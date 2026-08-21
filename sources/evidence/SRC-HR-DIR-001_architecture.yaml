@@ -1,0 +1,130 @@
+schema_version: "1.0"
+source:
+  source_id: "SRC-HR-DIR-001"
+  title: "Интервью директора по персоналу — архитектурные факты"
+  source_type: "INTERVIEW"
+  interviewee_role: "ROLE-HR-DIRECTOR-001"
+  interviewee_name: null
+  date: null
+  file_ref: "sources/raw/hr/SRC-HR-DIR-001_hr_director_interview.txt"
+
+facts:
+  - fact_id: FACT-HR-DIR-001
+    process_refs: [HR-RECRUIT-001]
+    statement: "Подбор начинается с заявки непосредственного руководителя на вакантную позицию; далее директор по персоналу формирует и согласует профиль, размещает вакансию, проводит первый этап интервью, направляет кандидатов на второй этап руководителю, выбирает кандидата и готовит оффер."
+    evidence_class: EXPLICIT
+    source_locator: "абзацы 2–3, блок 'Основной блок это подбор персонала'"
+    role_ref: ROLE-HR-DIRECTOR-001
+    object_refs: [ROLE-HIRING-MANAGER-001, ROLE-CANDIDATE-001, SYS-HH-001]
+    conflicts_with: []
+    notes: null
+
+  - fact_id: FACT-HR-DIR-002
+    process_refs: [HR-RECRUIT-001, HR-HIRE-001, HR-ADAPT-001]
+    statement: "Выбранные сотрудники выходят в назначенное время на определенных условиях, после чего директор по персоналу контролирует адаптацию и испытательный срок."
+    evidence_class: EXPLICIT
+    source_locator: "абзацы 3–4"
+    role_ref: ROLE-HR-DIRECTOR-001
+    object_refs: [ROLE-EMPLOYEE-001]
+    conflicts_with: []
+    notes: "Точный момент перехода между подбором, кадровым оформлением и адаптацией не указан."
+
+  - fact_id: FACT-HR-DIR-003
+    process_refs: [HR-ADAPT-001]
+    statement: "По итогам испытательного срока директор по персоналу берет обратную связь и устраняет негативные моменты адаптации, относящиеся к ее зоне ответственности."
+    evidence_class: EXPLICIT
+    source_locator: "абзац 4"
+    role_ref: ROLE-HR-DIRECTOR-001
+    object_refs: [ROLE-EMPLOYEE-001]
+    conflicts_with: []
+    notes: "Источник не называет поставщика обратной связи и формальное решение по итогам срока."
+
+  - fact_id: FACT-HR-DIR-004
+    process_refs: [HR-HIRE-001, HR-TERM-001, CAND-HR-MOVE-001]
+    statement: "Директор по персоналу контролирует кадровое делопроизводство, включая приемы, увольнения, переводы и различные движения с персоналом."
+    evidence_class: EXPLICIT
+    source_locator: "абзац 5, блок 'второй большой блок это кадровое делопроизводство'"
+    role_ref: ROLE-HR-DIRECTOR-001
+    object_refs: [ROLE-HR-KDP-001]
+    conflicts_with: []
+    notes: "Контроль КДП классифицирован как cross-process governance responsibility, а не отдельный L1."
+
+  - fact_id: FACT-HR-DIR-005
+    process_refs: [HR-TERM-001, CAND-HR-WORKFORCE-001]
+    statement: "При снижении объема задач компания может снижать штатную численность; названы сокращение штата, увольнение и договоренность с сотрудниками."
+    evidence_class: EXPLICIT
+    source_locator: "последние три абзаца"
+    role_ref: ROLE-HR-DIRECTOR-001
+    object_refs: [ROLE-EMPLOYEE-001]
+    conflicts_with: []
+    notes: "Фрагмент 'по закону дела ЦПТК' не интерпретируется и не используется как отдельный сценарий."
+
+  - fact_id: FACT-HR-DIR-006
+    process_refs: [CAND-HR-LEAVE-SCHEDULE-001]
+    statement: "До середины декабря требуется составить график отпусков, ознакомить сотрудников и подписать график у генерального директора."
+    evidence_class: EXPLICIT
+    source_locator: "абзац 5, фрагмент о графике отпусков"
+    role_ref: ROLE-HR-DIRECTOR-001
+    object_refs: [ROLE-CEO-001, ROLE-EMPLOYEE-001]
+    conflicts_with: []
+    notes: "Сильный самостоятельный периодический кандидат, но требует отдельного boundary-review."
+
+  - fact_id: FACT-HR-DIR-007
+    process_refs: [CAND-HR-LNA-001, CAND-HR-CONFLICT-001]
+    statement: "Директор по персоналу контролирует наличие, создание/редактирование, согласование и ознакомление сотрудников с локальными нормативными актами; эти акты также используются в конфликтных ситуациях."
+    evidence_class: EXPLICIT
+    source_locator: "абзац 6"
+    role_ref: ROLE-HR-DIRECTOR-001
+    object_refs: [ROLE-CEO-001, ROLE-EMPLOYEE-001]
+    conflicts_with: []
+    notes: "Граница lifecycle ЛНА и их применения в конфликтном процессе требует раздельного анализа."
+
+  - fact_id: FACT-HR-DIR-008
+    process_refs: [CAND-HR-CONFLICT-001]
+    statement: "Досудебные конфликты решаются через беседы с сотрудником и его руководителем; при судебной стадии HR помогает юристам готовить ответы и копии документов."
+    evidence_class: EXPLICIT
+    source_locator: "абзацы 7–9"
+    role_ref: ROLE-HR-DIRECTOR-001
+    object_refs: [ROLE-EMPLOYEE-001, ROLE-HIRING-MANAGER-001]
+    conflicts_with: []
+    notes: "Не делится на отдельные L1 без уточнения границы судебной ветки."
+
+  - fact_id: FACT-HR-DIR-009
+    process_refs: [CAND-HR-INSPECTION-001]
+    statement: "По запросу налоговой или трудовой инспекции HR готовит выписки, копии и регламенты по запрошенному списку."
+    evidence_class: EXPLICIT
+    source_locator: "абзац 10"
+    role_ref: ROLE-HR-DIRECTOR-001
+    object_refs: []
+    conflicts_with: []
+    notes: "Точка отправки/закрытия запроса не раскрыта."
+
+  - fact_id: FACT-HR-DIR-010
+    process_refs: [CAND-HR-FOT-001]
+    statement: "Директор по персоналу ежемесячно ведет учет выплат по каждому сотруднику и передает таблицу по фонду оплаты труда на согласование выплаты."
+    evidence_class: EXPLICIT
+    source_locator: "абзацы 10–11"
+    role_ref: ROLE-HR-DIRECTOR-001
+    object_refs: [ROLE-EMPLOYEE-001]
+    conflicts_with: []
+    notes: "Получатель/согласующий не назван."
+
+  - fact_id: FACT-HR-DIR-011
+    process_refs: [CAND-HR-CORP-EVENT-001]
+    statement: "Для корпоративного мероприятия директор по персоналу определяет программу, место и формат, согласует бюджет, проводит мероприятие и отчитывается о расходах."
+    evidence_class: EXPLICIT
+    source_locator: "абзац 12"
+    role_ref: ROLE-HR-DIRECTOR-001
+    object_refs: []
+    conflicts_with: []
+    notes: null
+
+  - fact_id: FACT-HR-DIR-012
+    process_refs: [CAND-HR-TIME-LEAVE-001]
+    statement: "Табелирование, учет отпусков и больничного времени только перечислены как области контроля кадрового делопроизводства."
+    evidence_class: EXPLICIT
+    source_locator: "абзац 5"
+    role_ref: ROLE-HR-DIRECTOR-001
+    object_refs: [ROLE-HR-KDP-001]
+    conflicts_with: []
+    notes: "Не создавать отдельные L1 без самостоятельных trigger/result/consumer."
