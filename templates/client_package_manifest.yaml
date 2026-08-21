@@ -1,0 +1,23 @@
+schema_version: "1.0"
+process_id: ""
+package_version: ""
+status: "DRAFT" # DRAFT | QA_REQUIRED | CLIENT_READY | APPROVED
+
+files:
+  diagrams: []
+  documents: []
+  summaries: []
+
+qa:
+  semantic: null # PASS | FAIL
+  visual: null # PASS | FAIL
+  documents_complete: null # true | false
+  checked_at: null
+  notes: []
+
+# Пример файла:
+# - file_id: FILE-001
+#   type: VSDX
+#   path: "delivery/HR-HIRE-001_TO-BE.vsdx"
+#   purpose: "Редактируемая клиентская схема"
+#   required: true
