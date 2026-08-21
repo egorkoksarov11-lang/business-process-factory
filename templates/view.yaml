@@ -1,0 +1,16 @@
+schema_version: "1.0"
+view:
+  view_id: "VIEW-DOMAIN-001"
+  name: ""
+  view_type: "END_TO_END" # ROLE_LANDSCAPE | DEPARTMENT_LANDSCAPE | END_TO_END
+  subject_role: null
+  subject_department: null
+  purpose: ""
+  level: "L0"
+  process_refs: []
+  entry_point: null
+  exit_point: null
+  notes: null
+
+# View не владеет копиями процессов. process_refs всегда указывают
+# на канонические process IDs из registry/process_registry.yaml.
