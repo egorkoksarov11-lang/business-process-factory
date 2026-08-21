@@ -1,0 +1,11 @@
+schema_version: "1.0"
+systems: []
+
+# Пример:
+# - system_id: SYS-1C-ZUP
+#   canonical_name: "1С: Зарплата и управление персоналом"
+#   aliases:
+#     - "1С ЗУП"
+#     - "1С зарплата"
+#   category: "HRIS"
+#   source_refs: []
