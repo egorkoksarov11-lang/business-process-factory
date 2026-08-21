@@ -24,6 +24,7 @@ notes:
   - "Источник хранится как сырой транскрипт; речевые оговорки и возможные ошибки распознавания не исправлялись."
   - "Темы из интервью не трактовались автоматически как самостоятельные L1-процессы."
   - "Интервью рассматривается как описание работы одной роли, а не как полное описание всей кадровой службы."
+  - "Архитектура HR-HIRE-001 и HR-TERM-001 повторно синтезирована совместно с SRC-HR-DIR-001; исходные факты SRC-HR-KDP-001 сохранены отдельно в sources/evidence/SRC-HR-KDP-001_architecture.yaml."
 source_quality_issues:
   - issue_id: SQI-HR-KDP-001
     fragment: "1С зарплата и управления. Производством зарплата и управление персоналом"
@@ -38,6 +39,9 @@ source_quality_issues:
     fragment: "Основные направления работы: ... ведение, воинского учёта, кампании"
     assessment: "Слово 'кампании' не имеет однозначной интерпретации в контексте и не использовано для создания процесса."
 architecture:
+  synthesized_with:
+    - SRC-HR-DIR-001
+  evidence_ref: "sources/evidence/SRC-HR-KDP-001_architecture.yaml"
   canonical_process_refs:
     - HR-HIRE-001
     - HR-TERM-001
@@ -51,7 +55,6 @@ architecture:
     - VIEW-HR-KDP-ROLE-001
   end_to_end_views:
     - VIEW-HR-HIRE-E2E-001
-    - VIEW-HR-TERM-E2E-001
   channels_observed:
     - "Telegram"
     - "Корпоративный мессенджер"
@@ -64,4 +67,4 @@ architecture:
 workflow:
   status: ARCHITECTURE_PROCESSED
   next_agent: "02_AS_IS_ANALYST"
-  handoff_path: "handoffs/SRC-HR-KDP-001_AGENT01_TO_AGENT02.md"
+  handoff_path: "handoffs/HR-SYNTHESIS-001_AGENT01_TO_AGENT02.md"
