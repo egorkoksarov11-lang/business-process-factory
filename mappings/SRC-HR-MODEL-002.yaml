@@ -1,0 +1,90 @@
+schema_version: "1.0"
+source_ref: SRC-HR-MODEL-002
+source_title: "Заявка на подбор"
+source_lifecycle_status: UNKNOWN
+mapping_status: COMPLETE_ARCHITECTURE_MAPPING
+
+elements:
+  - source_element: "MODEL-002#Start — Возникла потребность в сотруднике"
+    "canonical_process/subprocess": "HR-STAFF-REQ-001 / trigger"
+    classification: L1_TRIGGER
+    transformation_reason: "Самостоятельный trigger процесса заявки."
+    status: MAPPED
+
+  - source_element: "MODEL-002#1.1 — Оценить фактическую загрузку и рассчитать потребность"
+    "canonical_process/subprocess": "HR-STAFF-REQ-001"
+    classification: OPERATION_WITH_EXISTING_INTERNAL_DOCUMENT
+    transformation_reason: "Действие необходимо для L1, но не имеет самостоятельного результата для отдельного L2."
+    status: MAPPED_AS_OPERATION
+
+  - source_element: "MODEL-002#DOC1 — Таблица оценки загрузки (расчет потребности)"
+    "canonical_process/subprocess": "HR-STAFF-REQ-001 / DOC-HR-STAFF-LOAD-001"
+    classification: EXISTING_INTERNAL_DOCUMENT
+    transformation_reason: "Сохранена ссылка на существующий внутренний документ; новый шаблон не создается."
+    status: REFERENCED
+
+  - source_element: "MODEL-002#1.2 — Решение о необходимости позиции / заполнения вакансии"
+    "canonical_process/subprocess": "HR-STAFF-REQ-001"
+    classification: BUSINESS_DECISION_OPERATION
+    transformation_reason: "Решение входит в границу L1 и не становится отдельным process_id."
+    status: MAPPED_AS_OPERATION
+
+  - source_element: "MODEL-002#DOC2 — Приказ / распоряжение / распределение функций / должностная инструкция"
+    "canonical_process/subprocess": "HR-STAFF-REQ-001 / DOC-HR-STAFF-AUTHORITY-001"
+    classification: EXISTING_INTERNAL_DOCUMENT
+    transformation_reason: "Составное название сохранено как дано источником; не разделяется и не достраивается Agent 01."
+    status: REFERENCED
+
+  - source_element: "MODEL-002#1.3 — Определить функции и задачи будущего сотрудника"
+    "canonical_process/subprocess": "HR-STAFF-REQ-001"
+    classification: OPERATION
+    transformation_reason: "Часть формирования содержания заявки."
+    status: MAPPED_AS_OPERATION
+
+  - source_element: "MODEL-002#1.4 — Сформировать заявку и направить на согласование Генеральному директору"
+    "canonical_process/subprocess": "HR-STAFF-REQ-001"
+    classification: OPERATION_WITH_HANDOFF
+    transformation_reason: "Создает ключевой артефакт внутри L1, но результат процесса еще не достигнут до решения Генерального директора."
+    status: MAPPED_AS_OPERATION
+
+  - source_element: "MODEL-002#DOC3 — Заявка на подбор"
+    "canonical_process/subprocess": "HR-STAFF-REQ-001 / DOC-HR-STAFF-REQUEST-001"
+    classification: EXISTING_INTERNAL_DOCUMENT
+    transformation_reason: "Сохранена как existing internal reference; шаблон не генерируется."
+    status: REFERENCED
+
+  - source_element: "MODEL-002#1.5 — Рассмотреть заявку на подбор"
+    "canonical_process/subprocess": "HR-STAFF-REQ-001"
+    classification: APPROVAL_OPERATION
+    transformation_reason: "Часть единого процесса согласования заявки."
+    status: MAPPED_SOURCE_LIFECYCLE_UNKNOWN
+
+  - source_element: "MODEL-002#GW — Результат рассмотрения заявки"
+    "canonical_process/subprocess": "HR-STAFF-REQ-001"
+    classification: BUSINESS_DECISION
+    transformation_reason: "Ветви доработки/согласования/отказа определяют результат L1; gateway не отдельный процесс."
+    status: MAPPED
+
+  - source_element: "MODEL-002#1.6 — Замечания и рекомендации по доработке"
+    "canonical_process/subprocess": "HR-STAFF-REQ-001"
+    classification: REWORK_LOOP_OPERATION
+    transformation_reason: "Возврат к доработке внутри того же L1."
+    status: MAPPED
+
+  - source_element: "MODEL-002#1.7 — Направить согласованную заявку HR"
+    "canonical_process/subprocess": "HR-STAFF-REQ-001 → HR-RECRUIT-001"
+    classification: L1_RESULT_AND_HANDOFF
+    transformation_reason: "Положительный business result и handoff в recruitment."
+    status: MAPPED
+
+  - source_element: "MODEL-002#End+ — Заявка направлена HR"
+    "canonical_process/subprocess": "HR-STAFF-REQ-001 / positive result"
+    classification: L1_END_STATE
+    transformation_reason: "Самостоятельный положительный результат процесса."
+    status: MAPPED
+
+  - source_element: "MODEL-002#End- — Подбор сотрудника не согласован"
+    "canonical_process/subprocess": "HR-STAFF-REQ-001 / negative result"
+    classification: L1_ALTERNATE_END_STATE
+    transformation_reason: "Самостоятельный отрицательный результат подтверждает устойчивую boundary."
+    status: MAPPED
