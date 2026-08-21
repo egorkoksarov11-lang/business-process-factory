@@ -1,0 +1,35 @@
+source_id: SRC-HR-DIR-001
+source_type: interview_transcript
+source_status: RAW_REGISTERED
+language: ru
+original_filename: "HR 1.txt"
+repository_path: "sources/raw/hr/SRC-HR-DIR-001_hr_director_interview.txt"
+interviewee:
+  role: "Директор по персоналу"
+  department: UNKNOWN
+  reports_to: UNKNOWN
+  person_name: null
+source_scope_declared:
+  - "Подбор персонала"
+  - "Адаптация и испытательный срок"
+  - "Контроль кадрового делопроизводства"
+  - "Личные дела, приказы, табелирование, отпуска и больничные"
+  - "График отпусков"
+  - "Локальные нормативные акты"
+  - "Конфликты и дисциплинарные ситуации"
+  - "Поддержка судебной работы"
+  - "Документы при проверках государственных органов"
+  - "HR-бюджетирование и фонд оплаты труда"
+  - "Корпоративные мероприятия"
+  - "Изменение штатной численности и прекращение трудовых отношений"
+provenance:
+  uploaded_to_project: "2026-08-21"
+  transcription_origin: "Пользовательский исходный транскрипт"
+  semantic_corrections_applied: false
+notes:
+  - "Источник хранится как сырой транскрипт; речевые оговорки и возможные ошибки распознавания не исправлялись."
+  - "Источник особенно релевантен для проверки границ HR-HIRE-001, HR-TERM-001 и архитектуры кадровой службы совместно с SRC-HR-KDP-001."
+  - "Фраза о вариантах сокращения/увольнения содержит возможную ошибку распознавания ('по закону дела ЦПТК') и не должна исправляться молча."
+workflow:
+  status: NEW
+  next_agent: "01_COORDINATOR_PROCESS_ARCHITECT"
