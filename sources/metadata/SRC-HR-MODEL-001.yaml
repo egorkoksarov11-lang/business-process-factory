@@ -1,0 +1,35 @@
+source_id: SRC-HR-MODEL-001
+source_type: existing_process_model
+source_status: REFERENCE_REGISTERED
+language: ru
+original_filename: "Прием на работу (1)(1).png"
+repository_path: "sources/reference_models/hr/SRC-HR-MODEL-001_employee_entry_process.md"
+model:
+  title: "Прием на работу"
+  notation: "BPMN-like swimlane diagram"
+  lifecycle_status: UNKNOWN
+  approval_status: UNKNOWN
+  owner: UNKNOWN
+source_scope_declared:
+  - "Возникновение потребности в сотруднике"
+  - "Заявка на подбор"
+  - "Поиск и подбор кандидатов"
+  - "Отбор и собеседования"
+  - "Проверка службой безопасности"
+  - "Согласование оффера"
+  - "Оффер кандидату"
+  - "Оформление приема"
+  - "Контроль выхода и начало адаптации"
+  - "Воинский учет при приеме"
+  - "Отчетность в СФР"
+provenance:
+  uploaded_to_project: "2026-08-21"
+  origin: "Пользовательская готовая процессная схема, приложенная в чате"
+  normalization: "Текстовая транскрипция изображения без изменения бизнес-логики"
+  semantic_corrections_applied: false
+notes:
+  - "Не считать модель автоматически действующим AS-IS или целевым TO-BE до подтверждения ее статуса."
+  - "Использовать как самостоятельный source_ref и сохранять расхождения с интервью как source conflicts."
+workflow:
+  status: NEW
+  next_agent: "01_COORDINATOR_PROCESS_ARCHITECT"
