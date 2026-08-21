@@ -1,0 +1,43 @@
+schema_version: "1.0"
+process:
+  process_id: "HR-HIRE-SFR-001"
+  name: "Подготовка и отправка сведений о приеме в СФР"
+  domain: "HR"
+  level: "L2"
+  status: "ARCHITECTURE_READY"
+  parent_process: "HR-HIRE-001"
+  owner_role: UNKNOWN
+  participants: [ROLE-HR-KDP-001, ROLE-FIN-CHIEF-ACCOUNTANT-001]
+  views: []
+boundaries:
+  trigger: "Событие приема оформлено и доступны сведения для отчетности"
+  input: ["Сведения о приеме"]
+  previous_processes: [HR-HIRE-KDP-001]
+  business_result: "Сведения о приеме отправлены в СФР и подтверждение сдачи зафиксировано в пределах источников"
+  consumer: "HR-HIRE-001 / СФР"
+  next_processes: []
+sources:
+  source_refs: [SRC-HR-KDP-001, SRC-HR-MODEL-001]
+architecture_evidence:
+  - source_ref: SRC-HR-KDP-001
+    evidence_class: EXPLICIT
+    statement: "Кадровик формирует отчетность в 1С, сообщает Главному бухгалтеру о необходимости отправить; Главный бухгалтер сообщает о сдаче."
+  - source_ref: SRC-HR-MODEL-001
+    evidence_class: EXPLICIT
+    statement: "Collapsed subprocess 'Подготовка и отправка отчёта в СФР' расположен в lane Главного бухгалтера."
+  - source_ref: "SRC-HR-KDP-001 vs SRC-HR-MODEL-001"
+    evidence_class: CONFLICT
+    statement: "Источники различаются по распределению подготовки и отправки; owner_role остается UNKNOWN."
+versions: {as_is_version: null, to_be_version: null}
+as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+issues: []
+changes: []
+to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+open_questions:
+  - "Кто фактически готовит сведения, кто отправляет и кто несет ответственность за результат?"
+  - "Как фиксируется успешная сдача?"
+delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+metadata:
+  created_at: "2026-08-21"
+  updated_at: "2026-08-21"
+  notes: "Source conflict сохранен; Agent 01 не выбирает одну версию роли."

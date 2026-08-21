@@ -12,42 +12,59 @@ process:
     - ROLE-HR-DIRECTOR-001
     - ROLE-HIRING-MANAGER-001
     - ROLE-CANDIDATE-001
+    - ROLE-SECURITY-001
+    - ROLE-CEO-001
   views:
     - VIEW-HR-DIRECTOR-ROLE-001
     - VIEW-HR-HIRE-E2E-001
+    - VIEW-HR-MODEL-ENTRY-E2E-001
 
 boundaries:
-  trigger: "Поступление директору по персоналу заявки от непосредственного руководителя на вакантную позицию"
+  trigger: "HR получена согласованная заявка на подбор"
   input:
-    - "Заявка непосредственного руководителя на вакантную позицию"
-    - "Требования к позиции, которые уточняются/оформляются в профиль вакансии"
-  previous_processes: []
-  business_result: "Кандидат выбран, оффер подготовлен; источник подтверждает последующий выход выбранного кандидата в назначенное время на определенных условиях, но момент подтверждения оффера остается UNKNOWN"
-  consumer: "Выбранный кандидат, непосредственный руководитель и HR-HIRE-001"
+    - "Согласованная заявка на подбор"
+    - "Требования к вакансии/профиль вакансии; точная форма UNKNOWN"
+  previous_processes:
+    - HR-STAFF-REQ-001
+  business_result: "Кандидат выбран и согласился на оффер; кандидат готов к передаче в кадровое оформление приема"
+  consumer: "HR-HIRE-001 / кадровое делопроизводство"
   next_processes:
     - HR-HIRE-001
 
 sources:
   source_refs:
     - SRC-HR-DIR-001
+    - SRC-HR-MODEL-001
+    - SRC-HR-MODEL-002
     - SRC-HR-KDP-001
   evidence_refs:
     - "sources/evidence/SRC-HR-DIR-001_architecture.yaml"
     - "sources/evidence/SRC-HR-KDP-001_architecture.yaml"
+    - "sources/evidence/SRC-HR-MODEL-001_architecture.yaml"
+    - "sources/evidence/SRC-HR-MODEL-002_architecture.yaml"
 
 architecture_evidence:
   - source_ref: SRC-HR-DIR-001
     evidence_class: EXPLICIT
-    statement: "Директор по персоналу принимает заявку от непосредственного руководителя, формирует и согласует профиль, размещает вакансию, проводит первый этап интервью, передает кандидатов на второй этап руководителю, выбирает победителя и готовит оффер."
-  - source_ref: SRC-HR-DIR-001
+    statement: "Директор по персоналу получает заявку, формирует/согласует профиль, размещает вакансию, проводит первый этап интервью, передает кандидатов руководителю на второй этап, выбирает победителя и готовит оффер."
+  - source_ref: SRC-HR-MODEL-001
     evidence_class: EXPLICIT
-    statement: "После выбора сотрудники выходят в назначенное время на определенных условиях."
+    statement: "Модель показывает collapsed subprocesses поиска, отбора/интервью, проверки СБ и оффера, циклы возврата к поиску и явное решение кандидата принять/не принять оффер."
+  - source_ref: SRC-HR-MODEL-002
+    evidence_class: EXPLICIT
+    statement: "Успешный результат upstream-процесса — согласованная заявка направлена HR."
   - source_ref: SRC-HR-KDP-001
     evidence_class: EXPLICIT
-    statement: "Кадровый специалист получает от директора по персоналу данные для оформления приема, что подтверждает downstream-handoff после подбора, но не раскрывает сам подбор."
-  - source_ref: "SRC-HR-DIR-001 + SRC-HR-KDP-001"
-    evidence_class: INFERRED
-    statement: "HR-RECRUIT-001 завершается передачей выбранного кандидата/сведений в HR-HIRE-001; точный момент handoff остается UNKNOWN."
+    statement: "Кадровик получает от директора по персоналу сведения для оформления приема, подтверждая downstream-handoff после подбора."
+  - source_ref: "SRC-HR-DIR-001 + SRC-HR-MODEL-001"
+    evidence_class: UNKNOWN
+    statement: "Lane 'HR' reference-модели не приписан Директору по персоналу автоматически, хотя интервью Директора подтверждает выполнение им значительной части тех же действий."
+
+architecture_subprocesses:
+  - HR-RECRUIT-SOURCE-001
+  - HR-RECRUIT-SELECT-001
+  - HR-RECRUIT-SEC-001
+  - HR-RECRUIT-OFFER-001
 
 versions:
   as_is_version: null
@@ -74,10 +91,10 @@ to_be:
   automation_options: []
 
 open_questions:
-  - "Каким событием фактически завершается подбор: выбор кандидата, принятие оффера или подтверждение даты выхода?"
-  - "Кто и как фиксирует согласие кандидата на оффер?"
-  - "Когда и каким составом данных директор по персоналу передает выбранного кандидата в кадровое делопроизводство?"
-  - "Есть ли upstream-процесс, который утверждает/создает вакансию до заявки непосредственного руководителя, или заявка является фактическим началом HR-RECRUIT-001?"
+  - "Какой состав данных/документов передается в HR-HIRE-001 после принятия оффера?"
+  - "Является ли проверка Службой безопасности обязательной текущей практикой?"
+  - "Является ли условное согласование оффера Генеральным директором действующим правилом?"
+  - "Кого именно обозначает lane 'HR' в SRC-HR-MODEL-001?"
 
 delivery:
   diagrams: []
@@ -89,6 +106,7 @@ metadata:
   created_at: "2026-08-21"
   updated_at: "2026-08-21"
   notes: |
-    Agent 01 architecture only; detailed AS-IS intentionally not created.
-    Внутренние действия — составление профиля, размещение на HeadHunter, получение откликов, два этапа собеседований, выбор и подготовка оффера — рассматриваются как L2-блоки/операции HR-RECRUIT-001 и не получают отдельных L1 process_id.
-    Изменение штатной численности может быть upstream-контекстом, но CAND-HR-WORKFORCE-001 пока не канонизирован из-за недостатка данных о решении/результате.
+    Agent 01 architecture only; AS-IS intentionally not created.
+    Upstream boundary пересмотрена после SRC-HR-MODEL-002: поступление согласованной заявки — trigger recruitment; сама заявка вынесена в HR-STAFF-REQ-001.
+    Принятие оффера теперь является подтвержденной моделью точкой перехода к кадровому оформлению. Точный состав handoff остается UNKNOWN.
+    Отдельные L2 созданы только для бизнес-значимых collapsed subprocesses; интерфейсные и единичные действия отдельными process_id не стали.

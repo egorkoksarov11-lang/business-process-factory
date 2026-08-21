@@ -1,0 +1,33 @@
+schema_version: "1.0"
+process:
+  process_id: "HR-RECRUIT-SEC-001"
+  name: "Проверка кандидата службой безопасности"
+  domain: "HR"
+  level: "L2"
+  status: "ARCHITECTURE_READY"
+  parent_process: "HR-RECRUIT-001"
+  owner_role: UNKNOWN
+  participants: [ROLE-SECURITY-001]
+  views: []
+boundaries:
+  trigger: "Кандидат выбран для проверки согласно SRC-HR-MODEL-001"
+  input: ["Выбранный кандидат", "Данные для проверки — состав UNKNOWN"]
+  previous_processes: [HR-RECRUIT-SELECT-001]
+  business_result: "Получен результат о наличии/отсутствии негативной информации"
+  consumer: "HR-RECRUIT-OFFER-001"
+  next_processes: [HR-RECRUIT-OFFER-001]
+sources:
+  source_refs: [SRC-HR-MODEL-001]
+versions: {as_is_version: null, to_be_version: null}
+as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+issues: []
+changes: []
+to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+open_questions:
+  - "Является ли этот L2 действующим AS-IS; lifecycle/approval status reference-модели UNKNOWN?"
+  - "Что фиксирует результат проверки?"
+delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+metadata:
+  created_at: "2026-08-21"
+  updated_at: "2026-08-21"
+  notes: "Архитектурный L2 сохранен из collapsed subprocess MODEL-001#4. Никакие правила проверки не достроены."

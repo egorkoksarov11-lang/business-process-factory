@@ -1,0 +1,33 @@
+schema_version: "1.0"
+process:
+  process_id: "HR-RECRUIT-OFFER-001"
+  name: "Формирование, согласование и принятие оффера"
+  domain: "HR"
+  level: "L2"
+  status: "ARCHITECTURE_READY"
+  parent_process: "HR-RECRUIT-001"
+  owner_role: UNKNOWN
+  participants: [ROLE-HR-DIRECTOR-001, ROLE-CEO-001, ROLE-CANDIDATE-001]
+  views: []
+boundaries:
+  trigger: "Кандидат выбран и получен результат требуемой проверки"
+  input: ["Выбранный кандидат", "Условия оффера", "Результат проверки при применимости"]
+  previous_processes: [HR-RECRUIT-SEC-001]
+  business_result: "Оффер принят кандидатом либо процесс возвращается к поиску при отказе/несогласовании"
+  consumer: "HR-HIRE-001 при принятом оффере"
+  next_processes: [HR-HIRE-001, HR-RECRUIT-SOURCE-001]
+sources:
+  source_refs: [SRC-HR-DIR-001, SRC-HR-MODEL-001]
+versions: {as_is_version: null, to_be_version: null}
+as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+issues: []
+changes: []
+to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+open_questions:
+  - "Является ли условное согласование Генеральным директором при негативной информации действующим правилом?"
+  - "Как фиксируется принятие оффера кандидатом?"
+delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+metadata:
+  created_at: "2026-08-21"
+  updated_at: "2026-08-21"
+  notes: "MODEL-001#4.1, #5 и связанные gateways объединены в один бизнес-значимый L2; отдельные решения не превращены в микропроцессы."
