@@ -1,0 +1,18 @@
+schema_version: "1.0"
+changes: []
+
+# Пример:
+# - change_id: CHG-HR-HIRE-001-001
+#   process_id: HR-HIRE-001
+#   as_is_steps: [A07, A08]
+#   problem_refs: [ISS-HR-HIRE-001-003]
+#   change_type: MERGE
+#   solution: "Объединить две последовательные проверки в одну проверку по чек-листу"
+#   reason: "Обе проверки выполняет одна роль над одним комплектом без изменения состояния между ними"
+#   rationale_source: ANALYTICAL # INTERVIEW | ANALYTICAL | BUSINESS_RULE | CLIENT_DECISION
+#   source_refs: []
+#   to_be_steps: [T06]
+#   expected_effect: "Снижение числа операций и единый критерий комплектности"
+#   assumptions: []
+#   risks: []
+#   status: PROPOSED # PROPOSED | ACCEPTED | REJECTED | IMPLEMENTED
