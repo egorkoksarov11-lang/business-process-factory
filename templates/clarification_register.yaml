@@ -1,0 +1,14 @@
+schema_version: "1.0"
+questions: []
+
+# Пример:
+# - question_id: Q-HR-HIRE-001-001
+#   process_id: HR-HIRE-001
+#   source_refs: [SRC-HR-002]
+#   related_steps: [A05]
+#   question: "Где фиксируется, что комплект документов для приема полный?"
+#   why_needed: "От ответа зависит контрольная точка перед внесением данных в 1С"
+#   blocking: true
+#   status: OPEN # OPEN | ANSWERED | CLOSED_NOT_NEEDED
+#   answer: null
+#   answer_source_ref: null
