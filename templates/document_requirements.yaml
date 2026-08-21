@@ -1,0 +1,17 @@
+schema_version: "1.0"
+documents: []
+
+# Пример:
+# - document_id: DOC-HR-HIRE-001-001
+#   process_id: HR-HIRE-001
+#   name: "Чек-лист комплектности документов для приема"
+#   document_type: PROPOSED_CHECKLIST
+#   used_in_steps: [T03]
+#   purpose: "Единый критерий допуска к оформлению"
+#   required_contents:
+#     - "Перечень обязательных документов"
+#     - "Отметка наличия/отсутствия"
+#     - "Поле для исключения и комментария"
+#   owner_role: ROLE-HR-KDP-001
+#   file_path: null
+#   status: REQUIRED # REQUIRED | CREATED | VERIFIED
