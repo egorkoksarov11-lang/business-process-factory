@@ -1,0 +1,13 @@
+schema_version: "1.0"
+issues: []
+
+# Пример:
+# - issue_id: ISS-HR-HIRE-001-001
+#   process_id: HR-HIRE-001
+#   category: WAIT
+#   as_is_steps: [A12]
+#   description: "После передачи документа согласующему нет установленного срока ответа"
+#   evidence_refs: [FACT-014]
+#   consequence: "Документ может быть несвоевременно отражен в следующем процессе"
+#   severity: MEDIUM # LOW | MEDIUM | HIGH | CRITICAL
+#   status: OPEN # OPEN | ADDRESSED | ACCEPTED_AS_IS
