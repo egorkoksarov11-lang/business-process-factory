@@ -1,0 +1,19 @@
+schema_version: "1.0"
+processes: []
+
+# Пример записи:
+# - process_id: HR-HIRE-001
+#   name: "Оформление приема сотрудника"
+#   domain: HR
+#   level: L1
+#   status: NEW
+#   owner_role: null
+#   trigger: null
+#   business_result: null
+#   previous_processes: []
+#   next_processes: []
+#   source_refs: []
+#   views: []
+#   as_is_version: null
+#   to_be_version: null
+#   blocking_questions: []
