@@ -1,0 +1,28 @@
+source_id: SRC-HR-KDP-001
+source_type: interview_transcript
+source_status: RAW_REGISTERED
+language: ru
+original_filename: "Кадровик.txt"
+original_recording_reference: "Кадровик.mp3"
+repository_path: "sources/raw/hr/SRC-HR-KDP-001_kadrovik_interview.txt"
+interviewee:
+  role: "Ведущий специалист по кадровому делопроизводству"
+  department: "Администрация"
+  reports_to: "Директор по персоналу"
+  person_name: null
+source_scope_declared:
+  - "Приём сотрудников"
+  - "Перевод и кадровые перемещения"
+  - "Воинский учёт"
+  - "Увольнение сотрудников"
+  - "Кадровые отчёты по запросу"
+provenance:
+  uploaded_to_project: "2026-08-21"
+  transcription_origin: "Пользовательский исходный транскрипт"
+  semantic_corrections_applied: false
+notes:
+  - "Источник хранится как сырой транскрипт; речевые оговорки и возможные ошибки распознавания не исправлялись."
+  - "На стадии Agent 01 темы из интервью не должны автоматически считаться самостоятельными L1-процессами."
+workflow:
+  status: NEW
+  next_agent: "01_COORDINATOR_PROCESS_ARCHITECT"
