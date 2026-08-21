@@ -1,19 +1,126 @@
 schema_version: "1.0"
-processes: []
+processes:
+  - process_id: HR-HIRE-001
+    name: "Оформление приема сотрудника"
+    domain: HR
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Получение от директора по персоналу электронного сообщения с данными для оформления приема"
+    business_result: "Прием сотрудника кадрово оформлен; связанные с событием приема действия, описанные источником, завершены в пределах подтвержденной границы"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-HR-KDP-001]
+    views: [VIEW-HR-KDP-ROLE-001, VIEW-HR-HIRE-E2E-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions:
+      - "UNKNOWN: какой процесс формирует и передает директору по персоналу исходные данные для приема?"
+      - "UNKNOWN: является ли подтверждение отправки сведений в СФР обязательной конечной точкой L1 или контрольным завершением L2 внутри приема?"
+      - "UNKNOWN: является ли ответственный за воинский учет отдельной ролью или функцией текущего кадрового специалиста?"
 
-# Пример записи:
-# - process_id: HR-HIRE-001
-#   name: "Оформление приема сотрудника"
-#   domain: HR
-#   level: L1
-#   status: NEW
-#   owner_role: null
-#   trigger: null
-#   business_result: null
-#   previous_processes: []
-#   next_processes: []
-#   source_refs: []
-#   views: []
-#   as_is_version: null
-#   to_be_version: null
-#   blocking_questions: []
+  - process_id: HR-TERM-001
+    name: "Оформление увольнения сотрудника"
+    domain: HR
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Получение заявления сотрудника об увольнении — единственный явно раскрытый источником сценарий запуска"
+    business_result: "Увольнение кадрово оформлено, документы выданы сотруднику, а связанная с увольнением отчетность подготовлена и передана на отправку в пределах описанного сценария"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-HR-KDP-001]
+    views: [VIEW-HR-KDP-ROLE-001, VIEW-HR-TERM-E2E-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions:
+      - "UNKNOWN: какие иные основания увольнения входят в фактический процесс помимо увольнения по заявлению сотрудника?"
+      - "UNKNOWN: кто отвечает за полный расчет в последний рабочий день и является ли расчет частью границы этого L1 или соседнего процесса?"
+      - "UNKNOWN: кто подписывает приказ об увольнении; транскрипт содержит неоднозначную/ошибочную фразу про приказ о приеме после заявления об увольнении."
+
+  - process_id: HR-MIL-ORG-001
+    name: "Постановка организации на воинский учет"
+    domain: HR
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Необходимость первоначально поставить организацию на воинский учет"
+    business_result: "Организация поставлена на воинский учет; вывод основан на заявленной цели блока и последующем переходе к текущему ведению учета, при этом формальный подтверждающий артефакт в источнике не назван"
+    previous_processes: []
+    next_processes: [HR-MIL-CHANGE-001, HR-MIL-RECON-001]
+    source_refs: [SRC-HR-KDP-001]
+    views: [VIEW-HR-KDP-ROLE-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions:
+      - "UNKNOWN: какой формальный результат/подтверждение означает, что постановка организации на учет завершена?"
+      - "UNKNOWN: выполняет ли этот процесс текущий ведущий специалист или отдельный назначенный ответственный за воинский учет?"
+
+  - process_id: HR-MIL-CHANGE-001
+    name: "Актуализация сведений воинского учета при изменениях данных сотрудника"
+    domain: HR
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Изменение личных данных, документов, образования или должности сотрудника, состоящего на воинском учете"
+    business_result: "Сведения об изменениях зафиксированы и направлены письмом в военный комиссариат"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-HR-KDP-001]
+    views: [VIEW-HR-KDP-ROLE-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions:
+      - "UNKNOWN: каким образом кадровая служба получает достоверное сообщение об изменении данных сотрудника и что является входным подтверждением изменения?"
+      - "UNKNOWN: является ли ответственный за воинский учет отдельной ролью или функцией ведущего специалиста по кадровому делопроизводству?"
+
+  - process_id: HR-MIL-RECON-001
+    name: "Ежегодная сверка воинского учета с военным комиссариатом"
+    domain: HR
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Ежегодный период сверки: начиная с 1 октября и до конца года"
+    business_result: "Ежегодная сверка с военным комиссариатом выполнена, а подготовленные документы переданы на согласование/получены после согласования в пределах описанного источником сценария"
+    previous_processes: [HR-MIL-ORG-001]
+    next_processes: []
+    source_refs: [SRC-HR-KDP-001]
+    views: [VIEW-HR-KDP-ROLE-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions:
+      - "UNKNOWN: какой конкретный артефакт или отметка подтверждает завершение ежегодной сверки?"
+      - "UNKNOWN: кто именно забирает согласованные документы и закрывает процесс?"
+
+  - process_id: HR-REPORT-REQ-001
+    name: "Подготовка кадрового отчета по запросу"
+    domain: HR
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Поступление запроса на кадровый отчет"
+    business_result: "Запрошенный кадровый отчет сформирован и отправлен инициатору запроса"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-HR-KDP-001]
+    views: [VIEW-HR-KDP-ROLE-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions:
+      - "UNKNOWN: какие роли/подразделения являются инициаторами и потребителями кадровых отчетов?"
+      - "UNKNOWN: через какие каналы поступают запросы и отправляются результаты?"
+
+architecture_candidates:
+  - candidate_id: CAND-HR-MOVE-001
+    working_name: "Оформление перевода / кадрового перемещения"
+    domain: HR
+    proposed_level: L1
+    status: BOUNDARY_UNKNOWN
+    source_refs: [SRC-HR-KDP-001]
+    evidence_note: "Тема названа одним из основных направлений работы; отдельно упомянуто изменение должности и сведения о переводе для воинского учета, но фактическая кадровая последовательность не раскрыта."
+    missing_for_canonicalization:
+      - "самостоятельный trigger"
+      - "полный business result"
+      - "consumer результата"
+      - "границы и основные передачи ответственности"
+      - "различие между переводом и иными кадровыми перемещениями"
