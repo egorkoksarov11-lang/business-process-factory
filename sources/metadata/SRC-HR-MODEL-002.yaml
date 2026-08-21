@@ -1,0 +1,31 @@
+source_id: SRC-HR-MODEL-002
+source_type: existing_process_model
+source_status: REFERENCE_REGISTERED
+language: ru
+original_filename: "Заявка на подбор (1)(1).png"
+repository_path: "sources/reference_models/hr/SRC-HR-MODEL-002_recruitment_request_process.md"
+model:
+  title: "Заявка на подбор"
+  notation: "BPMN-like swimlane diagram"
+  lifecycle_status: UNKNOWN
+  approval_status: UNKNOWN
+  owner: UNKNOWN
+source_scope_declared:
+  - "Оценка загрузки и потребности"
+  - "Решение о необходимости позиции"
+  - "Определение функций и задач"
+  - "Формирование заявки на подбор"
+  - "Согласование Генеральным директором"
+  - "Доработка / отказ"
+  - "Передача согласованной заявки HR"
+provenance:
+  uploaded_to_project: "2026-08-21"
+  origin: "Пользовательская готовая процессная схема, приложенная в чате"
+  normalization: "Текстовая транскрипция изображения без изменения бизнес-логики"
+  semantic_corrections_applied: false
+notes:
+  - "Не считать модель автоматически действующим AS-IS или целевым TO-BE до подтверждения ее статуса."
+  - "Отдельно проверить архитектурную границу относительно HR-RECRUIT-001 и CAND-HR-WORKFORCE-001."
+workflow:
+  status: NEW
+  next_agent: "01_COORDINATOR_PROCESS_ARCHITECT"
