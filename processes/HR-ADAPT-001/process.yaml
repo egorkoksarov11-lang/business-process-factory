@@ -1,0 +1,89 @@
+schema_version: "1.0"
+
+process:
+  process_id: "HR-ADAPT-001"
+  name: "Сопровождение адаптации и испытательного срока сотрудника"
+  domain: "HR"
+  level: "L1"
+  status: "ARCHITECTURE_READY"
+  parent_process: null
+  owner_role: UNKNOWN
+  participants:
+    - ROLE-HR-DIRECTOR-001
+    - ROLE-EMPLOYEE-001
+  views:
+    - VIEW-HR-DIRECTOR-ROLE-001
+    - VIEW-HR-HIRE-E2E-001
+
+boundaries:
+  trigger: "Выход выбранного сотрудника на работу и начало периода адаптации/испытательного срока"
+  input:
+    - "Сотрудник, вышедший на работу на согласованных условиях"
+    - "Условия/ожидания испытательного срока; конкретный состав критериев UNKNOWN"
+  previous_processes:
+    - HR-HIRE-001
+  business_result: "Период адаптации/испытательного срока проконтролирован, обратная связь получена, а выявленные негативные моменты в зоне ответственности директора по персоналу отработаны; дальнейшее решение по результатам периода в источнике не раскрыто"
+  consumer: "Сотрудник и организация"
+  next_processes: []
+
+sources:
+  source_refs:
+    - SRC-HR-DIR-001
+  evidence_refs:
+    - "sources/evidence/SRC-HR-DIR-001_architecture.yaml"
+
+architecture_evidence:
+  - source_ref: SRC-HR-DIR-001
+    evidence_class: EXPLICIT
+    statement: "После выхода выбранных сотрудников директор по персоналу контролирует прохождение периода адаптации и испытательного срока."
+  - source_ref: SRC-HR-DIR-001
+    evidence_class: EXPLICIT
+    statement: "По итогу испытательного срока директор по персоналу берет обратную связь и устраняет негативные моменты адаптации, находящиеся в ее зоне ответственности."
+  - source_ref: SRC-HR-DIR-001
+    evidence_class: UNKNOWN
+    statement: "Источник не называет поставщика обратной связи и не описывает формальное решение/артефакт, закрывающий испытательный срок."
+
+versions:
+  as_is_version: null
+  to_be_version: null
+
+as_is:
+  steps: []
+  flows: []
+  documents: []
+  systems: []
+  rules: []
+  exceptions: []
+  observations: []
+
+issues: []
+changes: []
+
+to_be:
+  steps: []
+  flows: []
+  documents: []
+  rules: []
+  exceptions: []
+  automation_options: []
+
+open_questions:
+  - "Кто предоставляет обратную связь по итогам адаптации/испытательного срока?"
+  - "Какие критерии используются для оценки прохождения периода?"
+  - "Какое решение или документ формально завершает HR-ADAPT-001?"
+  - "Что происходит при неудовлетворительном результате испытательного срока и связано ли это с HR-TERM-001?"
+  - "Начинается ли адаптация только после полного завершения HR-HIRE-001 или часть действий приема/отчетности продолжается параллельно после фактического выхода?"
+
+delivery:
+  diagrams: []
+  attachments: []
+  qa_status: null
+  client_package_status: null
+
+metadata:
+  created_at: "2026-08-21"
+  updated_at: "2026-08-21"
+  notes: |
+    Agent 01 architecture only; detailed AS-IS intentionally not created.
+    Адаптация выделена самостоятельным L1, потому что имеет собственный trigger (фактический выход сотрудника), отдельный управленческий результат (контроль периода и обратная связь) и отдельную временную границу относительно кадрового оформления приема.
+    Получение обратной связи и устранение отдельных негативных моментов не разделяются на самостоятельные процессы.
