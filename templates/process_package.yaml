@@ -1,0 +1,60 @@
+schema_version: "1.0"
+
+process:
+  process_id: "DOMAIN-OBJECT-001"
+  name: ""
+  domain: ""
+  level: "L1" # L0 | L1 | L2 | L3
+  status: "NEW"
+  parent_process: null
+  owner_role: null
+  participants: []
+  views: []
+
+boundaries:
+  trigger: null
+  input: []
+  previous_processes: []
+  business_result: null
+  consumer: null
+  next_processes: []
+
+sources:
+  source_refs: []
+
+versions:
+  as_is_version: null
+  to_be_version: null
+
+as_is:
+  steps: []
+  flows: []
+  documents: []
+  systems: []
+  rules: []
+  exceptions: []
+  observations: []
+
+issues: []
+changes: []
+
+to_be:
+  steps: []
+  flows: []
+  documents: []
+  rules: []
+  exceptions: []
+  automation_options: []
+
+open_questions: []
+
+delivery:
+  diagrams: []
+  attachments: []
+  qa_status: null
+  client_package_status: null
+
+metadata:
+  created_at: null
+  updated_at: null
+  notes: null
