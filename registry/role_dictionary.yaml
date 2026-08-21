@@ -1,0 +1,12 @@
+schema_version: "1.0"
+roles: []
+
+# Пример:
+# - role_id: ROLE-HR-KDP-001
+#   canonical_name: "Ведущий специалист по кадровому делопроизводству"
+#   department: "Кадровая служба"
+#   aliases:
+#     - "кадровик"
+#     - "специалист кадров"
+#   source_refs: []
+#   notes: null
