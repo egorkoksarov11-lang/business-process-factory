@@ -1,0 +1,22 @@
+schema_version: "1.0"
+source:
+  source_id: "SRC-DOMAIN-001"
+  title: ""
+  source_type: "INTERVIEW" # INTERVIEW | QUESTIONNAIRE | DOCUMENT | DIAGRAM | OTHER
+  interviewee_role: null
+  interviewee_name: null
+  date: null
+  file_ref: null
+
+facts: []
+
+# Пример факта:
+# - fact_id: FACT-001
+#   process_refs: [HR-HIRE-001]
+#   statement: "Кадровый специалист проверяет комплект документов до внесения сотрудника в 1С"
+#   evidence_class: EXPLICIT # EXPLICIT | INFERRED | UNKNOWN | CONFLICT
+#   source_locator: "абзац/строка/таймкод"
+#   role_ref: ROLE-HR-KDP-001
+#   object_refs: []
+#   conflicts_with: []
+#   notes: null
