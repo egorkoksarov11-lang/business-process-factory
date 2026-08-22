@@ -14,6 +14,7 @@ process:
     - ROLE-SECURITY-001
   views:
     - VIEW-ACC-CHIEF-ROLE-001
+    - VIEW-ACC-FUNCTION-001
 boundaries:
   trigger: "Поступил внутренний запрос на документ, справку, цифры, расчет или иную бухгалтерскую информацию"
   input:
