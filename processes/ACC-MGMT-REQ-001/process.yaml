@@ -1,0 +1,48 @@
+schema_version: "1.0"
+process:
+  process_id: "ACC-MGMT-REQ-001"
+  name: "Подготовка бухгалтерской информации по внутреннему запросу"
+  domain: "ACC"
+  level: "L1"
+  status: "ARCHITECTURE_READY"
+  parent_process: null
+  owner_role: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+  participants:
+    - ROLE-FIN-CHIEF-ACCOUNTANT-001
+    - ROLE-FIN-DIRECTOR-001
+    - ROLE-CEO-001
+    - ROLE-SECURITY-001
+  views:
+    - VIEW-ACC-CHIEF-ROLE-001
+boundaries:
+  trigger: "Поступил внутренний запрос на документ, справку, цифры, расчет или иную бухгалтерскую информацию"
+  input:
+    - "Запрос и требуемый формат/срок, если они указаны инициатором"
+  previous_processes: []
+  business_result: "Запрошенная бухгалтерская информация, документ или расчет подготовлены и переданы инициатору"
+  consumer: "Инициатор внутреннего запроса"
+  next_processes: []
+sources:
+  source_refs: [SRC-ACC-CHIEF-001]
+  evidence_refs: ["sources/evidence/SRC-ACC-CHIEF-001_architecture.yaml"]
+architecture_evidence:
+  - source_ref: SRC-ACC-CHIEF-001
+    evidence_class: EXPLICIT
+    statement: "В течение дня поступают запросы преимущественно от Финансового директора, а также от руководства/службы безопасности; ответы обычно готовятся день в день, но фиксированного общего SLA нет."
+architecture_notes:
+  - "Процесс выделен отдельно от запросов контролирующих органов: другой инициатор, другой потребитель и иной бизнес-результат."
+  - "Срок 'день в день' является наблюдаемой практикой интервьюируемой, а не формальным SLA."
+versions: {as_is_version: null, to_be_version: null}
+as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+issues: []
+changes: []
+to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+open_questions:
+  - "Какие типы внутренних запросов имеют разные маршруты/согласования?"
+  - "Есть ли формальные приоритеты или SLA по типам запросов?"
+  - "Какие роли, кроме перечисленных в интервью, являются устойчивыми инициаторами?"
+delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Agent 01 architecture only; AS-IS detail intentionally deferred."
