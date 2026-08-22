@@ -1,6 +1,6 @@
 source_id: SRC-IT-LEAD-001
 source_type: interview_transcript
-source_status: RAW_REGISTERED
+source_status: ARCHITECTURE_SYNTHESIZED
 language: ru
 original_filename: "ИТ (1).txt"
 repository_path: "sources/raw/it/SRC-IT-LEAD-001_it_lead_interview.txt"
@@ -32,11 +32,23 @@ provenance:
   semantic_corrections_applied: false
 notes:
   - "Источник хранится без смысловой корректировки распознавания."
-  - "Интервью явно называет два крупных направления: архитектурные решения и техническая поддержка. Не превращать весь перечисленный ИТ-ландшафт автоматически в набор L1 без boundary-test."
+  - "Интервью явно называет два крупных направления: архитектурные решения и техническая поддержка. Boundary-test подтвердил техническую поддержку как L1; архитектурный контур оставлен BOUNDARY_UNKNOWN/candidate."
   - "Бот для обращений из корпоративного мессенджера находится в разработке и не является текущим AS-IS."
-  - "Источник содержит междоменную связь с HR: подготовка доступов при приеме, отзыв доступов и техника при увольнении. Не изменять HR process packages в этой ветке; фиксировать cross-domain handoff/candidate и source conflict/issue для последующего synthesis."
-  - "Электронные акты по технике описаны как внедренные/частично прижившиеся, а общий процесс приема/увольнения — как не прижившийся; не смешивать эти статусы."
+  - "Источник содержит междоменную связь с HR: подготовка доступов при приеме, отзыв доступов и техника при увольнении. HR process packages в этой ветке не изменялись."
+  - "Электронные акты по технике отделены как внедренный/работающий механизм; общий процесс приема/увольнения — attempted/not adopted; фактические уведомления IT — unstable current practice."
+architecture_outputs:
+  evidence: "sources/evidence/SRC-IT-LEAD-001_architecture.yaml"
+  confirmed_processes:
+    - IT-SUPPORT-001
+    - IT-SUPPORT-INTAKE-001
+    - IT-SUPPORT-RESOLVE-001
+    - IT-SUPPORT-FINALIZE-001
+  views:
+    - VIEW-IT-LEAD-ROLE-001
+    - VIEW-IT-FUNCTION-001
+  candidates_mapping: "mappings/IT-ARCHITECTURE-CANDIDATES-001.yaml"
+  cross_domain_mapping: "mappings/IT-HR-CROSS-DOMAIN-001.yaml"
 workflow:
-  status: NEW
-  next_agent: "01_COORDINATOR_PROCESS_ARCHITECT"
+  status: ARCHITECTURE_READY
+  next_agent: "02_AS_IS_ANALYST"
   working_branch: "agent01/it-architecture-src-001"
