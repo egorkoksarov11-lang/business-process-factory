@@ -1,19 +1,69 @@
 schema_version: "1.0"
-processes: []
+processes:
+  - process_id: IT-SUPPORT-001
+    name: "Техническая поддержка пользователей"
+    domain: IT
+    level: L1
+    status: ARCHITECTURE_READY
+    parent_process: null
+    owner_role: ROLE-IT-LEAD-EXT-001
+    trigger: "Внутренний сотрудник направляет обращение о проблеме или IT-потребности"
+    business_result: "Обращение обработано; пользователь получил постоянное либо временное решение с последующей доработкой"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-IT-LEAD-001]
+    views: [VIEW-IT-LEAD-ROLE-001, VIEW-IT-FUNCTION-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: []
 
-# Пример записи:
-# - process_id: HR-HIRE-001
-#   name: "Оформление приема сотрудника"
-#   domain: HR
-#   level: L1
-#   status: NEW
-#   owner_role: null
-#   trigger: null
-#   business_result: null
-#   previous_processes: []
-#   next_processes: []
-#   source_refs: []
-#   views: []
-#   as_is_version: null
-#   to_be_version: null
-#   blocking_questions: []
+  - process_id: IT-SUPPORT-INTAKE-001
+    name: "Прием и регистрация обращения в техническую поддержку"
+    domain: IT
+    level: L2
+    status: ARCHITECTURE_READY
+    parent_process: IT-SUPPORT-001
+    owner_role: ROLE-IT-SUPPORT-EXT-001
+    trigger: "Получено обращение пользователя"
+    business_result: "Обращение зарегистрировано в HelpDesk и доступно для обработки"
+    previous_processes: []
+    next_processes: [IT-SUPPORT-RESOLVE-001]
+    source_refs: [SRC-IT-LEAD-001]
+    views: [VIEW-IT-LEAD-ROLE-001, VIEW-IT-FUNCTION-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: []
+
+  - process_id: IT-SUPPORT-RESOLVE-001
+    name: "Обработка обращения и восстановление возможности работы"
+    domain: IT
+    level: L2
+    status: ARCHITECTURE_READY
+    parent_process: IT-SUPPORT-001
+    owner_role: ROLE-IT-SUPPORT-EXT-001
+    trigger: "Зарегистрированная заявка взята в работу"
+    business_result: "Пользователь получил постоянное либо временное решение, позволяющее продолжить работу"
+    previous_processes: [IT-SUPPORT-INTAKE-001]
+    next_processes: []
+    source_refs: [SRC-IT-LEAD-001]
+    views: [VIEW-IT-LEAD-ROLE-001, VIEW-IT-FUNCTION-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: []
+
+  - process_id: IT-SUPPORT-FINALIZE-001
+    name: "Доработка временного решения до постоянного"
+    domain: IT
+    level: L2
+    status: ARCHITECTURE_READY
+    parent_process: IT-SUPPORT-001
+    owner_role: ROLE-IT-SUPPORT-EXT-001
+    trigger: "По заявке выдано временное решение"
+    business_result: "Временное решение доработано до более постоянного решения"
+    previous_processes: [IT-SUPPORT-RESOLVE-001]
+    next_processes: []
+    source_refs: [SRC-IT-LEAD-001]
+    views: [VIEW-IT-LEAD-ROLE-001, VIEW-IT-FUNCTION-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: []
