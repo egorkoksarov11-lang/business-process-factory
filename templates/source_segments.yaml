@@ -1,0 +1,14 @@
+schema_version: "1.1"
+source_id: "SRC-DOMAIN-001"
+segments: []
+
+# Сегменты используются для устойчивых ссылок на длинные интервью/документы.
+# Они не заменяют raw source и не должны менять его смысл.
+# - segment_id: SEG-SRC-DOMAIN-001-001
+#   locator:
+#     type: TIMECODE # TIMECODE | LINE_RANGE | PARAGRAPH | SECTION | PAGE | OTHER
+#     value: "00:12:40-00:13:25"
+#   anchor: "Описание передачи документа на согласование"
+#   process_refs: [DOMAIN-PROCESS-001]
+#   role_refs: [ROLE-001]
+#   notes: null
