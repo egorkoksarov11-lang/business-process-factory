@@ -1,6 +1,6 @@
 source_id: SRC-HR-KDP-001
 source_type: interview_transcript
-source_status: RAW_REGISTERED
+source_status: ARCHITECTURE_PROCESSED
 language: ru
 original_filename: "Кадровик.txt"
 original_recording_reference: "Кадровик.mp3"
@@ -22,7 +22,49 @@ provenance:
   semantic_corrections_applied: false
 notes:
   - "Источник хранится как сырой транскрипт; речевые оговорки и возможные ошибки распознавания не исправлялись."
-  - "На стадии Agent 01 темы из интервью не должны автоматически считаться самостоятельными L1-процессами."
+  - "Темы из интервью не трактовались автоматически как самостоятельные L1-процессы."
+  - "Интервью рассматривается как описание работы одной роли, а не как полное описание всей кадровой службы."
+  - "Архитектура HR-HIRE-001 и HR-TERM-001 повторно синтезирована совместно с SRC-HR-DIR-001; исходные факты SRC-HR-KDP-001 сохранены отдельно в sources/evidence/SRC-HR-KDP-001_architecture.yaml."
+source_quality_issues:
+  - issue_id: SQI-HR-KDP-001
+    fragment: "1С зарплата и управления. Производством зарплата и управление персоналом"
+    assessment: "Возможная ошибка распознавания/самокоррекция. Для нормализации системы использована соседняя явная формулировка 'зарплата и управление персоналом'; точная конфигурация/версия остается UNKNOWN."
+  - issue_id: SQI-HR-KDP-002
+    fragment: "трудовой договор поступает на подпись директору ... генеральный директор подписывает трудовой договор"
+    assessment: "Неоднозначность роли подписанта в первой фразе. Генеральный директор подтвержден следующей фразой; отдельная роль 'директор' не создавалась."
+  - issue_id: SQI-HR-KDP-003
+    fragment: "приказ о приёме подписывается после получения ... заявления об увольнении"
+    assessment: "Внутренне противоречивая фраза в блоке увольнения; вероятная ошибка распознавания/оговорка. Не исправлена молча, вынесена в UNKNOWN для AS-IS уточнения."
+  - issue_id: SQI-HR-KDP-004
+    fragment: "Основные направления работы: ... ведение, воинского учёта, кампании"
+    assessment: "Слово 'кампании' не имеет однозначной интерпретации в контексте и не использовано для создания процесса."
+architecture:
+  synthesized_with:
+    - SRC-HR-DIR-001
+  evidence_ref: "sources/evidence/SRC-HR-KDP-001_architecture.yaml"
+  canonical_process_refs:
+    - HR-HIRE-001
+    - HR-TERM-001
+    - HR-MIL-ORG-001
+    - HR-MIL-CHANGE-001
+    - HR-MIL-RECON-001
+    - HR-REPORT-REQ-001
+  architecture_candidates:
+    - CAND-HR-MOVE-001
+  role_landscape_views:
+    - VIEW-HR-KDP-ROLE-001
+  end_to_end_views:
+    - VIEW-HR-HIRE-E2E-001
+  channels_observed:
+    - "Telegram"
+    - "Корпоративный мессенджер"
+    - "Электронная почта"
+    - "Личное устное сообщение"
+    - "Почтовое отправление"
+  external_organizations_observed:
+    - "СФР"
+    - "Военный комиссариат"
 workflow:
-  status: NEW
-  next_agent: "01_COORDINATOR_PROCESS_ARCHITECT"
+  status: ARCHITECTURE_PROCESSED
+  next_agent: "02_AS_IS_ANALYST"
+  handoff_path: "handoffs/HR-SYNTHESIS-001_AGENT01_TO_AGENT02.md"

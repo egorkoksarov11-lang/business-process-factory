@@ -1,0 +1,90 @@
+schema_version: "1.0"
+source:
+  source_id: "SRC-HR-MODEL-002"
+  title: "Существующая схема «Заявка на подбор»"
+  source_type: "DIAGRAM"
+  interviewee_role: null
+  interviewee_name: null
+  date: "2026-08-21"
+  file_ref: "sources/reference_models/hr/SRC-HR-MODEL-002_recruitment_request_process.md"
+
+facts:
+  - fact_id: MODEL002-FACT-001
+    process_refs: [HR-STAFF-REQ-001]
+    statement: "Процесс начинается с возникновения потребности в сотруднике."
+    evidence_class: EXPLICIT
+    source_locator: "Start"
+    role_ref: ROLE-HIRING-MANAGER-001
+    object_refs: []
+    conflicts_with: []
+    notes: null
+
+  - fact_id: MODEL002-FACT-002
+    process_refs: [HR-STAFF-REQ-001]
+    statement: "Руководитель подразделения оценивает фактическую загрузку и рассчитывает потребность, затем принимает решение о необходимости позиции."
+    evidence_class: EXPLICIT
+    source_locator: "MODEL-002#1.1-1.2"
+    role_ref: ROLE-HIRING-MANAGER-001
+    object_refs: [DOC-HR-STAFF-LOAD-001, DOC-HR-STAFF-AUTHORITY-001]
+    conflicts_with: []
+    notes: null
+
+  - fact_id: MODEL002-FACT-003
+    process_refs: [HR-STAFF-REQ-001]
+    statement: "Руководитель определяет функции и задачи будущего сотрудника и формирует заявку с обоснованием потребности."
+    evidence_class: EXPLICIT
+    source_locator: "MODEL-002#1.3-1.4"
+    role_ref: ROLE-HIRING-MANAGER-001
+    object_refs: [DOC-HR-STAFF-REQUEST-001]
+    conflicts_with: []
+    notes: null
+
+  - fact_id: MODEL002-FACT-004
+    process_refs: [HR-STAFF-REQ-001]
+    statement: "Генеральный директор рассматривает заявку; возможны доработка, согласование или отказ."
+    evidence_class: EXPLICIT
+    source_locator: "MODEL-002#1.5 + gateway"
+    role_ref: ROLE-CEO-001
+    object_refs: []
+    conflicts_with: []
+    notes: "Фактическая обязательность правила требует подтверждения из-за UNKNOWN lifecycle модели."
+
+  - fact_id: MODEL002-FACT-005
+    process_refs: [HR-STAFF-REQ-001]
+    statement: "При необходимости доработки Генеральный директор направляет замечания и рекомендации, после чего схема возвращается к доработке заявки/функций."
+    evidence_class: EXPLICIT
+    source_locator: "MODEL-002#1.6"
+    role_ref: ROLE-CEO-001
+    object_refs: []
+    conflicts_with: []
+    notes: null
+
+  - fact_id: MODEL002-FACT-006
+    process_refs: [HR-STAFF-REQ-001, HR-RECRUIT-001]
+    statement: "При согласовании Руководитель подразделения направляет согласованную заявку HR; это успешный handoff в recruitment."
+    evidence_class: EXPLICIT
+    source_locator: "MODEL-002#1.7 + End 'Заявка направлена HR'"
+    role_ref: ROLE-HIRING-MANAGER-001
+    object_refs: [DOC-HR-STAFF-REQUEST-001]
+    conflicts_with: []
+    notes: null
+
+  - fact_id: MODEL002-FACT-007
+    process_refs: [HR-STAFF-REQ-001]
+    statement: "Ветка 'Не согласовано с подбором' завершает процесс результатом 'Подбор сотрудника не согласован'."
+    evidence_class: EXPLICIT
+    source_locator: "gateway → End 'Подбор сотрудника не согласован'"
+    role_ref: ROLE-CEO-001
+    object_refs: []
+    conflicts_with: []
+    notes: "Наличие самостоятельного отрицательного результата усиливает L1 boundary."
+
+  - fact_id: MODEL002-FACT-008
+    process_refs: [HR-STAFF-REQ-001]
+    statement: "Таблица оценки загрузки, составной документ/основание по функциям и заявка на подбор показаны как существующие документы схемы."
+    evidence_class: EXPLICIT
+    source_locator: "documents linked to MODEL-002#1.1, #1.2, #1.4"
+    role_ref: null
+    object_refs: [DOC-HR-STAFF-LOAD-001, DOC-HR-STAFF-AUTHORITY-001, DOC-HR-STAFF-REQUEST-001]
+    conflicts_with: []
+    notes: "Классифицированы Agent 01 как EXISTING_INTERNAL references; шаблоны не создавались."

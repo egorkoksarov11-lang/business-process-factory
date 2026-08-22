@@ -1,6 +1,6 @@
 source_id: SRC-HR-MODEL-001
 source_type: existing_process_model
-source_status: REFERENCE_REGISTERED
+source_status: ARCHITECTURE_PROCESSED
 language: ru
 original_filename: "Прием на работу (1)(1).png"
 repository_path: "sources/reference_models/hr/SRC-HR-MODEL-001_employee_entry_process.md"
@@ -28,8 +28,31 @@ provenance:
   normalization: "Текстовая транскрипция изображения без изменения бизнес-логики"
   semantic_corrections_applied: false
 notes:
-  - "Не считать модель автоматически действующим AS-IS или целевым TO-BE до подтверждения ее статуса."
-  - "Использовать как самостоятельный source_ref и сохранять расхождения с интервью как source conflicts."
+  - "Не считать модель автоматически действующим AS-IS или целевым TO-BE: lifecycle/approval status остается UNKNOWN."
+  - "Использована как самостоятельный source_ref; расхождения с интервью сохранены как CONFLICT/UNKNOWN, а не разрешены молча."
+  - "Исходная схема шире одного канонического L1; ее структура сохранена через отдельный E2E view и element-level mapping."
+architecture:
+  canonical_process_refs:
+    - HR-STAFF-REQ-001
+    - HR-RECRUIT-001
+    - HR-HIRE-001
+    - HR-ADAPT-001
+  canonical_subprocess_refs:
+    - HR-RECRUIT-SOURCE-001
+    - HR-RECRUIT-SELECT-001
+    - HR-RECRUIT-SEC-001
+    - HR-RECRUIT-OFFER-001
+    - HR-HIRE-KDP-001
+    - HR-HIRE-MIL-001
+    - HR-HIRE-SFR-001
+  views:
+    - VIEW-HR-MODEL-ENTRY-E2E-001
+  evidence_path: "sources/evidence/SRC-HR-MODEL-001_architecture.yaml"
+  mapping_path: "mappings/SRC-HR-MODEL-001.yaml"
+  source_conflicts:
+    - "MODEL-001#7: роль Кадровика для контроля выхода/начала адаптации vs SRC-HR-DIR-001: контроль адаптации Директором по персоналу."
+    - "MODEL-001#9: подготовка+отправка СФР у Главного бухгалтера vs SRC-HR-KDP-001: формирование Кадровиком и передача Главному бухгалтеру на отправку."
 workflow:
-  status: NEW
-  next_agent: "01_COORDINATOR_PROCESS_ARCHITECT"
+  status: ARCHITECTURE_PROCESSED
+  next_agent: "02_AS_IS_ANALYST"
+  handoff_path: "handoffs/HR-SYNTHESIS-001_AGENT01_TO_AGENT02.md"

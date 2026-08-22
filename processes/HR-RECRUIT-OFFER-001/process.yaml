@@ -1,0 +1,67 @@
+schema_version: "1.0"
+process:
+  process_id: "HR-RECRUIT-OFFER-001"
+  name: "Формирование, согласование и принятие оффера"
+  domain: "HR"
+  level: "L2"
+  status: "ARCHITECTURE_READY"
+  parent_process: "HR-RECRUIT-001"
+  owner_role: UNKNOWN
+  participants: [ROLE-HR-DIRECTOR-001, ROLE-CANDIDATE-001]
+  conditional_participants:
+    - role_ref: ROLE-CEO-001
+      applicability: UNKNOWN
+      source_ref: SRC-HR-MODEL-001
+      note: "Условное согласование при негативной информации; не подтверждено интервью."
+  views: []
+boundaries:
+  trigger: "Кандидат выбран; результат проверки СБ учитывается только если такая проверка применима"
+  input: ["Выбранный кандидат", "Условия оффера", "Результат проверки СБ — только при применимости"]
+  previous_processes: [HR-RECRUIT-SELECT-001]
+  business_result: "Оффер принят кандидатом либо сформирован результат, требующий возврата к поиску"
+  consumer: "Parent HR-RECRUIT-001; при accepted offer — handoff в HR-HIRE-001"
+  next_processes: []
+conditional_previous_processes:
+  - process_ref: HR-RECRUIT-SEC-001
+    condition: "Проверка СБ применима"
+    applicability: UNKNOWN
+    source_ref: SRC-HR-MODEL-001
+parent_exit_handoff:
+  event: "Кандидат принял оффер"
+  parent_result: "HR-RECRUIT-001 завершен успешно"
+  target_l1: HR-HIRE-001
+  note: "Cross-level L2→L1 не хранится в next_processes."
+conditional_internal_returns:
+  - target_process: HR-RECRUIT-SOURCE-001
+    condition: "Кандидат отказался от оффера"
+    source_ref: SRC-HR-MODEL-001
+    source_lifecycle_status: UNKNOWN
+  - target_process: HR-RECRUIT-SOURCE-001
+    condition: "Условное согласование Генеральным директором не получено"
+    applicability: UNKNOWN
+    source_ref: SRC-HR-MODEL-001
+    source_lifecycle_status: UNKNOWN
+conditional_reference_rules:
+  - rule: "При негативной информации оффер согласуется Генеральным директором"
+    applicability: UNKNOWN
+    source_ref: SRC-HR-MODEL-001
+    source_lifecycle_status: UNKNOWN
+architecture_applicability:
+  mode: CANONICAL_L2_WITH_REFERENCE_CONDITIONS
+  as_is_applicability: OFFER_CORE_INTERVIEW_SUPPORTED
+  source_confidence: MIXED
+sources:
+  source_refs: [SRC-HR-DIR-001, SRC-HR-MODEL-001]
+versions: {as_is_version: null, to_be_version: null}
+as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+issues: []
+changes: []
+to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+open_questions:
+  - "Является ли условное согласование Генеральным директором действующим правилом?"
+  - "Как фиксируется принятие оффера кандидатом?"
+delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+metadata:
+  created_at: "2026-08-21"
+  updated_at: "2026-08-22"
+  notes: "Offer core поддержан интервью. CEO approval и loops — conditional/reference-derived; не трактовать как безусловный AS-IS."

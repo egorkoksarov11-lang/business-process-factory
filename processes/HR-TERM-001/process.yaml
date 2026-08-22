@@ -1,0 +1,84 @@
+schema_version: "1.0"
+
+process:
+  process_id: "HR-TERM-001"
+  name: "Прекращение трудовых отношений с сотрудником"
+  domain: "HR"
+  level: "L1"
+  status: "ARCHITECTURE_READY"
+  parent_process: null
+  owner_role: UNKNOWN
+  participants:
+    - ROLE-EMPLOYEE-001
+    - ROLE-HR-KDP-001
+    - ROLE-HR-DIRECTOR-001
+    - ROLE-FIN-CHIEF-ACCOUNTANT-001
+    - ROLE-CEO-001
+    - ROLE-MIL-RESP-001
+  views:
+    - VIEW-HR-KDP-ROLE-001
+    - VIEW-HR-DIRECTOR-ROLE-001
+    - VIEW-HR-FUNCTION-001
+
+boundaries:
+  trigger: "Возникновение подтвержденного источниками основания прекращения трудовых отношений: заявление сотрудника; сокращение штата/снижение численности; договоренность с сотрудником. Полный перечень оснований остается UNKNOWN"
+  input:
+    - "Основание прекращения трудовых отношений; конкретный вход зависит от сценария"
+    - "Для сценария по инициативе сотрудника: заявление сотрудника об увольнении"
+    - "Для сценария снижения численности: потребность/решение о сокращении штата, точный документ и инициатор UNKNOWN"
+  previous_processes: []
+  business_result: "Трудовые отношения прекращены и кадровое оформление прекращения завершено; для подробно раскрытого сценария по заявлению сотрудника подтверждены выдача документов и подготовка связанной отчетности"
+  consumer: "Сотрудник и организация"
+  next_processes: []
+
+sources:
+  source_refs: [SRC-HR-KDP-001, SRC-HR-DIR-001]
+  evidence_refs:
+    - "sources/evidence/SRC-HR-KDP-001_architecture.yaml"
+    - "sources/evidence/SRC-HR-DIR-001_architecture.yaml"
+architecture_evidence:
+  - source_ref: SRC-HR-KDP-001
+    evidence_class: EXPLICIT
+    statement: "Подробно раскрыт сценарий увольнения по заявлению сотрудника."
+  - source_ref: SRC-HR-DIR-001
+    evidence_class: EXPLICIT
+    statement: "Подтверждены сокращение штата/снижение численности и договоренность с сотрудниками как варианты прекращения отношений; один фрагмент распознан неясно."
+  - source_ref: "SRC-HR-KDP-001 + SRC-HR-DIR-001"
+    evidence_class: INFERRED
+    statement: "Канонический L1 охватывает прекращение трудовых отношений, а основания трактуются как сценарии/L2, не отдельные L1."
+architecture_decomposition:
+  - scenario_id: TERM-SCENARIO-EMPLOYEE-INITIATED
+    classification: "L2 scenario"
+    source_refs: [SRC-HR-KDP-001]
+    readiness: DETAIL_AVAILABLE_FOR_AGENT_02
+  - scenario_id: TERM-SCENARIO-REDUCTION
+    classification: "L2 candidate scenario"
+    source_refs: [SRC-HR-DIR-001]
+    readiness: BOUNDARY_ONLY
+  - scenario_id: TERM-SCENARIO-AGREEMENT
+    classification: "L2 candidate scenario"
+    source_refs: [SRC-HR-DIR-001]
+    readiness: BOUNDARY_ONLY
+  - scenario_id: TERM-SCENARIO-UNRECOGNIZED-FRAGMENT
+    classification: "source-quality ambiguity"
+    source_refs: [SRC-HR-DIR-001]
+    readiness: DO_NOT_MODEL
+versions: {as_is_version: null, to_be_version: null}
+as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+issues: []
+changes: []
+to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+open_questions:
+  - "Каков полный перечень фактических сценариев прекращения трудовых отношений и какие из них требуют отдельных L2?"
+  - "Кто инициирует и утверждает сокращение штата/численности и какой вход передается в HR-TERM-001?"
+  - "Кто отвечает за полный расчет в последний рабочий день и входит ли расчет в границу HR-TERM-001 или в соседний процесс?"
+  - "Кто подписывает приказ об увольнении? SRC-HR-KDP-001 содержит противоречивую фразу."
+  - "Является ли передача дел частью HR-TERM-001 или соседнего процесса подразделения?"
+  - "Как обрабатывается воинский учет при прекращении отношений?"
+delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+metadata:
+  created_at: "2026-08-21"
+  updated_at: "2026-08-22"
+  notes: |
+    Agent 01 synthesis only; AS-IS intentionally not created.
+    Основания прекращения не получают самостоятельные L1 process_id; краткие сценарии не достраиваются из общих знаний.
