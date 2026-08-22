@@ -29,6 +29,7 @@
 3. Канонический `process_id`, границы, views, mappings и source refs сохраняются.
 4. Существующие v1.0 evidence/view artifacts могут использоваться как вход без формальной миграции; при естественном обновлении файла допускается перевести его на v1.1.
 5. Нельзя менять подтвержденную архитектуру только ради соответствия новому формату.
+6. Если Agent 02 естественным образом обновляет `process.yaml`, чтобы подключить detailed AS-IS artifacts, он переводит этот package на `schema_version: "1.1"` и использует только канонический `model_refs`. Собственные альтернативные секции ссылок (`as_is_artifacts` и аналоги) не создаются.
 
 ## 3. Основная цепочка объектов
 
@@ -123,6 +124,19 @@ Process package хранит устойчивую бизнес-границу:
 - evidence class.
 
 Шаг не должен превращаться в список кликов.
+
+### 7.1 Partial order / неизвестный взаимный порядок
+
+Наличие нескольких подтвержденных шагов не означает, что источник подтверждает их полную линейную последовательность.
+
+Если известна только часть порядка:
+
+- подтвержденные зависимости хранятся в `orchestration_constraints.confirmed_order`;
+- существенные пары/блоки с неизвестным взаимным порядком хранятся в `orchestration_constraints.order_unknown` с `relation: ORDER_UNKNOWN`;
+- искусственный `SEQUENCE` между такими шагами не создается;
+- отсутствие sequence flow в этой ситуации не является дефектом модели.
+
+`confirmed_order` должен иметь evidence. `order_unknown` должен явно объяснять, какой порядок источник не устанавливает.
 
 ## 8. Information Object
 
@@ -225,6 +239,29 @@ Information objects и communications подчиняются тому же пр�
 
 Канал (`email`, `messenger`, `phone`) не является самим сообщением.
 
+### 9.1 Channel reference contract
+
+Канонические ссылки на канал всегда используют IDs из `registry/channel_dictionary.yaml` вида `CH-*`.
+
+- `communication.channel_ref` — **одиночное** поле: `CH-*` либо `null`;
+- `information_object.channel_refs` и `handoff.channel_refs` — массивы canonical `CH-*` IDs;
+- enum `EMAIL`, `PHONE`, `MESSENGER`, `TICKET_PORTAL` является `channel_type`, а не `channel_ref`;
+- свободное название из источника не записывается как canonical ref.
+
+Если канал еще не нормализован Coordinator:
+
+- canonical ref остается `null` / `[]` в зависимости от поля;
+- исходное wording хранится в `observed_channel_names`;
+- Agent 02 передает dictionary proposal и не создает новый `CH-*` самостоятельно.
+
+System и channel классифицируются отдельно. Интерфейс/«личный кабинет» не должен автоматически становиться каналом, пока не установлен его статус относительно системы.
+
+### 9.2 Acknowledgement semantics
+
+Acknowledgement — отдельная communication/information object, если источник подтверждает факт сообщения/подтверждения приема.
+
+`UNKNOWN` acknowledgement означает неизвестность, а не отсутствие. Нельзя использовать неизвестный acknowledgement как доказанный gateway condition либо обходить основную процессную ветку так, будто сообщения точно нет.
+
 ## 10. Handoff
 
 Handoff — передача объекта, результата или ответственности между ролями/процессами.
@@ -242,6 +279,8 @@ Handoff — передача объекта, результата или отв�
 - status/ambiguity.
 
 Это особенно важно для межфункциональных процессов HR ↔ IT, HR ↔ Accounting, Accounting ↔ Financial Director и т. п.
+
+Handoff не создается только ради структурного перехода между двумя L2 одного parent process. Должна существовать реальная передача объекта, результата или ответственности.
 
 ## 11. Flow и Decision
 
@@ -266,6 +305,8 @@ Decision хранит:
 - applicability.
 
 Условный reference-derived шаг нельзя превращать в обязательный sequence flow.
+
+Decision не должен логически перескакивать через подтвержденные шаги передачи/ожидания. Если routing criterion неизвестен, он остается `UNKNOWN`, а не достраивается правилом «по смыслу».
 
 ## 12. Timings, frequency, volume
 
