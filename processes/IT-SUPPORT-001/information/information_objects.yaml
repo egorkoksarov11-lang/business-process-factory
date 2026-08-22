@@ -243,7 +243,7 @@ communications:
       - IO-IT-SUPPORT-REQUEST-001
       - IO-IT-SUPPORT-DESCRIPTION-001
     message_information_ref: IO-IT-SUPPORT-REQUEST-001
-    channel_refs: []
+    channel_ref: null
     observed_channel_names:
       - "Электронная почта"
     system_ref: SYS-IT-HELPDESK-001
@@ -270,7 +270,7 @@ communications:
       - IO-IT-SUPPORT-REQUEST-001
       - IO-IT-SUPPORT-DESCRIPTION-001
     message_information_ref: null
-    channel_refs: []
+    channel_ref: null
     observed_channel_names:
       - "Телефон"
     system_ref: null
@@ -293,7 +293,7 @@ communications:
       - IO-IT-SUPPORT-REQUEST-001
       - IO-IT-SUPPORT-DESCRIPTION-001
     message_information_ref: IO-IT-SUPPORT-REQUEST-001
-    channel_refs: []
+    channel_ref: null
     observed_channel_names:
       - "Личный кабинет"
     system_ref: SYS-IT-HELPDESK-001
@@ -320,7 +320,7 @@ communications:
       - IO-IT-SUPPORT-TICKET-NUMBER-001
       - IO-IT-SUPPORT-ACK-001
     message_information_ref: IO-IT-SUPPORT-ACK-001
-    channel_refs: []
+    channel_ref: null
     observed_channel_names:
       - "Электронная почта"
     system_ref: SYS-IT-HELPDESK-001
@@ -342,7 +342,7 @@ communications:
     purpose: "Передать временное решение, позволяющее продолжить работу"
     payload_refs: [IO-IT-SUPPORT-TEMP-SOLUTION-001]
     message_information_ref: null
-    channel_refs: []
+    channel_ref: null
     observed_channel_names: []
     system_ref: null
     related_step_refs: [ITSUP-A006]
@@ -362,7 +362,7 @@ communications:
     purpose: "Передать или довести постоянное решение по обращению"
     payload_refs: [IO-IT-SUPPORT-PERM-SOLUTION-001]
     message_information_ref: null
-    channel_refs: []
+    channel_ref: null
     observed_channel_names: []
     system_ref: null
     related_step_refs:
