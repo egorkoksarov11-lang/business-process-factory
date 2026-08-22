@@ -14,8 +14,13 @@ boundaries:
   input: ["Кадровые данные приема", "Данные/документы воинского учета"]
   previous_processes: [HR-HIRE-KDP-001]
   business_result: "Связанные с приемом действия/документы воинского учета обработаны и необходимые сведения направлены в пределах источника"
-  consumer: "HR-HIRE-001 / внешний военный комиссариат в соответствующей части"
+  consumer: "Parent HR-HIRE-001 / внешний военный комиссариат в соответствующей части"
   next_processes: []
+architecture_applicability:
+  mode: CONDITIONAL_L2
+  as_is_applicability: CONDITIONAL
+  source_confidence: INTERVIEW_SUPPORTED
+  parent_completion_dependency: UNKNOWN
 sources:
   source_refs: [SRC-HR-KDP-001, SRC-HR-MODEL-001]
 versions: {as_is_version: null, to_be_version: null}
@@ -24,10 +29,11 @@ issues: []
 changes: []
 to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
 open_questions:
-  - "ROLE-MIL-RESP-001 — отдельная роль или функция Кадровика?"
-  - "Каков точный критерий применимости ветки по фактической практике?"
+  - "ROLE-MIL-RESP-001 — отдельная роль или функция КДП?"
+  - "Каков точный критерий применимости ветки?"
+  - "Обязано ли завершение этого L2 предшествовать закрытию HR-HIRE-001?"
 delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
 metadata:
   created_at: "2026-08-21"
-  updated_at: "2026-08-21"
-  notes: "Отдельный L2 только внутри HR-HIRE-001. Не дублирует самостоятельные периодические/событийные процессы воинского учета."
+  updated_at: "2026-08-22"
+  notes: "Conditional sibling L2 внутри HR-HIRE-001. Parent closure dependency остается UNKNOWN."
