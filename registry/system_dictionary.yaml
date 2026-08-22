@@ -1,11 +1,10 @@
 schema_version: "1.0"
-systems: []
-
-# Пример:
-# - system_id: SYS-1C-ZUP
-#   canonical_name: "1С: Зарплата и управление персоналом"
-#   aliases:
-#     - "1С ЗУП"
-#     - "1С зарплата"
-#   category: "HRIS"
-#   source_refs: []
+systems:
+  - system_id: SYS-IT-HELPDESK-001
+    canonical_name: "HelpDesk"
+    aliases:
+      - "HelpDeck"
+      - "централизованная панель заявок"
+    category: "IT_SUPPORT_TICKETING"
+    source_refs: [SRC-IT-LEAD-001]
+    notes: "В сыром транскрипте встречается распознавание 'HelpDeck'; work order и metadata нормализуют сущность как HelpDesk. Личный кабинет рассматривается как интерфейс/канал к support до появления доказательств отдельной системы."
