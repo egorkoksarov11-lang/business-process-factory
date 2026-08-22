@@ -1,6 +1,7 @@
 schema_version: "1.0"
 cross_domain_mapping:
   mapping_id: "IT-HR-CROSS-DOMAIN-001"
+  candidate_id: "XDOM-HR-IT-001"
   name: "HR ↔ IT handoffs при приеме и увольнении"
   status: "ARCHITECTURE_CANDIDATE"
   source_refs: [SRC-IT-LEAD-001]
@@ -16,14 +17,14 @@ handoffs:
     related_process_ref: HR-HIRE-001
     trigger: "Будущий сотрудник должен выйти на работу"
     expected_input: "Своевременное уведомление IT о выходе и необходимости подготовить доступ"
-    receiver: "ROLE-IT-LEAD-EXT-001 / IT support — точная исполнительская роль UNKNOWN"
+    receiver: "IT lead / IT support — точная исполнительская роль UNKNOWN"
     sender_role: UNKNOWN
-    sender_candidates:
-      - ROLE-HR-UNKNOWN-001
-      - ROLE-SECRETARY-UNKNOWN-001
+    sender_candidates_text:
+      - "секретарь"
+      - "отдел кадров"
     current_evidence_status: "UNSTABLE_CURRENT_PRACTICE"
     evidence_refs: [FACT-IT-LEAD-015, FACT-IT-LEAD-016]
-    note: "Источник подтверждает пропуски уведомления и решение вопроса уже в момент выхода; не подтверждает устойчивый действующий маршрут."
+    note: "Источник подтверждает пропуски уведомления и решение вопроса уже в момент выхода; не подтверждает устойчивый действующий маршрут. Ни секретарь, ни HR не нормализуются здесь как канонический sender."
 
   - handoff_id: XDOM-HR-IT-HIRE-ACCESS-001
     direction: "IT → new employee/business"
@@ -48,11 +49,11 @@ handoffs:
     related_process_ref: HR-TERM-001
     trigger: "Сотрудник увольняется/уволен"
     expected_input: "Своевременное уведомление IT о прекращении работы сотрудника"
-    receiver: "ROLE-IT-LEAD-EXT-001 / IT support — точная исполнительская роль UNKNOWN"
+    receiver: "IT lead / IT support — точная исполнительская роль UNKNOWN"
     sender_role: UNKNOWN
-    sender_candidates:
-      - ROLE-HR-UNKNOWN-001
-      - ROLE-SECRETARY-UNKNOWN-001
+    sender_candidates_text:
+      - "секретарь"
+      - "отдел кадров"
     current_evidence_status: "UNSTABLE_CURRENT_PRACTICE"
     evidence_refs: [FACT-IT-LEAD-015, FACT-IT-LEAD-017]
     note: "Источник подтверждает случаи отсутствия уведомления."
