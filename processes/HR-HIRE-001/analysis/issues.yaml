@@ -43,7 +43,7 @@ issues:
     process_id: HR-HIRE-001
     category: ROLE_AMBIGUITY
     as_is_steps: [A023, A024, A025, A026, A027]
-    flow_refs: [F020, F021, F022, F023]
+    flow_refs: [F023]
     handoff_refs: [HO-HIRE-MIL-001]
     information_object_refs: [IO-MIL-001, IO-MIL-003, IO-MIL-004]
     description: "Источник подтверждает роль/функцию Ответственного за воинский учет, но не устанавливает, является ли она отдельным сотрудником или функцией КДП; исполнитель формирования/отправки сведений в военкомат также назван неявно."
@@ -69,7 +69,7 @@ issues:
     process_id: HR-HIRE-001
     category: COMPLETION_BOUNDARY_UNKNOWN
     as_is_steps: [A018, A019, A020, A021, A023, A024, A025, A026, A027]
-    flow_refs: [F016, F017, F018, F019, F020, F021, F022, F023]
+    flow_refs: [F016, F017, F018, F019, F023]
     handoff_refs: [HO-HIRE-SFR-001, HO-HIRE-MIL-001, HO-HIRE-ADAPT-001]
     information_object_refs: [IO-SFR-001, IO-SFR-003, IO-MIL-003, IO-MIL-004]
     description: "Неизвестно, должны ли SFR и применимый MIL L2 завершиться до закрытия HR-HIRE-001 и должен ли parent полностью закрыться до начала HR-ADAPT-001."
