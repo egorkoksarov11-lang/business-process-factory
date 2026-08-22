@@ -46,7 +46,7 @@ questions:
     process_id: HR-HIRE-001
     source_refs: [SRC-HR-KDP-001]
     related_steps: [A022, A023, A024, A025, A026, A027]
-    related_flow_refs: [F020, F021, F022, F023]
+    related_flow_refs: [F023]
     related_handoff_refs: [HO-HIRE-MIL-001]
     related_information_object_refs: [IO-MIL-001, IO-MIL-002, IO-MIL-003, IO-MIL-004]
     question: "Каков фактический критерий применимости воинской ветки при приеме и кто именно формирует/проверяет/отправляет воинские документы: КДП или отдельный Ответственный за воинский учет?"
@@ -60,7 +60,7 @@ questions:
     process_id: HR-HIRE-001
     source_refs: [SRC-HR-KDP-001, SRC-HR-MODEL-001]
     related_steps: [A023, A024, A025, A026, A027]
-    related_flow_refs: [F020, F021, F022, F023]
+    related_flow_refs: [F023]
     related_handoff_refs: [HO-HIRE-MIL-001]
     related_information_object_refs: [IO-MIL-003, IO-MIL-004]
     question: "При применимости HR-HIRE-MIL-001 должен ли этот L2 полностью завершиться до закрытия parent HR-HIRE-001?"
