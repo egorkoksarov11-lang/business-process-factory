@@ -1,0 +1,131 @@
+schema_version: "1.1"
+
+issues:
+  - issue_id: ISS-IT-SUPPORT-001
+    process_id: IT-SUPPORT-001
+    category: TRACEABILITY_GAP
+    as_is_steps:
+      - ITSUP-A001
+      - ITSUP-A002
+    flow_refs: [ITSUP-F001]
+    handoff_refs: [HO-IT-SUPPORT-USER-TO-SUPPORT-001]
+    information_object_refs:
+      - IO-IT-SUPPORT-REQUEST-001
+      - IO-IT-SUPPORT-TICKET-001
+    description: "Телефон является действующим каналом, но механизм переноса телефонного обращения в HelpDesk не установлен."
+    evidence_refs:
+      - FACT-IT-LEAD-005
+      - FACT-IT-LEAD-007
+    consequence: "Нельзя подтвердить одинаковую прослеживаемость и полноту регистрации для телефонных обращений."
+    severity: MEDIUM
+    status: OPEN
+
+  - issue_id: ISS-IT-SUPPORT-002
+    process_id: IT-SUPPORT-001
+    category: ACKNOWLEDGEMENT_GAP
+    as_is_steps: [ITSUP-A003]
+    flow_refs:
+      - ITSUP-F002
+      - ITSUP-F003
+    handoff_refs: [HO-IT-SUPPORT-USER-TO-SUPPORT-001]
+    information_object_refs: [IO-IT-SUPPORT-ACK-001]
+    description: "Подтверждение приема явно подтверждено только для email; поведение телефона и личного кабинета неизвестно."
+    evidence_refs: [FACT-IT-LEAD-007]
+    consequence: "Для части каналов нельзя установить, как пользователь понимает, что обращение принято."
+    severity: LOW
+    status: OPEN
+
+  - issue_id: ISS-IT-SUPPORT-003
+    process_id: IT-SUPPORT-001
+    category: CLOSURE_AMBIGUITY
+    as_is_steps:
+      - ITSUP-A006
+      - ITSUP-A008
+    flow_refs: [ITSUP-F008]
+    handoff_refs:
+      - HO-IT-SUPPORT-TEMP-TO-USER-001
+      - HO-IT-SUPPORT-RESOLVE-TO-FINALIZE-001
+    information_object_refs:
+      - IO-IT-SUPPORT-TICKET-001
+      - IO-IT-SUPPORT-STATUS-001
+      - IO-IT-SUPPORT-TEMP-SOLUTION-001
+    description: "Источник подтверждает временное восстановление и последующую доработку, но не определяет критерий закрытия HelpDesk ticket при временном решении."
+    evidence_refs: [FACT-IT-LEAD-010]
+    consequence: "Нельзя однозначно определить момент завершения обращения и статус заявки между временным и постоянным решением."
+    severity: HIGH
+    status: OPEN
+
+  - issue_id: ISS-IT-SUPPORT-004
+    process_id: IT-SUPPORT-001
+    category: METRIC_AMBIGUITY
+    as_is_steps:
+      - ITSUP-A004
+      - ITSUP-A005
+    flow_refs: []
+    handoff_refs: []
+    information_object_refs: [IO-IT-SUPPORT-TICKET-001]
+    description: "Названы 30 минут и наблюдение 10–15 минут, но измеряемый интервал и формальный статус SLA не установлены."
+    evidence_refs: [FACT-IT-LEAD-009]
+    consequence: "Показатели нельзя надежно интерпретировать как SLA или сравнивать с конкретным этапом lifecycle."
+    severity: MEDIUM
+    status: OPEN
+
+  - issue_id: ISS-IT-SUPPORT-005
+    process_id: IT-SUPPORT-001
+    category: PRIORITY_RULE_UNKNOWN
+    as_is_steps:
+      - ITSUP-A004
+      - ITSUP-A005
+    flow_refs: [ITSUP-F005]
+    handoff_refs: []
+    information_object_refs: [IO-IT-SUPPORT-TICKET-001]
+    description: "Для заявок, требующих больше времени, источник упоминает согласование требуемой скорости/объема реализации, но правило приоритета и срочности не раскрыто."
+    evidence_refs: [FACT-IT-LEAD-008]
+    consequence: "Нельзя установить воспроизводимый критерий очередности и срочности обработки заявок."
+    severity: MEDIUM
+    status: OPEN
+
+  - issue_id: ISS-IT-SUPPORT-006
+    process_id: IT-SUPPORT-001
+    category: HANDOFF_AMBIGUITY
+    as_is_steps: [ITSUP-A005]
+    flow_refs: []
+    handoff_refs: [HO-IT-SUPPORT-TO-IT-LEAD-001]
+    information_object_refs:
+      - IO-IT-SUPPORT-TICKET-001
+      - IO-IT-SUPPORT-DESCRIPTION-001
+    description: "IT lead подключается к архитектурным/безопасностным вопросам при прямом обращении, но критерий и маршрут передачи заявки от support к IT lead не подтверждены."
+    evidence_refs: [FACT-IT-LEAD-018]
+    consequence: "Граница ответственности внутри RESOLVE и фактический escalation handoff остаются неустановленными."
+    severity: HIGH
+    status: OPEN
+
+  - issue_id: ISS-IT-SUPPORT-007
+    process_id: IT-SUPPORT-001
+    category: REPEATED_DEMAND
+    as_is_steps: [ITSUP-A005]
+    flow_refs: []
+    handoff_refs: []
+    information_object_refs: [IO-IT-SUPPORT-TICKET-001]
+    description: "Одни и те же IT-проблемы/задачи могут повторяться многократно."
+    evidence_refs: [FACT-IT-LEAD-011]
+    consequence: "Техническая поддержка повторно тратит усилия на одинаковые обращения."
+    severity: MEDIUM
+    status: OPEN
+
+  - issue_id: ISS-IT-SUPPORT-008
+    process_id: IT-SUPPORT-001
+    category: DUPLICATE_REQUESTS
+    as_is_steps:
+      - ITSUP-A001
+      - ITSUP-A002
+    flow_refs: [ITSUP-F001]
+    handoff_refs: [HO-IT-SUPPORT-USER-TO-SUPPORT-001]
+    information_object_refs:
+      - IO-IT-SUPPORT-REQUEST-001
+      - IO-IT-SUPPORT-TICKET-001
+    description: "Редко несколько сотрудников независимо создают дублирующие заявки по одной и той же проблеме."
+    evidence_refs: [FACT-IT-LEAD-011]
+    consequence: "В HelpDesk могут появляться несколько записей об одной ситуации и возникать дублирующая обработка."
+    severity: LOW
+    status: OPEN
