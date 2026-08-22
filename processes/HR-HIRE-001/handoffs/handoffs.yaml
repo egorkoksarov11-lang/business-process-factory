@@ -1,0 +1,131 @@
+schema_version: "1.1"
+process_id: "HR-HIRE-001"
+
+handoffs:
+  - handoff_id: HO-HIRE-001
+    handoff_type: PROCESS_TO_PROCESS
+    from_process_ref: HR-RECRUIT-001
+    from_subprocess_ref: HR-RECRUIT-OFFER-001
+    from_role_ref: ROLE-HR-DIRECTOR-001
+    to_process_ref: HR-HIRE-001
+    to_subprocess_ref: HR-HIRE-KDP-001
+    to_role_ref: ROLE-HR-KDP-001
+    trigger_or_condition: "Кандидат выбран/согласился на оффер; Директор по персоналу передает КДП данные для приема"
+    payload_refs: [IO-HIRE-001]
+    communication_refs: [COM-HIRE-001]
+    system_refs: []
+    channel_refs: []
+    observed_channel_names: ["Telegram", "Корпоративный мессенджер", "Электронная почта"]
+    acceptance_or_result: "КДП получил данные и может начать проверку комплекта; точный критерий принятия handoff UNKNOWN"
+    acknowledgement_required: UNKNOWN
+    timing: {deadline: null, expected_wait: null, sla: null}
+    applicability: PARTIAL_CURRENT
+    evidence_refs: [FACT-HIRE-001, FACT-HIRE-DIR-001]
+    evidence_class: EXPLICIT
+    ambiguity: "Точный состав recruitment→hire payload не раскрыт; accepted offer как архитектурная граница подтверждается synthesis/reference, а конкретное сообщение КДП описано интервью."
+    notes: "Не расширяет AS-IS на полный recruitment."
+
+  - handoff_id: HO-HIRE-002
+    handoff_type: ROLE_TO_ROLE
+    from_process_ref: HR-HIRE-001
+    from_subprocess_ref: HR-HIRE-KDP-001
+    from_role_ref: ROLE-EMPLOYEE-001
+    to_process_ref: HR-HIRE-001
+    to_subprocess_ref: HR-HIRE-KDP-001
+    to_role_ref: ROLE-HR-KDP-001
+    trigger_or_condition: "Документы отсутствуют либо комплект должен быть доведен до полного"
+    payload_refs: [IO-HIRE-004, IO-HIRE-002]
+    communication_refs: [COM-HIRE-002]
+    system_refs: []
+    channel_refs: []
+    acceptance_or_result: "КДП повторно проверяет комплект и фиксирует фактическую полноту"
+    acknowledgement_required: UNKNOWN
+    timing: {deadline: null, expected_wait: "До получения полного пакета", sla: null}
+    applicability: CONDITIONAL
+    evidence_refs: [FACT-HIRE-002]
+    evidence_class: EXPLICIT
+    ambiguity: "Источник называет участника 'сотрудник' на этапе приема; формальная точка перехода от ROLE-CANDIDATE-001 к ROLE-EMPLOYEE-001 не установлена."
+    notes: null
+
+  - handoff_id: HO-HIRE-SFR-001
+    handoff_type: CROSS_DOMAIN
+    from_process_ref: HR-HIRE-001
+    from_subprocess_ref: HR-HIRE-SFR-001
+    from_role_ref: ROLE-HR-KDP-001
+    to_process_ref: HR-HIRE-001
+    to_subprocess_ref: HR-HIRE-SFR-001
+    to_role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger_or_condition: "КДП сформировал в 1С сведения/отчет о приеме для СФР"
+    payload_refs: [IO-SFR-001, IO-SFR-002]
+    communication_refs: [COM-SFR-001, COM-SFR-002]
+    system_refs: [SYS-1C-HR-001]
+    channel_refs: []
+    observed_channel_names: ["Лично", "Корпоративный мессенджер"]
+    acceptance_or_result: "Главный бухгалтер отправляет сведения; КДП получает сообщение, что отчет сдан"
+    acknowledgement_required: YES
+    timing:
+      deadline: "Отчет должен быть отправлен не позднее следующего дня от даты приема"
+      expected_wait: "От сообщения о готовности до сообщения о сдаче; длительность UNKNOWN"
+      sla: null
+    applicability: CONFIRMED_CURRENT
+    evidence_refs: [FACT-HIRE-008, FACT-HIRE-REF-002]
+    evidence_class: CONFLICT
+    ambiguity: "Current interview: КДП формирует, Главный бухгалтер отправляет/подтверждает. Reference model UNKNOWN lifecycle размещает весь collapsed block у Главного бухгалтера."
+    notes: "Конфликт сохранен без выбора reference как действующего AS-IS."
+
+  - handoff_id: HO-HIRE-MIL-001
+    handoff_type: EXTERNAL
+    from_process_ref: HR-HIRE-001
+    from_subprocess_ref: HR-HIRE-MIL-001
+    from_role_ref: UNKNOWN
+    to_process_ref: null
+    to_subprocess_ref: null
+    to_role_ref: null
+    external_recipient: "Военный комиссариат по месту жительства/воинского учета военнообязанного"
+    trigger_or_condition: "Воинская ветка применима и сведения о приеме сформированы"
+    payload_refs: [IO-MIL-004]
+    communication_refs: []
+    system_refs: []
+    channel_refs: []
+    observed_channel_names: ["Почтовое отправление"]
+    acceptance_or_result: "Сведения направлены в военный комиссариат; подтверждение получения источником не раскрыто"
+    acknowledgement_required: UNKNOWN
+    timing:
+      deadline: "В течение пяти дней от даты приема"
+      expected_wait: null
+      sla: null
+    applicability: CONDITIONAL
+    evidence_refs: [FACT-HIRE-011]
+    evidence_class: EXPLICIT
+    ambiguity: "Точный исполнитель: ROLE-HR-KDP-001 или ROLE-MIL-RESP-001 — UNKNOWN. Критерий полной applicability ветки также требует уточнения."
+    notes: "Postal channel ID отсутствует в shared dictionary."
+
+  - handoff_id: HO-HIRE-ADAPT-001
+    handoff_type: PROCESS_TO_PROCESS
+    from_process_ref: HR-HIRE-001
+    from_subprocess_ref: null
+    from_role_ref: UNKNOWN
+    to_process_ref: HR-ADAPT-001
+    to_subprocess_ref: null
+    to_role_ref: UNKNOWN
+    trigger_or_condition: "Фактический выход сотрудника и начало адаптации/испытательного срока"
+    payload_refs: []
+    communication_refs: []
+    system_refs: []
+    channel_refs: []
+    acceptance_or_result: "HR-ADAPT-001 запущен; это boundary parent, а не обычный next_process одного из L2"
+    acknowledgement_required: UNKNOWN
+    timing:
+      deadline: null
+      expected_wait: null
+      sla: null
+    applicability: PARTIAL_CURRENT
+    evidence_refs: [FACT-HIRE-DIR-001, FACT-HIRE-REF-001, FACT-HIRE-REF-003]
+    evidence_class: CONFLICT
+    ambiguity: "SRC-HR-DIR-001 подтверждает контроль адаптации Директором по персоналу; MODEL-001#7 размещает 'контроль выхода и начало адаптации' в lane Кадровика. Timing relative to parent close UNKNOWN_MAY_OVERLAP."
+    notes: "Не моделировать HR-HIRE-KDP-001 → HR-ADAPT-001 как ordinary next_process."
+
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Handoffs remain inside requested HR-HIRE scope; external L1 appears only as parent boundary."
