@@ -92,13 +92,15 @@ Detailed questions are in `processes/HR-HIRE-001/analysis/clarifications.yaml`; 
 
 ## Channel dictionary proposals for Coordinator
 
-`registry/channel_dictionary.yaml` remains unchanged. Agent 02 did not add canonical IDs independently. Current evidence retains local `channel_ref: null` plus `observed_channel_names` for:
+`registry/channel_dictionary.yaml` remains unchanged. Agent 02 did not add canonical IDs independently. Current evidence retains local null canonical channel refs plus `observed_channel_names` for:
 
 - `Telegram`;
 - `Корпоративный мессенджер`;
 - `Электронная почта`;
 - `Лично`;
 - `Почтовое отправление`.
+
+For communication objects the v1.1 field is `channel_ref: null`; information objects/handoffs retain their schema-defined empty `channel_refs` plus the same observed names.
 
 Candidate canonical IDs remain proposals only:
 
