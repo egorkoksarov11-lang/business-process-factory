@@ -1,10 +1,10 @@
-schema_version: "1.0"
+schema_version: "1.1"
 process:
   process_id: "ACC-REPORTING-001"
   name: "Подготовка, сдача и подтверждение бухгалтерской и налоговой отчетности"
   domain: "ACC"
   level: "L1"
-  status: "ARCHITECTURE_READY"
+  status: "CLARIFICATION_REQUIRED"
   parent_process: null
   owner_role: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
   participants:
@@ -13,6 +13,7 @@ process:
     - VIEW-ACC-CHIEF-ROLE-001
     - VIEW-ACC-FUNCTION-001
     - VIEW-ACC-ACCOUNT-TO-REPORT-E2E-001
+
 boundaries:
   trigger: "Наступил отчетный период/государственный срок подготовки и сдачи бухгалтерской или налоговой отчетности"
   input:
@@ -22,35 +23,81 @@ boundaries:
   business_result: "Отчетность направлена в соответствующий орган, получение/принятие проконтролировано, подтверждающие файлы собраны в электронный архив"
   consumer: "Контролирующие органы и внутренние пользователи подтвержденной отчетности"
   next_processes: []
+
 architecture_subprocesses:
   - ACC-REPORTING-PRECHECK-001
   - ACC-REPORTING-PREPARE-001
   - ACC-REPORTING-ACCEPT-001
+
 internal_flow:
   canonical_path: [ACC-REPORTING-PRECHECK-001, ACC-REPORTING-PREPARE-001, ACC-REPORTING-ACCEPT-001]
   evidence_class: EXPLICIT
+
 sources:
   source_refs: [SRC-ACC-CHIEF-001]
   evidence_refs: ["sources/evidence/SRC-ACC-CHIEF-001_architecture.yaml"]
+
 architecture_evidence:
   - source_ref: SRC-ACC-CHIEF-001
     evidence_class: EXPLICIT
     statement: "До отчетности Главный бухгалтер проверяет взаиморасчеты и корректность отражения операций; затем формирует декларации/отчетность, направляет их в органы, контролирует принятие и формирует электронный архив с квитанциями."
+
 boundary_notes:
-  - "Государственные сроки подтверждены как внешний регламентирующий trigger; конкретные календарные даты не нормализуются на Agent 01."
+  - "Государственные сроки подтверждены как внешний регламентирующий фактор; точное фактическое событие старта подготовки в raw source не установлено и сохранено UNKNOWN в detailed AS-IS."
   - "Электронное архивирование отчетности является частью завершения этого L1, а не отдельным процессом."
-versions: {as_is_version: null, to_be_version: null}
-as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+  - "Detailed AS-IS различает состояния prepared, sent и accepted; отправка сама по себе не считается подтвержденным завершением процесса."
+
+versions:
+  as_is_version: "0.1"
+  to_be_version: null
+
+as_is:
+  steps: []
+  flows: []
+  documents: []
+  systems: []
+  rules: []
+  exceptions: []
+  observations: []
+
 issues: []
 changes: []
-to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+
+to_be:
+  steps: []
+  flows: []
+  documents: []
+  rules: []
+  exceptions: []
+  automation_options: []
+
+model_refs:
+  as_is_model: "processes/ACC-REPORTING-001/as-is/model.yaml"
+  information_objects: "processes/ACC-REPORTING-001/information/information_objects.yaml"
+  handoff_register: "processes/ACC-REPORTING-001/handoffs/handoffs.yaml"
+  clarification_register: "processes/ACC-REPORTING-001/analysis/clarifications.yaml"
+  issues: "processes/ACC-REPORTING-001/analysis/issues.yaml"
+  change_log: null
+  to_be_model: null
+
 open_questions:
-  - "Какие платформы фактически используются для каждого вида отчетности?"
-  - "Какие отчеты/декларации входят в устойчивый scope по каждому юридическому лицу?"
-  - "Как формально определяется завершение: отправка, квитанция о получении или подтверждение принятия?"
-  - "Кто является внутренним потребителем электронного архива отчетности?"
-delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+  - "Какое фактическое событие запускает подготовку отчетности до наступления крайнего государственного срока?"
+  - "Какие электронные платформы/программы фактически используются для сдачи отчетности и как они должны классифицироваться как system/channel?"
+  - "Какой конкретный ответ, статус или квитанция считается подтверждением принятия отчетности?"
+  - "Что происходит, если отчетность не принята: есть ли исправление, повторная отправка и кто выполняет эти действия?"
+  - "Кто является внутренним потребителем итогового архива/общей папки отчетности?"
+
+delivery:
+  diagrams: []
+  attachments: []
+  qa_status: null
+  client_package_status: null
+
 metadata:
   created_at: "2026-08-22"
   updated_at: "2026-08-22"
-  notes: "Agent 01 architecture only; reporting AS-IS detail intentionally deferred."
+  notes: |
+    Agent 01 architecture preserved; no boundary redesign was performed.
+    Agent 02 detailed AS-IS is stored only through canonical Schema v1.1 model_refs.
+    Status is CLARIFICATION_REQUIRED because the exact operational trigger, submission platform classification, acceptance evidence semantics, and reject/resubmit branch remain materially UNKNOWN.
+    Shared role/system/channel dictionaries were intentionally not changed.
