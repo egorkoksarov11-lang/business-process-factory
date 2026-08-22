@@ -1,19 +1,292 @@
 schema_version: "1.0"
-processes: []
+architecture_linkage_policy:
+  L1_previous_next: "Только канонические L1↔L1 связи."
+  L2_previous_next: "Только sibling L2 внутри одного parent_process."
+  cross_level: "Через parent_entry/parent_exit/boundary notes, не через обычные previous_processes/next_processes."
+processes:
+  - process_id: ACC-REG-REQ-001
+    name: "Подготовка бухгалтерского ответа по запросу контролирующего органа"
+    domain: ACC
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Поступил/переадресован запрос контролирующего органа, требующий бухгалтерских/налоговых данных"
+    business_result: "Бухгалтерская часть ответа/пакет документов подготовлены и переданы на согласование/дальнейшую отправку"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: [VIEW-ACC-CHIEF-ROLE-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: финальный отправитель/владелец полного ответа.", "UNKNOWN: маршрут согласования пакета."]
 
-# Пример записи:
-# - process_id: HR-HIRE-001
-#   name: "Оформление приема сотрудника"
-#   domain: HR
-#   level: L1
-#   status: NEW
-#   owner_role: null
-#   trigger: null
-#   business_result: null
-#   previous_processes: []
-#   next_processes: []
-#   source_refs: []
-#   views: []
-#   as_is_version: null
-#   to_be_version: null
-#   blocking_questions: []
+  - process_id: ACC-BANK-001
+    name: "Отражение банковских выписок в бухгалтерском учете"
+    domain: ACC
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Получены электронные банковские выписки/связанные документы от операциониста"
+    business_result: "Банковские выписки загружены в 1С по соответствующему юридическому лицу"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: [VIEW-ACC-CHIEF-ROLE-001, VIEW-ACC-ACCOUNT-TO-REPORT-E2E-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: контроль успешности загрузки/обработки.", "UNKNOWN: полный состав банковских документов."]
+
+  - process_id: ACC-MGMT-REQ-001
+    name: "Подготовка бухгалтерской информации по внутреннему запросу"
+    domain: ACC
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Поступил внутренний запрос на документ, справку, цифры или расчет"
+    business_result: "Запрошенная бухгалтерская информация/документ/расчет переданы инициатору"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: [VIEW-ACC-CHIEF-ROLE-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: типология маршрутов и инициаторов.", "UNKNOWN: формальные SLA/приоритеты."]
+
+  - process_id: ACC-PRIMARY-001
+    name: "Проверка и принятие первичных документов к бухгалтерскому учету"
+    domain: ACC
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Первичный документ контрагента поступил в работу Главному бухгалтеру"
+    business_result: "Получено решение о принятии; принятый документ отражен в 1С"
+    previous_processes: []
+    next_processes: [ACC-REPORTING-001]
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: [VIEW-ACC-CHIEF-ROLE-001, VIEW-ACC-ACCOUNT-TO-REPORT-E2E-001]
+    internal_flow: [ACC-PRIMARY-CHECK-001, ACC-PRIMARY-APPROVE-001, ACC-PRIMARY-POST-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: матрица согласующих по типам документов.", "UNKNOWN: статус роли инициатора сделки.", "UNKNOWN: reject/return path."]
+
+  - process_id: ACC-PRIMARY-CHECK-001
+    name: "Проверка первичного документа"
+    domain: ACC
+    level: L2
+    parent_process: ACC-PRIMARY-001
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Первичный документ поступил в parent"
+    business_result: "Документ проверен и готов к решению о принятии к учету"
+    previous_processes: []
+    next_processes: [ACC-PRIMARY-APPROVE-001]
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: полный перечень критериев/возвратов."]
+
+  - process_id: ACC-PRIMARY-APPROVE-001
+    name: "Согласование принятия первичного документа к учету"
+    domain: ACC
+    level: L2
+    parent_process: ACC-PRIMARY-001
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Проверенный документ готов к решению о принятии"
+    business_result: "Получено решение/резолюция о принятии либо документ остается в ожидании; артефакт решения UNKNOWN"
+    previous_processes: [ACC-PRIMARY-CHECK-001]
+    next_processes: [ACC-PRIMARY-POST-001]
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: фактический согласующий по сценарию.", "UNKNOWN: подтверждение инициатора договора как действующее правило.", "UNKNOWN: отсутствие ответа/эскалация."]
+
+  - process_id: ACC-PRIMARY-POST-001
+    name: "Принятие документа к учету и отражение в 1С"
+    domain: ACC
+    level: L2
+    parent_process: ACC-PRIMARY-001
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Получено положительное решение о принятии документа"
+    business_result: "Документ отражен в 1С"
+    previous_processes: [ACC-PRIMARY-APPROVE-001]
+    next_processes: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: дата/критерий завершения отражения."]
+
+  - process_id: ACC-REPORTING-001
+    name: "Подготовка, сдача и подтверждение бухгалтерской и налоговой отчетности"
+    domain: ACC
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Наступил отчетный период/государственный срок подготовки и сдачи отчетности"
+    business_result: "Отчетность направлена, принятие проконтролировано, подтверждающий электронный архив сформирован"
+    previous_processes: [ACC-PRIMARY-001]
+    next_processes: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: [VIEW-ACC-CHIEF-ROLE-001, VIEW-ACC-ACCOUNT-TO-REPORT-E2E-001]
+    internal_flow: [ACC-REPORTING-PRECHECK-001, ACC-REPORTING-PREPARE-001, ACC-REPORTING-ACCEPT-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: платформы и набор отчетов по юрлицам.", "UNKNOWN: критерий formal completion по видам отчетности."]
+
+  - process_id: ACC-REPORTING-PRECHECK-001
+    name: "Предотчетная проверка учета и взаиморасчетов"
+    domain: ACC
+    level: L2
+    parent_process: ACC-REPORTING-001
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Начался этап подготовки отчетности"
+    business_result: "Взаиморасчеты и корректность учета проверены для дальнейшего формирования отчетности"
+    previous_processes: []
+    next_processes: [ACC-REPORTING-PREPARE-001]
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: полный набор контрольных процедур и блокирующих расхождений."]
+
+  - process_id: ACC-REPORTING-PREPARE-001
+    name: "Формирование и направление бухгалтерской и налоговой отчетности"
+    domain: ACC
+    level: L2
+    parent_process: ACC-REPORTING-001
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Предотчетные проверки завершены и наступил срок сдачи применимой формы"
+    business_result: "Отчетность сформирована и направлена через электронную площадку"
+    previous_processes: [ACC-REPORTING-PRECHECK-001]
+    next_processes: [ACC-REPORTING-ACCEPT-001]
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: конкретная платформа по форме.", "UNKNOWN: согласования перед отправкой."]
+
+  - process_id: ACC-REPORTING-ACCEPT-001
+    name: "Контроль принятия отчетности и электронное архивирование"
+    domain: ACC
+    level: L2
+    parent_process: ACC-REPORTING-001
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Отчетность направлена в контролирующий орган"
+    business_result: "Принятие проконтролировано; отчетность и подтверждения размещены в электронном архиве"
+    previous_processes: [ACC-REPORTING-PREPARE-001]
+    next_processes: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: reject/resubmit path.", "UNKNOWN: каноническое место/владелец архива."]
+
+  - process_id: ACC-PAYROLL-001
+    name: "Расчет заработной платы, платежные ведомости и отчетность по персоналу"
+    domain: ACC
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Наступил цикл расчета/выплаты либо срок отчетности по начислениям/персоналу"
+    business_result: "Расчет выполнен; ведомости переданы HR/Финансовому директору; отчетность по начислениям/персоналу сформирована в подтвержденном объеме"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: [VIEW-ACC-CHIEF-ROLE-001]
+    internal_blocks: [ACC-PAYROLL-PAY-001, ACC-PAYROLL-REPORT-001]
+    internal_ordering: UNKNOWN
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: HR input boundary.", "UNKNOWN: формы, которые бухгалтерия отправляет/контролирует.", "UNKNOWN: связь циклов расчета и отчетности."]
+
+  - process_id: ACC-PAYROLL-PAY-001
+    name: "Расчет заработной платы и формирование ведомостей на выплату"
+    domain: ACC
+    level: L2
+    parent_process: ACC-PAYROLL-001
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Наступил цикл расчета/выплаты либо запрос на ведомость"
+    business_result: "Расчет выполнен; ведомость передана Директору по персоналу и Финансовому директору"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: входные данные/утверждение/фактический платеж.", "UNKNOWN: формальность практики подготовки за 5 дней."]
+
+  - process_id: ACC-PAYROLL-REPORT-001
+    name: "Формирование отчетности по персоналу, начислениям и налогам"
+    domain: ACC
+    level: L2
+    parent_process: ACC-PAYROLL-001
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Наступил применимый отчетный период по начислениям/персоналу"
+    business_result: "Отчетность сформирована в части оплаты труда, налогов и взносов; граница отправки по формам UNKNOWN"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: точные формы и ownership отправки.", "UNKNOWN: boundary с HR отчетностью."]
+
+  - process_id: ACC-TAX-ENS-001
+    name: "Контроль единого налогового счета и налоговых обязательств"
+    domain: ACC
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Необходима проверка ЕНС в связи с налоговым обязательством, сроком уплаты или потребностью в подтверждении исполнения"
+    business_result: "Состояние ЕНС и своевременность обязательств проконтролированы; риск отрицательного сальдо выявлен/не допущен в пределах ответственности бухгалтерии"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: [VIEW-ACC-CHIEF-ROLE-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: периодичность/точный trigger.", "UNKNOWN: кто выполняет платеж и как закрывается обязательство."]
+
+  - process_id: ACC-CONTRACT-REVIEW-001
+    name: "Бухгалтерское и налоговое согласование договора"
+    domain: ACC
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Договор поступил Главному бухгалтеру на бухгалтерское/налоговое согласование"
+    business_result: "Замечания/рекомендации возвращены инициатору либо отсутствие замечаний подтверждено"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: [VIEW-ACC-CHIEF-ROLE-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: владелец общего contract lifecycle.", "UNKNOWN: applicability/финальное утверждение/артефакт согласования."]
+
+architecture_candidates:
+  - candidate_id: CAND-ACC-INBOX-001
+    working_name: "Прием, классификация и маршрутизация входящих документов/запросов"
+    domain: CROSS_DOMAIN_DOCUMENT_MANAGEMENT
+    proposed_level: L1
+    status: BOUNDARY_OWNER_UNKNOWN
+    source_refs: [SRC-ACC-CHIEF-001]
+    evidence_note: "Деятельность подтверждена, но смешивает разные типы входящих объектов; интервьюируемая прямо не знает, должна ли функция оставаться в бухгалтерии."
+    missing_for_canonicalization: ["owner", "domain boundary", "единый business result", "правила регистрации/каналов"]
+
+  - candidate_id: CAND-ACC-FOUNDING-ARCHIVE-001
+    working_name: "Управление электронным архивом учредительных документов"
+    domain: CROSS_DOMAIN_RECORDS_MANAGEMENT
+    proposed_level: L1
+    status: BOUNDARY_UNKNOWN
+    source_refs: [SRC-ACC-CHIEF-001]
+    evidence_note: "Отсутствуют некоторые электронные сканы; владелец между бухгалтерией/договорным/юридическим/иной службой не установлен."
+    missing_for_canonicalization: ["owner", "trigger/lifecycle", "состав архива", "consumer/result"]
