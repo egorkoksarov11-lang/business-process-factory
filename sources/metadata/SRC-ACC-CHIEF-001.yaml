@@ -1,6 +1,6 @@
 source_id: SRC-ACC-CHIEF-001
 source_type: interview_transcript
-source_status: RAW_REGISTERED
+source_status: ARCHITECTURE_PROCESSED
 language: ru
 original_filename: "Бухгалтер 1(2).txt"
 repository_path: "sources/raw/accounting/SRC-ACC-CHIEF-001_chief_accountant_interview.txt"
@@ -35,10 +35,68 @@ provenance:
   semantic_corrections_applied: false
 notes:
   - "Источник хранится без смысловой корректировки распознавания."
-  - "Не считать перенос файлов между серверами самостоятельным бизнес-процессом без boundary-test; интервью прямо описывает его как трудоемкую техническую операцию/ограничение."
-  - "Источник содержит потенциальные междоменные связи с HR (зарплата/кадровая отчетность) и IT (серверы, поддержка, правила файлового обмена). Не изменять HR/IT process packages в этой ветке; фиксировать cross-domain handoff/candidate для последующего synthesis."
-  - "Не интерпретировать рекомендации IT и службы безопасности как отдельные бизнес-процессы бухгалтерии без самостоятельного trigger/result/consumer."
+  - "Перенос файлов между серверами не канонизирован как самостоятельный бизнес-процесс: boundary-test не выявил самостоятельного business result/consumer; сохранен как cross-process technical constraint XISS-ACC-TECH-001."
+  - "Источник содержит междоменные связи с HR, IT, financial management и security. В этой ветке чужие HR/IT process packages, views и mappings не изменялись."
+  - "Позиция интервьюируемой о том, что инициатор договора/сделки должен подтверждать фактическое исполнение до принятия первички к учету, сохранена как мнение/кандидат правила, а не как подтвержденный текущий AS-IS."
+source_quality_issues:
+  - issue_id: SQI-ACC-001
+    fragment: "диадог"
+    assessment: "Вероятная ошибка распознавания названия системы. Сырой транскрипт не исправлен; в system dictionary добавлен канонический 'Диадок' с alias 'диадог'."
+  - issue_id: SQI-ACC-002
+    fragment: "ОПД"
+    assessment: "Аббревиатура в сыром транскрипте не нормализована молча до УПД; архитектура не зависит от выбора расшифровки."
+  - issue_id: SQI-ACC-003
+    fragment: "других смешных специалистов"
+    assessment: "Вероятная ошибка распознавания. Не использована для определения конкретной роли или подразделения."
+architecture:
+  evidence_ref: "sources/evidence/SRC-ACC-CHIEF-001_architecture.yaml"
+  canonical_l1_refs:
+    - ACC-REG-REQ-001
+    - ACC-BANK-001
+    - ACC-MGMT-REQ-001
+    - ACC-PRIMARY-001
+    - ACC-REPORTING-001
+    - ACC-PAYROLL-001
+    - ACC-TAX-ENS-001
+    - ACC-CONTRACT-REVIEW-001
+  l2_refs:
+    - ACC-PRIMARY-CHECK-001
+    - ACC-PRIMARY-APPROVE-001
+    - ACC-PRIMARY-POST-001
+    - ACC-REPORTING-PRECHECK-001
+    - ACC-REPORTING-PREPARE-001
+    - ACC-REPORTING-ACCEPT-001
+    - ACC-PAYROLL-PAY-001
+    - ACC-PAYROLL-REPORT-001
+  architecture_candidates:
+    - CAND-ACC-INBOX-001
+    - CAND-ACC-FOUNDING-ARCHIVE-001
+  cross_process_problems:
+    - XISS-ACC-RESP-001
+    - XISS-ACC-DUPLICATE-001
+    - XISS-ACC-FOLDERS-001
+    - XISS-ACC-WAIT-001
+    - XISS-ACC-TECH-001
+    - XISS-ACC-PRIMARY-TIMING-001
+    - XISS-ACC-FOUNDING-DOC-001
+  role_landscape_views:
+    - VIEW-ACC-CHIEF-ROLE-001
+  end_to_end_views:
+    - VIEW-ACC-ACCOUNT-TO-REPORT-E2E-001
+  systems_observed:
+    - SYS-1C-ACCOUNTING-001
+    - SYS-DIADOC-001
+    - SYS-SBIS-001
+    - SYS-REMOTE-DESKTOP-001
+  cross_domain_handoffs:
+    - HDO-ACC-HR-001
+    - HDO-ACC-HR-002
+    - HDO-ACC-IT-001
+    - HDO-ACC-IT-SUPPORT-001
+    - HDO-ACC-FIN-001
+    - HDO-ACC-SEC-001
 workflow:
-  status: NEW
-  next_agent: "01_COORDINATOR_PROCESS_ARCHITECT"
+  status: ARCHITECTURE_PROCESSED
+  next_agent: "02_AS_IS_ANALYST"
+  handoff_path: "handoffs/ACC-SYNTHESIS-001_AGENT01_TO_AGENT02.md"
   working_branch: "agent01/accounting-architecture-src-001"
