@@ -1,0 +1,54 @@
+source_id: SRC-IT-LEAD-001
+source_type: interview_transcript
+source_status: ARCHITECTURE_SYNTHESIZED
+language: ru
+original_filename: "ИТ (1).txt"
+repository_path: "sources/raw/it/SRC-IT-LEAD-001_it_lead_interview.txt"
+interviewee:
+  role: "ИТ-специалист / руководитель внешней IT-компании"
+  department: UNKNOWN
+  reports_to: "Непосредственно Анатолию по направлениям ответственности; должность адресата в источнике не названа"
+  person_name: null
+  employment_note: "Ранее штатный сотрудник; с 2021 года руководит собственной IT-компанией и участвует как внешний специалист с высокой вовлеченностью. Подчиненные работают в его компании и участвуют в технической поддержке."
+source_scope_declared:
+  - "ИТ-архитектурные решения"
+  - "Информационная безопасность"
+  - "Серверная инфраструктура"
+  - "Программное обеспечение"
+  - "Телефония, мониторинг и видеонаблюдение"
+  - "Корпоративные мессенджеры и почтовые серверы"
+  - "Техническая поддержка пользователей"
+  - "Каналы подачи заявок"
+  - "HelpDesk и регистрация обращений"
+  - "Временное и постоянное решение инцидентов/запросов"
+  - "Регламенты по поддержке и безопасности"
+  - "Повторяющиеся и дублирующиеся обращения"
+  - "ИТ-часть приема и увольнения сотрудников"
+  - "Закрепление/открепление корпоративной техники"
+  - "Предоставление и отзыв доступов"
+provenance:
+  uploaded_to_project: "2026-08-22"
+  transcription_origin: "Пользовательский исходный транскрипт"
+  semantic_corrections_applied: false
+notes:
+  - "Источник хранится без смысловой корректировки распознавания."
+  - "Интервью явно называет два крупных направления: архитектурные решения и техническая поддержка. Boundary-test подтвердил техническую поддержку как L1; архитектурный контур оставлен BOUNDARY_UNKNOWN/candidate."
+  - "Бот для обращений из корпоративного мессенджера находится в разработке и не является текущим AS-IS."
+  - "Источник содержит междоменную связь с HR: подготовка доступов при приеме, отзыв доступов и техника при увольнении. HR process packages в этой ветке не изменялись."
+  - "Электронные акты по технике отделены как внедренный/работающий механизм; общий процесс приема/увольнения — attempted/not adopted; фактические уведомления IT — unstable current practice."
+architecture_outputs:
+  evidence: "sources/evidence/SRC-IT-LEAD-001_architecture.yaml"
+  confirmed_processes:
+    - IT-SUPPORT-001
+    - IT-SUPPORT-INTAKE-001
+    - IT-SUPPORT-RESOLVE-001
+    - IT-SUPPORT-FINALIZE-001
+  views:
+    - VIEW-IT-LEAD-ROLE-001
+    - VIEW-IT-FUNCTION-001
+  candidates_mapping: "mappings/IT-ARCHITECTURE-CANDIDATES-001.yaml"
+  cross_domain_mapping: "mappings/IT-HR-CROSS-DOMAIN-001.yaml"
+workflow:
+  status: ARCHITECTURE_READY
+  next_agent: "02_AS_IS_ANALYST"
+  working_branch: "agent01/it-architecture-src-001"

@@ -18,3 +18,12 @@ systems:
     category: "Recruitment platform"
     source_refs: [SRC-HR-DIR-001]
     notes: "Используется директором по персоналу как площадка размещения вакансий и получения откликов. Это информационная/поисковая платформа, а не коммуникационный канал и не роль."
+
+  - system_id: SYS-IT-HELPDESK-001
+    canonical_name: "HelpDesk"
+    aliases:
+      - "HelpDeck"
+      - "централизованная панель заявок"
+    category: "IT_SUPPORT_TICKETING"
+    source_refs: [SRC-IT-LEAD-001]
+    notes: "В сыром транскрипте встречается распознавание 'HelpDeck'; work order и metadata нормализуют сущность как HelpDesk. Личный кабинет рассматривается как интерфейс/канал к support до появления доказательств отдельной системы."
