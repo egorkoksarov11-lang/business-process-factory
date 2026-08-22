@@ -18,17 +18,18 @@ information_objects:
       - ITSUP-A001
       - ITSUP-A002
     system_refs: []
-    channel_refs:
-      - EMAIL
-      - PHONE
-      - PERSONAL_CABINET
+    channel_refs: []
+    observed_channel_names:
+      - "Электронная почта"
+      - "Телефон"
+      - "Личный кабинет"
     storage_location: null
     format: null
     required: YES
     existence_status: CONFIRMED
     evidence_refs: [FACT-IT-LEAD-005]
     evidence_class: EXPLICIT
-    notes: "Это request/information object. Email, телефон и личный кабинет — каналы, а не сама заявка."
+    notes: "Это request/information object. Email, телефон и личный кабинет — каналы, а не сама заявка. Canonical channel IDs пока не назначены."
 
   - information_id: IO-IT-SUPPORT-DESCRIPTION-001
     model_layer: AS_IS
@@ -48,10 +49,11 @@ information_objects:
       - ITSUP-A004
       - ITSUP-A005
     system_refs: [SYS-IT-HELPDESK-001]
-    channel_refs:
-      - EMAIL
-      - PHONE
-      - PERSONAL_CABINET
+    channel_refs: []
+    observed_channel_names:
+      - "Электронная почта"
+      - "Телефон"
+      - "Личный кабинет"
     storage_location: null
     format: null
     required: UNKNOWN
@@ -83,6 +85,7 @@ information_objects:
       - ITSUP-A008
     system_refs: [SYS-IT-HELPDESK-001]
     channel_refs: []
+    observed_channel_names: []
     storage_location: "SYS-IT-HELPDESK-001"
     format: null
     required: YES
@@ -109,7 +112,9 @@ information_objects:
       - ITSUP-A002
       - ITSUP-A003
     system_refs: [SYS-IT-HELPDESK-001]
-    channel_refs: [EMAIL]
+    channel_refs: []
+    observed_channel_names:
+      - "Электронная почта"
     storage_location: "SYS-IT-HELPDESK-001"
     format: null
     required: YES
@@ -132,14 +137,16 @@ information_objects:
     consumed_by_role_refs: [ROLE-INTERNAL-USER-001]
     related_step_refs: [ITSUP-A003]
     system_refs: [SYS-IT-HELPDESK-001]
-    channel_refs: [EMAIL]
+    channel_refs: []
+    observed_channel_names:
+      - "Электронная почта"
     storage_location: null
     format: "Email message"
     required: UNKNOWN
     existence_status: CONFIRMED
     evidence_refs: [FACT-IT-LEAD-007]
     evidence_class: EXPLICIT
-    notes: "Подтверждено только для email. Источник не устанавливает, автоматическая это отбивка или ручное сообщение."
+    notes: "Подтверждено только для email. Наличие acknowledgement для телефона и личного кабинета UNKNOWN_CURRENT. Источник не устанавливает, автоматическая это отбивка или ручное сообщение."
 
   - information_id: IO-IT-SUPPORT-STATUS-001
     model_layer: AS_IS
@@ -159,7 +166,9 @@ information_objects:
       - ITSUP-A002
       - ITSUP-A004
     system_refs: [SYS-IT-HELPDESK-001]
-    channel_refs: [PERSONAL_CABINET]
+    channel_refs: []
+    observed_channel_names:
+      - "Личный кабинет"
     storage_location: "SYS-IT-HELPDESK-001"
     format: null
     required: UNKNOWN
@@ -187,6 +196,7 @@ information_objects:
       - ITSUP-A008
     system_refs: []
     channel_refs: []
+    observed_channel_names: []
     storage_location: null
     format: null
     required: NO
@@ -212,6 +222,7 @@ information_objects:
       - ITSUP-A008
     system_refs: []
     channel_refs: []
+    observed_channel_names: []
     storage_location: null
     format: null
     required: YES
@@ -232,7 +243,9 @@ communications:
       - IO-IT-SUPPORT-REQUEST-001
       - IO-IT-SUPPORT-DESCRIPTION-001
     message_information_ref: IO-IT-SUPPORT-REQUEST-001
-    channel_ref: EMAIL
+    channel_refs: []
+    observed_channel_names:
+      - "Электронная почта"
     system_ref: SYS-IT-HELPDESK-001
     related_step_refs:
       - ITSUP-A001
@@ -244,7 +257,7 @@ communications:
       - FACT-IT-LEAD-005
       - FACT-IT-LEAD-007
     evidence_class: EXPLICIT
-    notes: "Email — самый частый канал; для него явно подтверждена обратная отбивка."
+    notes: "Электронная почта — самый частый наблюдаемый канал; для нее явно подтверждена обратная отбивка. Canonical channel ID отсутствует."
 
   - communication_id: COM-IT-SUPPORT-PHONE-INTAKE-001
     model_layer: AS_IS
@@ -257,15 +270,17 @@ communications:
       - IO-IT-SUPPORT-REQUEST-001
       - IO-IT-SUPPORT-DESCRIPTION-001
     message_information_ref: null
-    channel_ref: PHONE
+    channel_refs: []
+    observed_channel_names:
+      - "Телефон"
     system_ref: null
     related_step_refs: [ITSUP-A001]
-    response_expected: YES
+    response_expected: UNKNOWN
     expected_response_information_refs: []
     response_deadline: null
     evidence_refs: [FACT-IT-LEAD-005]
     evidence_class: EXPLICIT
-    notes: "Как телефонный запрос попадает в HelpDesk и какое подтверждение получает пользователь — UNKNOWN."
+    notes: "Как телефонный запрос попадает в HelpDesk и существует ли отдельное acknowledgement пользователю — UNKNOWN_CURRENT."
 
   - communication_id: COM-IT-SUPPORT-CABINET-INTAKE-001
     model_layer: AS_IS
@@ -278,7 +293,9 @@ communications:
       - IO-IT-SUPPORT-REQUEST-001
       - IO-IT-SUPPORT-DESCRIPTION-001
     message_information_ref: IO-IT-SUPPORT-REQUEST-001
-    channel_ref: PERSONAL_CABINET
+    channel_refs: []
+    observed_channel_names:
+      - "Личный кабинет"
     system_ref: SYS-IT-HELPDESK-001
     related_step_refs:
       - ITSUP-A001
@@ -290,7 +307,7 @@ communications:
       - FACT-IT-LEAD-005
       - FACT-IT-LEAD-007
     evidence_class: EXPLICIT
-    notes: "Личный кабинет трактуется как интерфейс/канал к support, не как отдельная нормализованная система. Подтверждение приема по этому каналу UNKNOWN."
+    notes: "Личный кабинет трактуется как интерфейс/канал к support, не как отдельная нормализованная система. Наличие acknowledgement по этому каналу UNKNOWN_CURRENT."
 
   - communication_id: COM-IT-SUPPORT-ACK-EMAIL-001
     model_layer: AS_IS
@@ -303,7 +320,9 @@ communications:
       - IO-IT-SUPPORT-TICKET-NUMBER-001
       - IO-IT-SUPPORT-ACK-001
     message_information_ref: IO-IT-SUPPORT-ACK-001
-    channel_ref: EMAIL
+    channel_refs: []
+    observed_channel_names:
+      - "Электронная почта"
     system_ref: SYS-IT-HELPDESK-001
     related_step_refs: [ITSUP-A003]
     response_expected: NO
@@ -311,7 +330,8 @@ communications:
     response_deadline: null
     evidence_refs: [FACT-IT-LEAD-007]
     evidence_class: EXPLICIT
-    notes: "Отправитель как роль/автоматическая система не установлен."
+    applicability: CONFIRMED_CURRENT
+    notes: "Отправитель как роль/автоматическая система не установлен. Это единственное подтвержденное acknowledgement-сообщение; новые сообщения для иных каналов не создаются."
 
   - communication_id: COM-IT-SUPPORT-TEMP-SOLUTION-001
     model_layer: AS_IS
@@ -322,7 +342,8 @@ communications:
     purpose: "Передать временное решение, позволяющее продолжить работу"
     payload_refs: [IO-IT-SUPPORT-TEMP-SOLUTION-001]
     message_information_ref: null
-    channel_ref: UNKNOWN
+    channel_refs: []
+    observed_channel_names: []
     system_ref: null
     related_step_refs: [ITSUP-A006]
     response_expected: UNKNOWN
@@ -341,7 +362,8 @@ communications:
     purpose: "Передать или довести постоянное решение по обращению"
     payload_refs: [IO-IT-SUPPORT-PERM-SOLUTION-001]
     message_information_ref: null
-    channel_ref: UNKNOWN
+    channel_refs: []
+    observed_channel_names: []
     system_ref: null
     related_step_refs:
       - ITSUP-A007
@@ -356,4 +378,4 @@ communications:
 metadata:
   created_at: "2026-08-22"
   updated_at: "2026-08-22"
-  notes: "Ticket, email и HelpDesk разделены: ticket = record/information object; email = channel/message context; HelpDesk = system."
+  notes: "Ticket, email и HelpDesk разделены: ticket = record/information object; email = наблюдаемый channel context без canonical channel ID; HelpDesk = system. Channel IDs не создавались Agent 02."
