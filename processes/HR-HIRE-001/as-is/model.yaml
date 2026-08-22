@@ -1,0 +1,632 @@
+schema_version: "1.1"
+process_id: "HR-HIRE-001"
+as_is_version: "0.1"
+status: "CLARIFICATION_REQUIRED"
+
+scope:
+  trigger: "Кандидат согласился на оффер; в кадровое делопроизводство поступают данные для приема. Точный состав recruitment→hire payload требует уточнения."
+  business_result: "Core кадровое оформление приема выполнено; точная parent-close граница относительно HR-HIRE-MIL-001, HR-HIRE-SFR-001 и начала HR-ADAPT-001 остается UNKNOWN."
+  applicability: "PARTIAL_CURRENT"
+  source_refs: [SRC-HR-KDP-001, SRC-HR-DIR-001, SRC-HR-MODEL-001]
+  included_subprocesses:
+    - subprocess_id: HR-HIRE-KDP-001
+      applicability: CONFIRMED_CURRENT
+    - subprocess_id: HR-HIRE-SFR-001
+      applicability: CONFIRMED_CURRENT
+      role_boundary: CONFLICT
+    - subprocess_id: HR-HIRE-MIL-001
+      applicability: CONDITIONAL
+      exact_condition: UNKNOWN
+  excluded_scope:
+    - HR-RECRUIT-001
+    - HR-ADAPT-001
+    - HR-TERM-001
+
+steps:
+  - step_id: A001
+    subprocess_id: HR-HIRE-KDP-001
+    role_ref: ROLE-HR-KDP-001
+    action: "Получить от Директора по персоналу электронное сообщение с данными для приема"
+    business_object: "Данные для кадрового оформления выбранного кандидата"
+    input_information_refs: []
+    output_information_refs: [IO-HIRE-001]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: []
+    outgoing_flow_refs: [F001]
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "КДП получил данные для начала оформления"
+    evidence_refs: [FACT-HIRE-001]
+    evidence_class: EXPLICIT
+    notes: "Источник называет Telegram, корпоративный мессенджер и электронную почту. Канонические channel IDs отсутствуют; предложение вынесено Coordinator."
+
+  - step_id: A002
+    subprocess_id: HR-HIRE-KDP-001
+    role_ref: ROLE-HR-KDP-001
+    action: "Проверить комплект документов по используемому списку необходимых документов"
+    business_object: "Комплект документов для приема"
+    input_information_refs: [IO-HIRE-002]
+    output_information_refs: [IO-HIRE-002]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [F001, F004]
+    outgoing_flow_refs: [F002, F005]
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "Определена комплектность документов"
+    evidence_refs: [FACT-HIRE-002]
+    evidence_class: EXPLICIT
+    notes: "Полный состав списка источником не раскрыт."
+
+  - step_id: A003
+    subprocess_id: HR-HIRE-KDP-001
+    role_ref: ROLE-HR-KDP-001
+    action: "Запросить у сотрудника недостающие документы"
+    business_object: "Недостающие документы приема"
+    input_information_refs: [IO-HIRE-002]
+    output_information_refs: [IO-HIRE-003]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [F002]
+    outgoing_flow_refs: [F003]
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "Сотруднику направлен запрос на недостающие документы"
+    evidence_refs: [FACT-HIRE-002]
+    evidence_class: EXPLICIT
+    notes: "Канал запроса не указан."
+
+  - step_id: A004
+    subprocess_id: HR-HIRE-KDP-001
+    role_ref: ROLE-HR-KDP-001
+    action: "Ожидать и получить недостающие документы до полного пакета"
+    business_object: "Комплект документов для приема"
+    input_information_refs: [IO-HIRE-003]
+    output_information_refs: [IO-HIRE-004, IO-HIRE-002]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [F003]
+    outgoing_flow_refs: [F004]
+    timing:
+      duration: null
+      deadline: null
+      frequency: null
+      wait_for: "Недостающие документы от сотрудника"
+    result: "Недостающие документы получены; комплект возвращается на проверку"
+    evidence_refs: [FACT-HIRE-002]
+    evidence_class: EXPLICIT
+    notes: "Срок ожидания источником не установлен."
+
+  - step_id: A005
+    subprocess_id: HR-HIRE-KDP-001
+    role_ref: ROLE-HR-KDP-001
+    action: "Завести сотрудника в 1С как физическое лицо и внести персональные/идентификационные данные"
+    business_object: "Карточка физического лица"
+    input_information_refs: [IO-HIRE-002, IO-HIRE-005]
+    output_information_refs: [IO-HIRE-006]
+    system_refs: [SYS-1C-HR-001]
+    channel_refs: []
+    incoming_flow_refs: [F005]
+    outgoing_flow_refs: [F006]
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "Физическое лицо создано в 1С с доступными персональными данными"
+    evidence_refs: [FACT-HIRE-003]
+    evidence_class: EXPLICIT
+    notes: null
+
+  - step_id: A006
+    subprocess_id: HR-HIRE-KDP-001
+    role_ref: ROLE-HR-KDP-001
+    action: "Создать сотрудника и оформить прием в 1С с кадровыми и платежными данными"
+    business_object: "Запись сотрудника и событие приема"
+    input_information_refs: [IO-HIRE-006, IO-HIRE-005]
+    output_information_refs: [IO-HIRE-007]
+    system_refs: [SYS-1C-HR-001]
+    channel_refs: []
+    incoming_flow_refs: [F006]
+    outgoing_flow_refs: [F016]
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "Сотрудник создан в 1С, событие приема и подтвержденные параметры занятости внесены"
+    evidence_refs: [FACT-HIRE-004]
+    evidence_class: EXPLICIT
+    notes: "Источник говорит, что дата приема ставится текущей датой. Относительный порядок этого блока и подписания документов полностью не подтвержден."
+
+  - step_id: A007
+    subprocess_id: HR-HIRE-KDP-001
+    role_ref: ROLE-HR-KDP-001
+    action: "Предоставить сотруднику локальные нормативные акты для ознакомления и подписания"
+    business_object: "Комплект локальных нормативных актов"
+    input_information_refs: [IO-HIRE-008]
+    output_information_refs: [IO-HIRE-008]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: []
+    outgoing_flow_refs: [F007]
+    timing: {duration: null, deadline: "До подписания трудового договора", frequency: null, wait_for: null}
+    result: "Локальные акты предоставлены сотруднику до подписания трудового договора"
+    evidence_refs: [FACT-HIRE-005]
+    evidence_class: EXPLICIT
+    notes: null
+
+  - step_id: A008
+    subprocess_id: HR-HIRE-KDP-001
+    role_ref: ROLE-HR-KDP-001
+    action: "Предоставить сотруднику должностную инструкцию для ознакомления"
+    business_object: "Должностная инструкция"
+    input_information_refs: [IO-HIRE-009]
+    output_information_refs: [IO-HIRE-009]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [F007]
+    outgoing_flow_refs: [F008]
+    timing: {duration: null, deadline: "До подписания трудового договора", frequency: null, wait_for: null}
+    result: "Должностная инструкция предоставлена для ознакомления"
+    evidence_refs: [FACT-HIRE-005]
+    evidence_class: EXPLICIT
+    notes: null
+
+  - step_id: A009
+    subprocess_id: HR-HIRE-KDP-001
+    role_ref: ROLE-HR-KDP-001
+    action: "Выдать сотруднику трудовой договор в двух экземплярах для ознакомления и подписания"
+    business_object: "Трудовой договор"
+    input_information_refs: [IO-HIRE-010]
+    output_information_refs: [IO-HIRE-010]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [F008]
+    outgoing_flow_refs: [F009]
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "Два экземпляра трудового договора переданы сотруднику на ознакомление"
+    evidence_refs: [FACT-HIRE-006]
+    evidence_class: EXPLICIT
+    notes: null
+
+  - step_id: A010
+    subprocess_id: HR-HIRE-KDP-001
+    role_ref: ROLE-EMPLOYEE-001
+    action: "Ознакомиться с трудовым договором и проверить отсутствие замечаний"
+    business_object: "Трудовой договор"
+    input_information_refs: [IO-HIRE-010]
+    output_information_refs: [IO-HIRE-010]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [F009]
+    outgoing_flow_refs: [F010]
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "Определено, есть ли замечания к трудовому договору"
+    evidence_refs: [FACT-HIRE-006]
+    evidence_class: EXPLICIT
+    notes: "Источник раскрывает только ветку без замечаний."
+
+  - step_id: A011
+    subprocess_id: HR-HIRE-KDP-001
+    role_ref: ROLE-EMPLOYEE-001
+    action: "Подписать трудовой договор в двух экземплярах"
+    business_object: "Трудовой договор"
+    input_information_refs: [IO-HIRE-010]
+    output_information_refs: [IO-HIRE-010]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [F010]
+    outgoing_flow_refs: [F011]
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "Оба экземпляра подписаны сотрудником"
+    evidence_refs: [FACT-HIRE-006]
+    evidence_class: EXPLICIT
+    notes: null
+
+  - step_id: A012
+    subprocess_id: HR-HIRE-KDP-001
+    role_ref: ROLE-CEO-001
+    action: "Подписать трудовой договор после подписи сотрудника"
+    business_object: "Трудовой договор"
+    input_information_refs: [IO-HIRE-010]
+    output_information_refs: [IO-HIRE-010]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [F011]
+    outgoing_flow_refs: [F012]
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "Трудовой договор подписан Генеральным директором"
+    evidence_refs: [FACT-HIRE-006]
+    evidence_class: EXPLICIT
+    notes: null
+
+  - step_id: A013
+    subprocess_id: HR-HIRE-KDP-001
+    role_ref: ROLE-HR-KDP-001
+    action: "Оставить один экземпляр трудового договора в отделе кадров и передать второй сотруднику"
+    business_object: "Подписанный трудовой договор"
+    input_information_refs: [IO-HIRE-010]
+    output_information_refs: [IO-HIRE-010]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [F012]
+    outgoing_flow_refs: []
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "Один экземпляр хранится в кадровой функции, второй получен сотрудником"
+    evidence_refs: [FACT-HIRE-006]
+    evidence_class: EXPLICIT
+    notes: "Конкретное место хранения внутри кадровой функции не раскрыто."
+
+  - step_id: A014
+    subprocess_id: HR-HIRE-KDP-001
+    role_ref: ROLE-HR-KDP-001
+    action: "Выдать сотруднику приказ о приеме на подпись"
+    business_object: "Приказ о приеме"
+    input_information_refs: [IO-HIRE-011]
+    output_information_refs: [IO-HIRE-011]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: []
+    outgoing_flow_refs: []
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "Приказ о приеме предоставлен сотруднику на подпись"
+    evidence_refs: [FACT-HIRE-007]
+    evidence_class: EXPLICIT
+    notes: "Источник не описывает отдельным утверждением факт возврата уже подписанного приказа."
+
+  - step_id: A015
+    subprocess_id: HR-HIRE-KDP-001
+    role_ref: ROLE-HR-KDP-001
+    action: "Сформировать карточку Т-2 в 1С"
+    business_object: "Карточка Т-2"
+    input_information_refs: [IO-HIRE-007]
+    output_information_refs: [IO-HIRE-012]
+    system_refs: [SYS-1C-HR-001]
+    channel_refs: []
+    incoming_flow_refs: []
+    outgoing_flow_refs: []
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "Карточка Т-2 сформирована в 1С"
+    evidence_refs: [FACT-HIRE-007]
+    evidence_class: EXPLICIT
+    notes: null
+
+  - step_id: A016
+    subprocess_id: HR-HIRE-KDP-001
+    role_ref: ROLE-HR-KDP-001
+    action: "Получить от сотрудника согласие на обработку персональных данных и заявление о перечислении зарплаты по предоставленным реквизитам"
+    business_object: "Дополнительные документы приема"
+    input_information_refs: []
+    output_information_refs: [IO-HIRE-013, IO-HIRE-014]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: []
+    outgoing_flow_refs: []
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "Согласие и заявление получены в составе оформления приема"
+    evidence_refs: [FACT-HIRE-007]
+    evidence_class: EXPLICIT
+    notes: null
+
+  - step_id: A017
+    subprocess_id: HR-HIRE-KDP-001
+    role_ref: UNKNOWN
+    action: "Подписать документ, связанный с конфиденциальностью/коммерческой тайной"
+    business_object: "Документ о конфиденциальности/коммерческой тайне"
+    input_information_refs: [IO-HIRE-015]
+    output_information_refs: [IO-HIRE-015]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: []
+    outgoing_flow_refs: []
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "Документ подписан в рамках приема"
+    evidence_refs: [FACT-HIRE-007]
+    evidence_class: EXPLICIT
+    notes: "Точный вид документа и исполнитель подписи неоднозначны в транскрипте."
+
+  - step_id: A018
+    subprocess_id: HR-HIRE-SFR-001
+    role_ref: ROLE-HR-KDP-001
+    action: "Сформировать в 1С сведения/отчетность о приеме для отправки в СФР"
+    business_object: "Сведения о приеме для СФР"
+    input_information_refs: [IO-HIRE-007]
+    output_information_refs: [IO-SFR-001]
+    system_refs: [SYS-1C-HR-001]
+    channel_refs: []
+    incoming_flow_refs: [F016]
+    outgoing_flow_refs: [F017]
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "Отчет для СФР сформирован в 1С"
+    evidence_refs: [FACT-HIRE-008, FACT-HIRE-REF-002]
+    evidence_class: CONFLICT
+    notes: "Интервью КДП прямо относит формирование к КДП; reference-модель UNKNOWN lifecycle размещает весь блок в lane Главного бухгалтера."
+
+  - step_id: A019
+    subprocess_id: HR-HIRE-SFR-001
+    role_ref: ROLE-HR-KDP-001
+    action: "Сообщить Главному бухгалтеру, что отчет сформирован и его нужно отправить"
+    business_object: "Готовый отчет для СФР"
+    input_information_refs: [IO-SFR-001]
+    output_information_refs: [IO-SFR-002]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [F017]
+    outgoing_flow_refs: [F018]
+    timing: {duration: null, deadline: null, frequency: null, wait_for: "Отправка отчета Главным бухгалтером"}
+    result: "Главный бухгалтер уведомлен о готовности отчета и необходимости отправки"
+    evidence_refs: [FACT-HIRE-008]
+    evidence_class: EXPLICIT
+    notes: "Канал: лично либо корпоративный мессенджер; canonical channel IDs пока отсутствуют."
+
+  - step_id: A020
+    subprocess_id: HR-HIRE-SFR-001
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    action: "Отправить сформированные сведения о приеме в СФР"
+    business_object: "Сведения о приеме для СФР"
+    input_information_refs: [IO-SFR-001, IO-SFR-002]
+    output_information_refs: [IO-SFR-001]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [F018]
+    outgoing_flow_refs: [F019]
+    timing: {duration: null, deadline: "Не позднее следующего дня от даты приема", frequency: null, wait_for: null}
+    result: "Сведения отправлены в СФР в пределах описанного handoff"
+    evidence_refs: [FACT-HIRE-008, FACT-HIRE-REF-002]
+    evidence_class: EXPLICIT
+    notes: "Конкретная система/канал отправки в СФР источником не назван."
+
+  - step_id: A021
+    subprocess_id: HR-HIRE-SFR-001
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    action: "Сообщить КДП, что отчет сдан"
+    business_object: "Результат отправки сведений в СФР"
+    input_information_refs: [IO-SFR-001]
+    output_information_refs: [IO-SFR-003]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [F019]
+    outgoing_flow_refs: []
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "КДП получил внутреннее подтверждение, что отчет сдан"
+    evidence_refs: [FACT-HIRE-008]
+    evidence_class: EXPLICIT
+    notes: "Источник подтверждает сообщение Главного бухгалтера, но не называет внешний квиток/receipt СФР."
+
+  - step_id: A022
+    subprocess_id: HR-HIRE-MIL-001
+    role_ref: ROLE-HR-KDP-001
+    action: "При условии, названном источником как 'сотрудник мужского пола', внести в 1С данные по воинской обязанности и военному билету"
+    business_object: "Данные воинского учета сотрудника"
+    input_information_refs: [IO-MIL-001]
+    output_information_refs: [IO-MIL-002]
+    system_refs: [SYS-1C-HR-001]
+    channel_refs: []
+    incoming_flow_refs: []
+    outgoing_flow_refs: []
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "Воинские данные внесены в 1С при указанном в источнике условии"
+    evidence_refs: [FACT-HIRE-009]
+    evidence_class: EXPLICIT
+    notes: "Не трактовать мужской пол как достаточный нормативный критерий полной ветки HR-HIRE-MIL-001; точная applicability требует уточнения."
+
+  - step_id: A023
+    subprocess_id: HR-HIRE-MIL-001
+    role_ref: ROLE-HR-KDP-001
+    action: "Сформировать в программе карточку гражданина, подлежащего воинскому учету, по форме 10"
+    business_object: "Карточка формы 10"
+    input_information_refs: [IO-MIL-001, IO-HIRE-007]
+    output_information_refs: [IO-MIL-003]
+    system_refs: [SYS-1C-HR-001]
+    channel_refs: []
+    incoming_flow_refs: []
+    outgoing_flow_refs: [F020]
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "Карточка формы 10 сформирована с личными и воинскими сведениями"
+    evidence_refs: [FACT-HIRE-010]
+    evidence_class: EXPLICIT
+    notes: "Источник описывает формирование внутри рассказа КДП; отдельная identity ответственного за воинский учет остается UNKNOWN."
+
+  - step_id: A024
+    subprocess_id: HR-HIRE-MIL-001
+    role_ref: ROLE-MIL-RESP-001
+    action: "Сверить карточку формы 10 с документами воинского учета, поставить дату и подпись ответственного"
+    business_object: "Карточка формы 10"
+    input_information_refs: [IO-MIL-001, IO-MIL-003]
+    output_information_refs: [IO-MIL-003]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [F020]
+    outgoing_flow_refs: [F021]
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "Карточка сверена и подписана ответственным за воинский учет"
+    evidence_refs: [FACT-HIRE-010]
+    evidence_class: EXPLICIT
+    notes: "Неизвестно, совпадает ли ROLE-MIL-RESP-001 с ROLE-HR-KDP-001."
+
+  - step_id: A025
+    subprocess_id: HR-HIRE-MIL-001
+    role_ref: ROLE-EMPLOYEE-001
+    action: "Поставить подпись военнообязанного на карточке формы 10"
+    business_object: "Карточка формы 10"
+    input_information_refs: [IO-MIL-003]
+    output_information_refs: [IO-MIL-003]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [F021]
+    outgoing_flow_refs: [F022]
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "На карточке получена подпись военнообязанного"
+    evidence_refs: [FACT-HIRE-010]
+    evidence_class: EXPLICIT
+    notes: null
+
+  - step_id: A026
+    subprocess_id: HR-HIRE-MIL-001
+    role_ref: UNKNOWN
+    action: "Сформировать сведения о приеме для военного комиссариата"
+    business_object: "Сведения о приеме военнообязанного"
+    input_information_refs: [IO-HIRE-007, IO-MIL-001]
+    output_information_refs: [IO-MIL-004]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [F022]
+    outgoing_flow_refs: [F023]
+    timing: {duration: null, deadline: "В течение пяти дней от даты приема", frequency: null, wait_for: null}
+    result: "Сведения для военного комиссариата сформированы"
+    evidence_refs: [FACT-HIRE-011]
+    evidence_class: EXPLICIT
+    notes: "Источник не называет исполнителя однозначно; candidates: ROLE-HR-KDP-001 / ROLE-MIL-RESP-001."
+
+  - step_id: A027
+    subprocess_id: HR-HIRE-MIL-001
+    role_ref: UNKNOWN
+    action: "Отправить сведения почтовым отправлением в военный комиссариат по месту жительства/воинского учета"
+    business_object: "Сведения о приеме военнообязанного"
+    input_information_refs: [IO-MIL-004]
+    output_information_refs: [IO-MIL-004]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [F023]
+    outgoing_flow_refs: []
+    timing: {duration: null, deadline: "В течение пяти дней от даты приема", frequency: null, wait_for: null}
+    result: "Сведения направлены военному комиссариату почтовым отправлением"
+    evidence_refs: [FACT-HIRE-011]
+    evidence_class: EXPLICIT
+    notes: "Canonical postal channel ID отсутствует; proposal вынесен Coordinator."
+
+flows:
+  - {flow_id: F001, from_ref: A001, to_ref: A002, flow_type: SEQUENCE, condition: null, evidence_refs: [FACT-HIRE-001, FACT-HIRE-002], applicability: CONFIRMED_CURRENT}
+  - {flow_id: F002, from_ref: A002, to_ref: A003, flow_type: CONDITIONAL, condition: "Комплект неполный", evidence_refs: [FACT-HIRE-002], applicability: CONFIRMED_CURRENT}
+  - {flow_id: F003, from_ref: A003, to_ref: A004, flow_type: SEQUENCE, condition: null, evidence_refs: [FACT-HIRE-002], applicability: CONFIRMED_CURRENT}
+  - {flow_id: F004, from_ref: A004, to_ref: A002, flow_type: RETURN, condition: "Недостающие документы получены; требуется подтвердить полный пакет", evidence_refs: [FACT-HIRE-002], applicability: CONFIRMED_CURRENT}
+  - {flow_id: F005, from_ref: A002, to_ref: A005, flow_type: CONDITIONAL, condition: "Комплект полный", evidence_refs: [FACT-HIRE-002, FACT-HIRE-003], applicability: CONFIRMED_CURRENT}
+  - {flow_id: F006, from_ref: A005, to_ref: A006, flow_type: SEQUENCE, condition: null, evidence_refs: [FACT-HIRE-003, FACT-HIRE-004], applicability: CONFIRMED_CURRENT}
+  - {flow_id: F007, from_ref: A007, to_ref: A008, flow_type: SEQUENCE, condition: null, evidence_refs: [FACT-HIRE-005], applicability: CONFIRMED_CURRENT}
+  - {flow_id: F008, from_ref: A008, to_ref: A009, flow_type: SEQUENCE, condition: "До подписания трудового договора", evidence_refs: [FACT-HIRE-005, FACT-HIRE-006], applicability: CONFIRMED_CURRENT}
+  - {flow_id: F009, from_ref: A009, to_ref: A010, flow_type: SEQUENCE, condition: null, evidence_refs: [FACT-HIRE-006], applicability: CONFIRMED_CURRENT}
+  - {flow_id: F010, from_ref: A010, to_ref: A011, flow_type: CONDITIONAL, condition: "Замечаний к трудовому договору нет", evidence_refs: [FACT-HIRE-006], applicability: CONFIRMED_CURRENT}
+  - {flow_id: F011, from_ref: A011, to_ref: A012, flow_type: SEQUENCE, condition: null, evidence_refs: [FACT-HIRE-006], applicability: CONFIRMED_CURRENT}
+  - {flow_id: F012, from_ref: A012, to_ref: A013, flow_type: SEQUENCE, condition: null, evidence_refs: [FACT-HIRE-006], applicability: CONFIRMED_CURRENT}
+  - {flow_id: F016, from_ref: A006, to_ref: A018, flow_type: SEQUENCE, condition: "После завершения создания сотрудника в 1С", evidence_refs: [FACT-HIRE-008], applicability: CONFIRMED_CURRENT}
+  - {flow_id: F017, from_ref: A018, to_ref: A019, flow_type: SEQUENCE, condition: null, evidence_refs: [FACT-HIRE-008], applicability: CONFIRMED_CURRENT}
+  - {flow_id: F018, from_ref: A019, to_ref: A020, flow_type: HANDOFF, condition: "Главному бухгалтеру сообщено, что отчет сформирован и его нужно отправить", evidence_refs: [FACT-HIRE-008], applicability: CONFIRMED_CURRENT}
+  - {flow_id: F019, from_ref: A020, to_ref: A021, flow_type: SEQUENCE, condition: "После отправки", evidence_refs: [FACT-HIRE-008], applicability: CONFIRMED_CURRENT}
+  - {flow_id: F020, from_ref: A023, to_ref: A024, flow_type: SEQUENCE, condition: null, evidence_refs: [FACT-HIRE-010], applicability: CONFIRMED_CURRENT}
+  - {flow_id: F021, from_ref: A024, to_ref: A025, flow_type: SEQUENCE, condition: null, evidence_refs: [FACT-HIRE-010], applicability: CONFIRMED_CURRENT}
+  - {flow_id: F022, from_ref: A025, to_ref: A026, flow_type: SEQUENCE, condition: null, evidence_refs: [FACT-HIRE-010, FACT-HIRE-011], applicability: PARTIAL_CURRENT}
+  - {flow_id: F023, from_ref: A026, to_ref: A027, flow_type: SEQUENCE, condition: null, evidence_refs: [FACT-HIRE-011], applicability: CONFIRMED_CURRENT}
+
+decisions:
+  - decision_id: D001
+    after_step_ref: A002
+    question: "Комплект документов полный?"
+    branches:
+      - {outcome: "Да", next_ref: A005}
+      - {outcome: "Нет", next_ref: A003}
+    evidence_refs: [FACT-HIRE-002]
+    evidence_class: EXPLICIT
+    applicability: CONFIRMED_CURRENT
+
+  - decision_id: D002
+    after_step_ref: A010
+    question: "Есть замечания к трудовому договору?"
+    branches:
+      - {outcome: "Нет", next_ref: A011}
+      - {outcome: "Да", next_ref: UNKNOWN}
+    evidence_refs: [FACT-HIRE-006]
+    evidence_class: EXPLICIT
+    applicability: PARTIAL_CURRENT
+
+  - decision_id: D003
+    after_step_ref: A006
+    question: "Применяется ли ввод воинских данных по условию, сформулированному источником как 'сотрудник мужского пола'?"
+    branches:
+      - {outcome: "Да", next_ref: A022}
+      - {outcome: "Нет", next_ref: "Пропустить A022"}
+    evidence_refs: [FACT-HIRE-009]
+    evidence_class: EXPLICIT
+    applicability: PARTIAL_CURRENT
+
+  - decision_id: D004
+    after_step_ref: A006
+    question: "Сотрудник военнообязанный и применима ли ветка карточки формы 10/сведений в военкомат?"
+    branches:
+      - {outcome: "Да", next_ref: A023}
+      - {outcome: "Нет", next_ref: "Пропустить HR-HIRE-MIL-001 document branch"}
+    evidence_refs: [FACT-HIRE-010, FACT-HIRE-011]
+    evidence_class: EXPLICIT
+    applicability: CONDITIONAL
+
+exceptions:
+  - exception_id: EX001
+    related_step_refs: [A010]
+    condition: "У сотрудника есть замечания к трудовому договору"
+    behavior: "UNKNOWN: источник раскрывает только ветку 'если всё верно и нет замечаний'."
+    evidence_refs: [FACT-HIRE-006]
+
+  - exception_id: EX002
+    related_step_refs: [A002, A003, A004]
+    condition: "Комплект документов неполный"
+    behavior: "КДП запрашивает недостающие документы и ожидает полный пакет, затем повторяет контроль комплектности."
+    evidence_refs: [FACT-HIRE-002]
+
+quantitative_observations:
+  - observation_id: QO001
+    metric_type: DEADLINE
+    related_refs: [A020, IO-SFR-001]
+    value: 1
+    unit: "day"
+    qualifier: "Не позднее следующего дня от даты приема; тип дня источником не уточнен"
+    evidence_refs: [FACT-HIRE-008]
+    evidence_class: EXPLICIT
+
+  - observation_id: QO002
+    metric_type: DEADLINE
+    related_refs: [A026, A027, IO-MIL-004]
+    value: 5
+    unit: "days"
+    qualifier: "В течение пяти дней от даты приема; тип дней источником не уточнен"
+    evidence_refs: [FACT-HIRE-011]
+    evidence_class: EXPLICIT
+
+orchestration_unknowns:
+  - unknown_id: U-ORCH-001
+    statement: "Точный порядок между блоком внесения данных/создания сотрудника в 1С (A005-A006) и документным блоком A007-A017 не подтвержден. Подтверждено только, что ЛНА/должностная инструкция предшествуют подписанию трудового договора."
+    evidence_refs: [FACT-HIRE-004, FACT-HIRE-005, FACT-HIRE-006, FACT-HIRE-007]
+  - unknown_id: U-ORCH-002
+    statement: "Reference-модель показывает SFR, MIL и начало адаптации параллельно после core оформления, но current parallelism не подтверждается из-за UNKNOWN lifecycle/approval status."
+    evidence_refs: [FACT-HIRE-REF-003]
+  - unknown_id: U-ORCH-003
+    statement: "Неизвестно, должен ли HR-HIRE-SFR-001 завершиться до parent close HR-HIRE-001."
+    evidence_refs: [FACT-HIRE-008, FACT-HIRE-REF-003]
+  - unknown_id: U-ORCH-004
+    statement: "Неизвестно, должен ли применимый HR-HIRE-MIL-001 завершиться до parent close HR-HIRE-001."
+    evidence_refs: [FACT-HIRE-010, FACT-HIRE-011, FACT-HIRE-REF-003]
+  - unknown_id: U-ORCH-005
+    statement: "Неизвестно, должен ли HR-HIRE-001 полностью закрыться до boundary event фактического выхода/начала HR-ADAPT-001."
+    evidence_refs: [FACT-HIRE-DIR-001, FACT-HIRE-REF-003]
+
+reference_overlays:
+  - overlay_id: REF-OVERLAY-001
+    source_ref: SRC-HR-MODEL-001
+    lifecycle_status: UNKNOWN
+    applicability: REFERENCE_ONLY
+    statement: "MODEL-001#9 размещает подготовку и отправку СФР целиком у Главного бухгалтера; current interview КДП разделяет подготовку и отправку между КДП и Главным бухгалтером."
+    conflict_refs: [FACT-HIRE-008, FACT-HIRE-REF-002]
+  - overlay_id: REF-OVERLAY-002
+    source_ref: SRC-HR-MODEL-001
+    lifecycle_status: UNKNOWN
+    applicability: REFERENCE_ONLY
+    statement: "MODEL-001#7 размещает контроль выхода/начало адаптации у Кадровика, тогда как SRC-HR-DIR-001 подтверждает контроль адаптации Директором по персоналу."
+    conflict_refs: [FACT-HIRE-DIR-001, FACT-HIRE-REF-001]
+
+open_questions:
+  - Q-HR-HIRE-001-001
+  - Q-HR-HIRE-001-002
+  - Q-HR-HIRE-001-003
+  - Q-HR-HIRE-001-004
+  - Q-HR-HIRE-001-005
+  - Q-HR-HIRE-001-006
+  - Q-HR-HIRE-001-007
+  - Q-HR-HIRE-001-008
+
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: |
+    Единый detailed AS-IS хранится на parent HR-HIRE-001; каждый шаг размечен subprocess_id.
+    Отдельные L2 AS-IS models не создавались, чтобы не дублировать flow.
+    Технические микродействия в 1С объединены до бизнес-значимых состояний.
+    Никакие TO-BE решения, BPMN или новые шаблоны документов не создавались.
