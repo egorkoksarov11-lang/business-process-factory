@@ -15,26 +15,10 @@ processes:
     previous_processes: []
     next_processes: []
     source_refs: [SRC-ACC-CHIEF-001]
-    views: [VIEW-ACC-CHIEF-ROLE-001]
+    views: [VIEW-ACC-CHIEF-ROLE-001, VIEW-ACC-FUNCTION-001]
     as_is_version: null
     to_be_version: null
     blocking_questions: ["UNKNOWN: финальный отправитель/владелец полного ответа.", "UNKNOWN: маршрут согласования пакета."]
-
-  - process_id: ACC-BANK-001
-    name: "Отражение банковских выписок в бухгалтерском учете"
-    domain: ACC
-    level: L1
-    status: ARCHITECTURE_READY
-    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
-    trigger: "Получены электронные банковские выписки/связанные документы от операциониста"
-    business_result: "Банковские выписки загружены в 1С по соответствующему юридическому лицу"
-    previous_processes: []
-    next_processes: []
-    source_refs: [SRC-ACC-CHIEF-001]
-    views: [VIEW-ACC-CHIEF-ROLE-001, VIEW-ACC-ACCOUNT-TO-REPORT-E2E-001]
-    as_is_version: null
-    to_be_version: null
-    blocking_questions: ["UNKNOWN: контроль успешности загрузки/обработки.", "UNKNOWN: полный состав банковских документов."]
 
   - process_id: ACC-MGMT-REQ-001
     name: "Подготовка бухгалтерской информации по внутреннему запросу"
@@ -47,7 +31,7 @@ processes:
     previous_processes: []
     next_processes: []
     source_refs: [SRC-ACC-CHIEF-001]
-    views: [VIEW-ACC-CHIEF-ROLE-001]
+    views: [VIEW-ACC-CHIEF-ROLE-001, VIEW-ACC-FUNCTION-001]
     as_is_version: null
     to_be_version: null
     blocking_questions: ["UNKNOWN: типология маршрутов и инициаторов.", "UNKNOWN: формальные SLA/приоритеты."]
@@ -63,11 +47,11 @@ processes:
     previous_processes: []
     next_processes: [ACC-REPORTING-001]
     source_refs: [SRC-ACC-CHIEF-001]
-    views: [VIEW-ACC-CHIEF-ROLE-001, VIEW-ACC-ACCOUNT-TO-REPORT-E2E-001]
+    views: [VIEW-ACC-CHIEF-ROLE-001, VIEW-ACC-FUNCTION-001, VIEW-ACC-ACCOUNT-TO-REPORT-E2E-001]
     internal_flow: [ACC-PRIMARY-CHECK-001, ACC-PRIMARY-APPROVE-001, ACC-PRIMARY-POST-001]
     as_is_version: null
     to_be_version: null
-    blocking_questions: ["UNKNOWN: матрица согласующих по типам документов.", "UNKNOWN: статус роли инициатора сделки.", "UNKNOWN: reject/return path."]
+    blocking_questions: ["UNKNOWN: конкретный согласующий внутри ROLE-CONTRACT-OBLIGATION-RESP-001 по типам документов.", "UNKNOWN: является ли подтверждение инициатора сделки действующим правилом.", "UNKNOWN: reject/return path."]
 
   - process_id: ACC-PRIMARY-CHECK-001
     name: "Проверка первичного документа"
@@ -101,7 +85,7 @@ processes:
     views: []
     as_is_version: null
     to_be_version: null
-    blocking_questions: ["UNKNOWN: фактический согласующий по сценарию.", "UNKNOWN: подтверждение инициатора договора как действующее правило.", "UNKNOWN: отсутствие ответа/эскалация."]
+    blocking_questions: ["UNKNOWN: конкретная роль внутри ROLE-CONTRACT-OBLIGATION-RESP-001 по сценарию.", "UNKNOWN: подтверждение инициатора договора как действующее правило.", "UNKNOWN: отсутствие ответа/эскалация."]
 
   - process_id: ACC-PRIMARY-POST-001
     name: "Принятие документа к учету и отражение в 1С"
@@ -131,7 +115,7 @@ processes:
     previous_processes: [ACC-PRIMARY-001]
     next_processes: []
     source_refs: [SRC-ACC-CHIEF-001]
-    views: [VIEW-ACC-CHIEF-ROLE-001, VIEW-ACC-ACCOUNT-TO-REPORT-E2E-001]
+    views: [VIEW-ACC-CHIEF-ROLE-001, VIEW-ACC-FUNCTION-001, VIEW-ACC-ACCOUNT-TO-REPORT-E2E-001]
     internal_flow: [ACC-REPORTING-PRECHECK-001, ACC-REPORTING-PREPARE-001, ACC-REPORTING-ACCEPT-001]
     as_is_version: null
     to_be_version: null
@@ -199,7 +183,7 @@ processes:
     previous_processes: []
     next_processes: []
     source_refs: [SRC-ACC-CHIEF-001]
-    views: [VIEW-ACC-CHIEF-ROLE-001]
+    views: [VIEW-ACC-CHIEF-ROLE-001, VIEW-ACC-FUNCTION-001]
     internal_blocks: [ACC-PAYROLL-PAY-001, ACC-PAYROLL-REPORT-001]
     internal_ordering: UNKNOWN
     as_is_version: null
@@ -251,7 +235,7 @@ processes:
     previous_processes: []
     next_processes: []
     source_refs: [SRC-ACC-CHIEF-001]
-    views: [VIEW-ACC-CHIEF-ROLE-001]
+    views: [VIEW-ACC-CHIEF-ROLE-001, VIEW-ACC-FUNCTION-001]
     as_is_version: null
     to_be_version: null
     blocking_questions: ["UNKNOWN: периодичность/точный trigger.", "UNKNOWN: кто выполняет платеж и как закрывается обязательство."]
@@ -267,12 +251,22 @@ processes:
     previous_processes: []
     next_processes: []
     source_refs: [SRC-ACC-CHIEF-001]
-    views: [VIEW-ACC-CHIEF-ROLE-001]
+    views: [VIEW-ACC-CHIEF-ROLE-001, VIEW-ACC-FUNCTION-001]
     as_is_version: null
     to_be_version: null
     blocking_questions: ["UNKNOWN: владелец общего contract lifecycle.", "UNKNOWN: applicability/финальное утверждение/артефакт согласования."]
 
 architecture_candidates:
+  - candidate_id: CAND-ACC-BANK-001
+    working_name: "Получение банковских выписок и загрузка данных в 1С"
+    domain: ACC
+    proposed_level: "L2_OR_OPERATION"
+    status: BUSINESS_RESULT_INSUFFICIENT_FOR_L1
+    source_refs: [SRC-ACC-CHIEF-001]
+    evidence_note: "Источник прямо подтверждает только передачу электронных выписок операционистом, скачивание и загрузку в учетную 1С. Формулировка самостоятельного результата 'движение по расчетным счетам отражено в бухгалтерском учете' требует дополнительного вывода, поэтому бывший ACC-BANK-001 снят с canonical L1."
+    possible_future_classification: ["OPERATION", "L2_UNDER_UNKNOWN_PARENT"]
+    missing_for_canonicalization: ["самостоятельный бизнес-результат", "consumer результата", "подтверждение, что загрузка является завершенным отражением в учете", "parent boundary при классификации как L2"]
+
   - candidate_id: CAND-ACC-INBOX-001
     working_name: "Прием, классификация и маршрутизация входящих документов/запросов"
     domain: CROSS_DOMAIN_DOCUMENT_MANAGEMENT
