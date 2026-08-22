@@ -45,7 +45,7 @@ facts:
     subprocess_refs: ["ACC-PRIMARY-APPROVE-001", "ACC-PRIMARY-POST-001"]
     as_is_step_refs: ["A003", "A005-FIN", "A005-RESP", "A006"]
     information_object_refs: ["IO-ACC-PRIMARY-001", "IO-ACC-PRIMARY-004", "IO-ACC-PRIMARY-005", "IO-ACC-PRIMARY-006"]
-    handoff_refs: ["HO-ACC-PRIMARY-001", "HO-ACC-PRIMARY-002", "HO-ACC-PRIMARY-003", "HO-ACC-PRIMARY-004", "HO-ACC-PRIMARY-005"]
+    handoff_refs: ["HO-ACC-PRIMARY-001", "HO-ACC-PRIMARY-002", "HO-ACC-PRIMARY-003", "HO-ACC-PRIMARY-004"]
     statement: "После проверки Главный бухгалтер направляет документы на согласование руководителю либо Финансовому директору; после решения о принятии документов к учету Главный бухгалтер отражает их в учетной программе 1С для формирования отчетности."
     evidence_class: "EXPLICIT"
     source_locator: "line 29"
