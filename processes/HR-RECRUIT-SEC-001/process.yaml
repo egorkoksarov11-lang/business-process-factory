@@ -10,12 +10,19 @@ process:
   participants: [ROLE-SECURITY-001]
   views: []
 boundaries:
-  trigger: "Кандидат выбран для проверки согласно SRC-HR-MODEL-001"
+  trigger: "Если проверка СБ применима, выбранный кандидат передан на проверку"
   input: ["Выбранный кандидат", "Данные для проверки — состав UNKNOWN"]
   previous_processes: [HR-RECRUIT-SELECT-001]
   business_result: "Получен результат о наличии/отсутствии негативной информации"
   consumer: "HR-RECRUIT-OFFER-001"
   next_processes: [HR-RECRUIT-OFFER-001]
+architecture_applicability:
+  mode: CONDITIONAL_REFERENCE_DERIVED
+  as_is_applicability: UNKNOWN
+  source_confidence: REFERENCE_ONLY
+  source_ref: SRC-HR-MODEL-001
+  source_lifecycle_status: UNKNOWN
+  agent02_instruction: "Не включать как обязательный AS-IS участок до фактического подтверждения применимости."
 sources:
   source_refs: [SRC-HR-MODEL-001]
 versions: {as_is_version: null, to_be_version: null}
@@ -24,10 +31,10 @@ issues: []
 changes: []
 to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
 open_questions:
-  - "Является ли этот L2 действующим AS-IS; lifecycle/approval status reference-модели UNKNOWN?"
+  - "Применяется ли этот L2 в действующем AS-IS и для каких случаев?"
   - "Что фиксирует результат проверки?"
 delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
 metadata:
   created_at: "2026-08-21"
-  updated_at: "2026-08-21"
-  notes: "Архитектурный L2 сохранен из collapsed subprocess MODEL-001#4. Никакие правила проверки не достроены."
+  updated_at: "2026-08-22"
+  notes: "ARCHITECTURE_READY = граница L2 распознана. Это НЕ подтверждение обязательности или текущего AS-IS; applicability остается UNKNOWN."
