@@ -1,7 +1,59 @@
 schema_version: "1.1"
-channels: []
+channels:
+  - channel_id: CH-EMAIL-001
+    canonical_name: "Электронная почта"
+    channel_type: EMAIL
+    system_ref: null
+    aliases: ["email", "e-mail", "почта"]
+    source_refs: [SRC-HR-KDP-001, SRC-IT-LEAD-001, SRC-ACC-CHIEF-001]
+    notes: "Канал передачи сообщений. Не является почтовой системой/клиентом и не заменяет information object MESSAGE/REQUEST."
+
+  - channel_id: CH-PHONE-001
+    canonical_name: "Телефон"
+    channel_type: PHONE
+    system_ref: null
+    aliases: ["телефонный звонок", "звонок"]
+    source_refs: [SRC-IT-LEAD-001, SRC-ACC-CHIEF-001]
+    notes: "Голосовой канал. Факт телефонного обращения сам по себе не доказывает способ регистрации записи в целевой системе."
+
+  - channel_id: CH-TELEGRAM-001
+    canonical_name: "Telegram"
+    channel_type: MESSENGER
+    system_ref: null
+    aliases: []
+    source_refs: [SRC-HR-KDP-001]
+    notes: "Нормализован только как коммуникационный канал, без вывода о корпоративном статусе или системе-владельце."
+
+  - channel_id: CH-CORP-MESSENGER-001
+    canonical_name: "Корпоративный мессенджер"
+    channel_type: MESSENGER
+    system_ref: null
+    aliases: ["корпоративные мессенджеры"]
+    source_refs: [SRC-HR-KDP-001, SRC-ACC-CHIEF-001]
+    notes: "Конкретный продукт/система источниками в соответствующих фактах не нормализован; это канонический тип наблюдаемого корпоративного канала."
+
+  - channel_id: CH-IN-PERSON-001
+    canonical_name: "Личное взаимодействие"
+    channel_type: IN_PERSON
+    system_ref: null
+    aliases: ["лично", "очно"]
+    source_refs: [SRC-HR-KDP-001]
+    notes: "Очная передача/сообщение между участниками; не является отдельным процессом."
+
+  - channel_id: CH-POSTAL-001
+    canonical_name: "Почтовое отправление"
+    channel_type: POSTAL
+    system_ref: null
+    aliases: ["почтовая отправка", "отправка письмом"]
+    source_refs: [SRC-HR-KDP-001]
+    notes: "Физический почтовый канал. Конкретный оператор и сервис не утверждаются без evidence."
 
 # Канал не является системой и не является сообщением.
+# Agent 02 не создает новые CH-* самостоятельно: ненормализованный канал остается
+# observed_channel_names + null/empty canonical ref и передается Coordinator как dictionary proposal.
+# "Личный кабинет" HelpDesk намеренно не канонизирован здесь: требуется отдельно решить,
+# является ли это TICKET_PORTAL channel/interface либо частью SYS-IT-HELPDESK-001.
+#
 # Пример:
 # - channel_id: CH-EMAIL-001
 #   canonical_name: "Электронная почта"
