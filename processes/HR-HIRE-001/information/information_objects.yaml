@@ -66,11 +66,11 @@ information_objects:
     channel_refs: []
     storage_location: null
     format: null
-    required: CONDITIONAL
+    required: UNKNOWN
     existence_status: CONFIRMED
     evidence_refs: [FACT-HIRE-002]
     evidence_class: EXPLICIT
-    notes: "Канал запроса и срок ответа не указаны."
+    notes: "Условный объект: возникает только при неполном комплекте. Канал запроса и срок ответа не указаны."
 
   - information_id: IO-HIRE-004
     model_layer: AS_IS
@@ -89,11 +89,11 @@ information_objects:
     channel_refs: []
     storage_location: null
     format: null
-    required: CONDITIONAL
+    required: UNKNOWN
     existence_status: CONFIRMED
     evidence_refs: [FACT-HIRE-002]
     evidence_class: EXPLICIT
-    notes: "Состав зависит от того, чего не хватало в первоначальном комплекте."
+    notes: "Условный объект: состав зависит от того, чего не хватало в первоначальном комплекте."
 
   - information_id: IO-HIRE-005
     model_layer: AS_IS
@@ -446,11 +446,11 @@ information_objects:
     channel_refs: []
     storage_location: null
     format: null
-    required: CONDITIONAL
+    required: UNKNOWN
     existence_status: CONFIRMED
     evidence_refs: [FACT-HIRE-009, FACT-HIRE-010]
     evidence_class: EXPLICIT
-    notes: "В источнике отдельно назван военный билет и документы воинского учета."
+    notes: "Условный объект. В источнике отдельно назван военный билет и документы воинского учета."
 
   - information_id: IO-MIL-002
     model_layer: AS_IS
@@ -469,11 +469,11 @@ information_objects:
     channel_refs: []
     storage_location: "1С: Зарплата и управление персоналом"
     format: "Системная запись"
-    required: CONDITIONAL
+    required: UNKNOWN
     existence_status: CONFIRMED
     evidence_refs: [FACT-HIRE-009]
     evidence_class: EXPLICIT
-    notes: null
+    notes: "Условный объект; source condition recorded in A022/D003."
 
   - information_id: IO-MIL-003
     model_layer: AS_IS
@@ -492,7 +492,7 @@ information_objects:
     channel_refs: []
     storage_location: null
     format: "Форма 10"
-    required: CONDITIONAL
+    required: UNKNOWN
     existence_status: CONFIRMED
     evidence_refs: [FACT-HIRE-010]
     evidence_class: EXPLICIT
@@ -505,7 +505,7 @@ information_objects:
       - "Адреса/место жительства"
       - "Категория запаса, воинское звание, состав и кодовое обозначение ВУС"
       - "Сведения о приеме/увольнении, номер и дата приказа, должность, военный комиссариат"
-    notes: "Сверяется с документами воинского учета; требуется подпись ответственного и военнообязанного."
+    notes: "Условный объект. Сверяется с документами воинского учета; требуется подпись ответственного и военнообязанного."
 
   - information_id: IO-MIL-004
     model_layer: AS_IS
@@ -526,11 +526,11 @@ information_objects:
     observed_channel_names: ["Почтовое отправление"]
     storage_location: null
     format: null
-    required: CONDITIONAL
+    required: UNKNOWN
     existence_status: CONFIRMED
     evidence_refs: [FACT-HIRE-011]
     evidence_class: EXPLICIT
-    notes: "Исполнитель формирования/отправки в источнике не назван однозначно."
+    notes: "Условный объект. Исполнитель формирования/отправки в источнике не назван однозначно."
 
 communications:
   - communication_id: COM-HIRE-001
