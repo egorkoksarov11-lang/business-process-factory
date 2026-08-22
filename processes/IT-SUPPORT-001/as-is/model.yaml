@@ -12,10 +12,29 @@ scope:
     - IT-SUPPORT-INTAKE-001
     - IT-SUPPORT-RESOLVE-001
     - IT-SUPPORT-FINALIZE-001
-  current_channels:
-    - EMAIL
-    - PHONE
-    - PERSONAL_CABINET
+  observed_channel_names:
+    - "Электронная почта"
+    - "Телефон"
+    - "Личный кабинет"
+  channel_acknowledgement_status:
+    - observed_channel_name: "Электронная почта"
+      status: CONFIRMED_CURRENT
+      information_ref: IO-IT-SUPPORT-ACK-001
+      communication_ref: COM-IT-SUPPORT-ACK-EMAIL-001
+      evidence_refs: [FACT-IT-LEAD-007]
+      evidence_class: EXPLICIT
+    - observed_channel_name: "Телефон"
+      status: UNKNOWN_CURRENT
+      information_ref: null
+      communication_ref: null
+      evidence_refs: [FACT-IT-LEAD-007]
+      evidence_class: UNKNOWN
+    - observed_channel_name: "Личный кабинет"
+      status: UNKNOWN_CURRENT
+      information_ref: null
+      communication_ref: null
+      evidence_refs: [FACT-IT-LEAD-007]
+      evidence_class: UNKNOWN
   excluded_from_current_as_is:
     - object: "Бот корпоративного мессенджера для подачи обращений"
       status: "IN_DEVELOPMENT_NOT_AS_IS"
@@ -32,10 +51,11 @@ steps:
       - IO-IT-SUPPORT-REQUEST-001
       - IO-IT-SUPPORT-DESCRIPTION-001
     system_refs: []
-    channel_refs:
-      - EMAIL
-      - PHONE
-      - PERSONAL_CABINET
+    channel_refs: []
+    observed_channel_names:
+      - "Электронная почта"
+      - "Телефон"
+      - "Личный кабинет"
     incoming_flow_refs: []
     outgoing_flow_refs: [ITSUP-F001]
     timing:
@@ -46,7 +66,7 @@ steps:
     result: "Обращение пользователя направлено через один из трех действующих каналов"
     evidence_refs: [FACT-IT-LEAD-005]
     evidence_class: EXPLICIT
-    notes: "Email назван самым частым каналом. Каналы не являются отдельными процессами."
+    notes: "Электронная почта названа самым частым каналом. Каналы не являются отдельными процессами. Canonical channel IDs пока не назначены."
 
   - step_id: ITSUP-A002
     subprocess_id: IT-SUPPORT-INTAKE-001
@@ -87,9 +107,11 @@ steps:
     output_information_refs:
       - IO-IT-SUPPORT-ACK-001
     system_refs: [SYS-IT-HELPDESK-001]
-    channel_refs: [EMAIL]
+    channel_refs: []
+    observed_channel_names:
+      - "Электронная почта"
     incoming_flow_refs: [ITSUP-F002]
-    outgoing_flow_refs: [ITSUP-F004]
+    outgoing_flow_refs: []
     timing:
       duration: null
       deadline: null
@@ -98,7 +120,7 @@ steps:
     result: "При email-обращении пользователю отправлено подтверждение, что заявка принята и будет рассмотрена"
     evidence_refs: [FACT-IT-LEAD-007]
     evidence_class: EXPLICIT
-    notes: "Механизм отправки и исполнитель не установлены. Подтверждение явно доказано только для email."
+    notes: "Механизм отправки и исполнитель не установлены. Подтверждение доказано только для электронной почты и не является условием перехода заявки в RESOLVE."
 
   - step_id: ITSUP-A004
     subprocess_id: IT-SUPPORT-RESOLVE-001
@@ -112,9 +134,7 @@ steps:
       - IO-IT-SUPPORT-STATUS-001
     system_refs: [SYS-IT-HELPDESK-001]
     channel_refs: []
-    incoming_flow_refs:
-      - ITSUP-F003
-      - ITSUP-F004
+    incoming_flow_refs: [ITSUP-F003]
     outgoing_flow_refs: [ITSUP-F005]
     timing:
       duration: null
@@ -126,7 +146,7 @@ steps:
       - FACT-IT-LEAD-007
       - FACT-IT-LEAD-008
     evidence_class: EXPLICIT
-    notes: "Источник подтверждает взятие в работу, но не раскрывает правило приоритизации."
+    notes: "Источник подтверждает взятие в работу, но не раскрывает правило приоритизации. Переход из INTAKE не зависит от того, известен ли механизм acknowledgement по конкретному каналу."
 
   - step_id: ITSUP-A005
     subprocess_id: IT-SUPPORT-RESOLVE-001
@@ -240,20 +260,13 @@ flows:
     from_ref: ITSUP-A002
     to_ref: ITSUP-A003
     flow_type: CONDITIONAL
-    condition: "Канал обращения — email"
+    condition: "Наблюдаемый канал — электронная почта; для email подтверждено сообщение о принятии"
     evidence_refs: [FACT-IT-LEAD-007]
     applicability: CONFIRMED_CURRENT
+    notes: "Это отдельная подтвержденная коммуникация и не gateway, блокирующий основной переход INTAKE → RESOLVE."
 
   - flow_id: ITSUP-F003
     from_ref: ITSUP-A002
-    to_ref: ITSUP-A004
-    flow_type: CONDITIONAL
-    condition: "Канал не email; наличие отдельного подтверждения приема для телефона/личного кабинета не установлено"
-    evidence_refs: [FACT-IT-LEAD-007]
-    applicability: PARTIAL_CURRENT
-
-  - flow_id: ITSUP-F004
-    from_ref: ITSUP-A003
     to_ref: ITSUP-A004
     flow_type: SEQUENCE
     condition: null
@@ -261,6 +274,7 @@ flows:
       - FACT-IT-LEAD-007
       - FACT-IT-LEAD-008
     applicability: CONFIRMED_CURRENT
+    notes: "Основной переход зарегистрированной заявки в работу существует независимо от того, известен ли механизм acknowledgement для конкретного канала. Не означает отсутствие acknowledgement для телефона или личного кабинета."
 
   - flow_id: ITSUP-F005
     from_ref: ITSUP-A004
@@ -295,19 +309,6 @@ flows:
     applicability: CONFIRMED_CURRENT
 
 decisions:
-  - decision_id: ITSUP-D001
-    after_step_ref: ITSUP-A002
-    question: "Обращение поступило по email?"
-    branches:
-      - outcome: "Да"
-        next_ref: ITSUP-A003
-      - outcome: "Нет / иной из текущих каналов"
-        next_ref: ITSUP-A004
-        note: "Отсутствие подтверждения для телефона/личного кабинета не утверждается; его наличие UNKNOWN."
-    evidence_refs: [FACT-IT-LEAD-007]
-    evidence_class: EXPLICIT
-    applicability: CONFIRMED_CURRENT
-
   - decision_id: ITSUP-D002
     after_step_ref: ITSUP-A005
     question: "Какой вариант решения возможен по обращению?"
@@ -374,4 +375,4 @@ open_questions:
 metadata:
   created_at: "2026-08-22"
   updated_at: "2026-08-22"
-  notes: "Единый parent AS-IS для IT-SUPPORT-001; шаги размечены subprocess_id. TO-BE, оптимизация, BPMN и troubleshooting-detail не создавались."
+  notes: "Единый parent AS-IS для IT-SUPPORT-001; шаги размечены subprocess_id. TO-BE, оптимизация, BPMN и troubleshooting-detail не создавались. Channel IDs не назначались Agent 02; наблюдаемые каналы хранятся текстом до Coordinator canonicalization."
