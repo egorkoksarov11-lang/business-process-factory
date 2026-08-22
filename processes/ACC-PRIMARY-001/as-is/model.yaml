@@ -1,0 +1,305 @@
+schema_version: "1.1"
+process_id: "ACC-PRIMARY-001"
+as_is_version: "0.1"
+status: "CLARIFICATION_REQUIRED"
+
+scope:
+  trigger: "Первичный документ/документ контрагента поступил в работу Главному бухгалтеру; для контрагентских документов источник прямо описывает проверку входящих документов в Диадоке/СБИС."
+  business_result: "При положительном решении о принятии документ принят к учету и отражен Главным бухгалтером в 1С для формирования отчетности."
+  applicability: "CONFIRMED_CURRENT"
+  source_refs: ["SRC-ACC-CHIEF-001"]
+
+steps:
+  - step_id: "A001"
+    subprocess_id: "ACC-PRIMARY-CHECK-001"
+    role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    action: "Проверить наличие входящего документа контрагента в ЭДО и при наличии скачать документ на сервер соответствующего юридического лица"
+    business_object: "Входящий документ контрагента"
+    input_information_refs: ["IO-ACC-PRIMARY-001"]
+    output_information_refs: ["IO-ACC-PRIMARY-003"]
+    system_refs: ["SYS-DIADOC-001", "SYS-SBIS-001"]
+    channel_refs: []
+    incoming_flow_refs: []
+    outgoing_flow_refs: ["F001"]
+    timing:
+      duration: null
+      deadline: null
+      frequency: null
+      wait_for: null
+    result: "Документ доступен Главному бухгалтеру для предметной проверки; при поступлении через описанный ЭДО-контур файл скачан на сервер соответствующего юридического лица"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-001"]
+    evidence_class: "EXPLICIT"
+    notes: "Не распространяет общий CAND-ACC-INBOX-001 на отдельный L1 и не утверждает, что все первичные документы поступают только через ЭДО."
+
+  - step_id: "A002"
+    subprocess_id: "ACC-PRIMARY-CHECK-001"
+    role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    action: "Проверить документ на правильность оформления, соответствие реквизитов договорам и суммам"
+    business_object: "Первичный документ/документ контрагента"
+    input_information_refs: ["IO-ACC-PRIMARY-001", "IO-ACC-PRIMARY-002", "IO-ACC-PRIMARY-003"]
+    output_information_refs: ["IO-ACC-PRIMARY-001"]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: ["F001"]
+    outgoing_flow_refs: ["F002"]
+    timing:
+      duration: null
+      deadline: null
+      frequency: null
+      wait_for: null
+    result: "Документ проверен по прямо названным критериям и готов к передаче на решение о принятии к учету"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-002"]
+    evidence_class: "EXPLICIT"
+    notes: "Полный перечень критериев проверки и поведение при выявленном несоответствии UNKNOWN."
+
+  - step_id: "A003"
+    subprocess_id: "ACC-PRIMARY-APPROVE-001"
+    role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    action: "Направить проверенный документ на согласование для получения решения о принятии к учету"
+    business_object: "Проверенный первичный документ"
+    input_information_refs: ["IO-ACC-PRIMARY-001", "IO-ACC-PRIMARY-003"]
+    output_information_refs: ["IO-ACC-PRIMARY-004"]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: ["F002"]
+    outgoing_flow_refs: ["F003"]
+    timing:
+      duration: null
+      deadline: null
+      frequency: null
+      wait_for: "Ответ/резолюция адресата о принятии или непринятии документа к учету"
+    result: "Документ передан одному из подтвержденных типов согласующих; точное правило выбора адресата и канал передачи UNKNOWN"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003", "FACT-ACC-PRIMARY-ASIS-004"]
+    evidence_class: "EXPLICIT"
+    notes: "Подтвержденные категории адресатов: ROLE-FIN-DIRECTOR-001 и ROLE-CONTRACT-OBLIGATION-RESP-001. ROLE-CEO-001 не используется."
+
+  - step_id: "A004"
+    subprocess_id: "ACC-PRIMARY-APPROVE-001"
+    role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    action: "Ожидать ответ/резолюцию согласующего"
+    business_object: "Документ на согласовании"
+    input_information_refs: ["IO-ACC-PRIMARY-004"]
+    output_information_refs: []
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: ["F003"]
+    outgoing_flow_refs: ["F004-FIN", "F004-RESP"]
+    timing:
+      duration: null
+      deadline: null
+      frequency: null
+      wait_for: "Ответ/резолюция согласующего"
+    result: "Процесс находится в ожидании решения; числовой срок, SLA и правило эскалации не подтверждены"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-004", "FACT-ACC-PRIMARY-ASIS-005"]
+    evidence_class: "EXPLICIT"
+    notes: "Интервьюируемая называет согласование самым долгим участком. При отсутствии ответа описаны варианты самостоятельного решения либо дальнейшего ожидания, но правило выбора UNKNOWN."
+
+  - step_id: "A005-FIN"
+    subprocess_id: "ACC-PRIMARY-APPROVE-001"
+    role_ref: "ROLE-FIN-DIRECTOR-001"
+    action: "Предоставить решение/резолюцию о принятии или непринятии документа к учету"
+    business_object: "Проверенный первичный документ"
+    input_information_refs: ["IO-ACC-PRIMARY-001", "IO-ACC-PRIMARY-004"]
+    output_information_refs: ["IO-ACC-PRIMARY-005"]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: ["F004-FIN"]
+    outgoing_flow_refs: ["F005-FIN"]
+    timing:
+      duration: null
+      deadline: null
+      frequency: null
+      wait_for: null
+    result: "Главному бухгалтеру передано решение/резолюция; форма фиксации, канал и место хранения решения UNKNOWN"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003", "FACT-ACC-PRIMARY-ASIS-007"]
+    evidence_class: "EXPLICIT"
+    notes: "Шаг применим только когда согласующим выступает Финансовый директор."
+
+  - step_id: "A005-RESP"
+    subprocess_id: "ACC-PRIMARY-APPROVE-001"
+    role_ref: "ROLE-CONTRACT-OBLIGATION-RESP-001"
+    action: "Предоставить решение/резолюцию о принятии или непринятии документа к учету"
+    business_object: "Проверенный первичный документ"
+    input_information_refs: ["IO-ACC-PRIMARY-001", "IO-ACC-PRIMARY-004"]
+    output_information_refs: ["IO-ACC-PRIMARY-005"]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: ["F004-RESP"]
+    outgoing_flow_refs: ["F005-RESP"]
+    timing:
+      duration: null
+      deadline: null
+      frequency: null
+      wait_for: null
+    result: "Главному бухгалтеру передано решение/резолюция; конкретная должность согласующего, форма фиксации, канал и место хранения решения UNKNOWN"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003", "FACT-ACC-PRIMARY-ASIS-005", "FACT-ACC-PRIMARY-ASIS-007"]
+    evidence_class: "EXPLICIT"
+    notes: "ROLE-CONTRACT-OBLIGATION-RESP-001 — только функциональная категория для explicit формулировок 'руководитель / руководитель проекта / иное лицо, отвечающее за исполнение обязательств по договору'."
+
+  - step_id: "A006"
+    subprocess_id: "ACC-PRIMARY-POST-001"
+    role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    action: "После положительного решения принять документ к учету и отразить его в учетной программе 1С"
+    business_object: "Согласованный первичный документ"
+    input_information_refs: ["IO-ACC-PRIMARY-001", "IO-ACC-PRIMARY-005"]
+    output_information_refs: ["IO-ACC-PRIMARY-006"]
+    system_refs: ["SYS-1C-ACCOUNTING-001"]
+    channel_refs: []
+    incoming_flow_refs: ["F005-FIN", "F005-RESP"]
+    outgoing_flow_refs: []
+    timing:
+      duration: null
+      deadline: null
+      frequency: null
+      wait_for: null
+    result: "Принятый документ отражен в 1С для формирования отчетности"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003"]
+    evidence_class: "EXPLICIT"
+    notes: "Поля, проводки, дата принятия и контрольные признаки в 1С источник не раскрывает."
+
+flows:
+  - flow_id: "F001"
+    from_ref: "A001"
+    to_ref: "A002"
+    flow_type: "SEQUENCE"
+    condition: null
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-001", "FACT-ACC-PRIMARY-ASIS-002"]
+    applicability: "CONFIRMED_CURRENT"
+
+  - flow_id: "F002"
+    from_ref: "A002"
+    to_ref: "A003"
+    flow_type: "SEQUENCE"
+    condition: null
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003"]
+    applicability: "CONFIRMED_CURRENT"
+
+  - flow_id: "F003"
+    from_ref: "A003"
+    to_ref: "A004"
+    flow_type: "HANDOFF"
+    condition: "Документ передан согласующему; конкретный адресат определяется по ситуации, правило маршрутизации UNKNOWN"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003", "FACT-ACC-PRIMARY-ASIS-004"]
+    applicability: "CONFIRMED_CURRENT"
+
+  - flow_id: "F004-FIN"
+    from_ref: "A004"
+    to_ref: "A005-FIN"
+    flow_type: "CONDITIONAL"
+    condition: "Согласующим является ROLE-FIN-DIRECTOR-001"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003"]
+    applicability: "CONDITIONAL"
+
+  - flow_id: "F004-RESP"
+    from_ref: "A004"
+    to_ref: "A005-RESP"
+    flow_type: "CONDITIONAL"
+    condition: "Согласующим является ROLE-CONTRACT-OBLIGATION-RESP-001; конкретная должность и критерий выбора UNKNOWN"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003", "FACT-ACC-PRIMARY-ASIS-005"]
+    applicability: "CONDITIONAL"
+
+  - flow_id: "F005-FIN"
+    from_ref: "A005-FIN"
+    to_ref: "A006"
+    flow_type: "HANDOFF"
+    condition: "Получено положительное решение о принятии документа к учету"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003"]
+    applicability: "CONDITIONAL"
+
+  - flow_id: "F005-RESP"
+    from_ref: "A005-RESP"
+    to_ref: "A006"
+    flow_type: "HANDOFF"
+    condition: "Получено положительное решение о принятии документа к учету"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003"]
+    applicability: "CONDITIONAL"
+
+decisions:
+  - decision_id: "D001"
+    after_step_ref: "A002"
+    question: "Кому должен быть направлен конкретный документ для решения о принятии к учету?"
+    branches:
+      - outcome: "Финансовый директор"
+        next_ref: "A005-FIN"
+      - outcome: "Ответственный за исполнение обязательств по договору/сделке"
+        next_ref: "A005-RESP"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003", "FACT-ACC-PRIMARY-ASIS-005"]
+    evidence_class: "EXPLICIT"
+    applicability: "CONFIRMED_CURRENT"
+    notes: "Существование альтернативных адресатов подтверждено; критерий маршрутизации и конкретная должность внутри функциональной категории UNKNOWN. Фактический flow включает A003/A004 передачу и ожидание до шага адресата."
+
+exceptions:
+  - exception_id: "EX-ACC-PRIMARY-001"
+    related_step_refs: ["A002"]
+    condition: "Проверка выявила несоответствие / документ не может быть принят без исправления"
+    behavior: "UNKNOWN: источник не описывает reject/return ветку, адресата возврата, сообщение, канал или условие повторной подачи"
+    evidence_refs: []
+    evidence_class: "UNKNOWN"
+    applicability: "UNKNOWN_CURRENT"
+
+  - exception_id: "EX-ACC-PRIMARY-002"
+    related_step_refs: ["A003", "A004"]
+    condition: "Ответ/резолюция согласующего не получены"
+    behavior: "Интервьюируемая описывает два возможных поведения: Главный бухгалтер самостоятельно принимает решение либо продолжает ждать. Правило выбора, формальное полномочие, SLA и эскалация UNKNOWN"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-005"]
+    evidence_class: "EXPLICIT"
+    applicability: "PARTIAL_CURRENT"
+
+  - exception_id: "EX-ACC-PRIMARY-003"
+    related_step_refs: ["A005-FIN", "A005-RESP"]
+    condition: "Получена резолюция/решение 'не принимать документ к учету'"
+    behavior: "UNKNOWN: источник подтверждает возможность решения 'не берем', но не описывает дальнейший возврат, уведомление или завершение ветки"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-005"]
+    evidence_class: "EXPLICIT"
+    applicability: "UNKNOWN_CURRENT"
+
+quantitative_observations: []
+
+open_questions:
+  - "Q-ACC-PRIMARY-001-001"
+  - "Q-ACC-PRIMARY-001-002"
+  - "Q-ACC-PRIMARY-001-003"
+  - "Q-ACC-PRIMARY-001-004"
+  - "Q-ACC-PRIMARY-001-005"
+  - "Q-ACC-PRIMARY-001-006"
+  - "Q-ACC-PRIMARY-001-007"
+
+system_and_channel_observations:
+  systems_confirmed_in_scope:
+    - system_ref: "SYS-DIADOC-001"
+      use: "Проверка/получение входящих документов контрагентов в ЭДО"
+      evidence_refs: ["FACT-ACC-PRIMARY-ASIS-001"]
+    - system_ref: "SYS-SBIS-001"
+      use: "Проверка/получение входящих документов контрагентов в ЭДО"
+      evidence_refs: ["FACT-ACC-PRIMARY-ASIS-001"]
+    - system_ref: "SYS-1C-ACCOUNTING-001"
+      use: "Отражение принятого документа после положительного решения"
+      evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003"]
+  channels_from_source_context_not_bound_to_specific_approval_handoff:
+    - label: "Корпоративный мессенджер"
+      context: "Источник в целом описывает рабочую переписку/обмен информацией и уточнения через внутренний мессенджер, но не подтверждает, что конкретное согласование ACC-PRIMARY-001 всегда идет через него"
+      applicability: "UNKNOWN_CURRENT"
+    - label: "Телефон"
+      context: "Источник в целом называет телефонные звонки для уточнения информации, но не связывает их однозначно с конкретным approval handoff ACC-PRIMARY-001"
+      applicability: "UNKNOWN_CURRENT"
+    - label: "Электронная почта"
+      context: "Названа среди общих каналов входящих документов/запросов; применимость именно к первичным документам этого L1 не установлена"
+      applicability: "UNKNOWN_CURRENT"
+    - label: "WhatsApp"
+      context: "Назван среди общих каналов входящих документов/запросов; применимость именно к первичным документам этого L1 не установлена"
+      applicability: "UNKNOWN_CURRENT"
+  approval_channel: "UNKNOWN"
+  notes: "Каналы не внесены в system_refs и не получили новых dictionary IDs. Shared dictionaries не изменялись."
+
+interviewee_position_not_current_rule:
+  statement: "Инициатор договора/сделки должен подтверждать фактическое исполнение (поставка/услуга)"
+  evidence_refs: ["FACT-ACC-PRIMARY-ASIS-006"]
+  evidence_class: "EXPLICIT"
+  as_is_rule_status: "NOT_CONFIRMED"
+  role_status: "NOT_CONFIRMED_CURRENT_ROLE"
+  included_as_mandatory_step_or_decision: false
+
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Единый detailed parent model для ACC-PRIMARY-001. Steps насыщены subprocess_id CHECK → APPROVE → POST. TO-BE/оптимизация/BPMN не выполнялись."
