@@ -1,0 +1,172 @@
+schema_version: "1.1"
+process_id: "ACC-REG-REQ-001"
+
+information_objects:
+  - information_id: "IO-ACC-REG-REQ-REQUEST-001"
+    model_layer: "AS_IS"
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Запрос контролирующего органа"
+    object_type: "REQUEST"
+    document_class: "TRANSACTIONAL"
+    lifecycle_role: "INPUT"
+    state_in: "Поступил или был переадресован в бухгалтерскую границу"
+    state_out: "Используется как основание для подготовки бухгалтерской/налоговой части ответа"
+    created_by_role_ref: null
+    consumed_by_role_refs:
+      - "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    related_step_refs:
+      - "REGREQ-A001"
+      - "REGREQ-A002"
+      - "REGREQ-A003"
+    system_refs:
+      - "SYS-DIADOC-001"
+      - "SYS-SBIS-001"
+    channel_refs: []
+    observed_channel_names: []
+    storage_location: "Конкретное место хранения экземпляра запроса UNKNOWN"
+    format: "Электронный запрос; источник также перечисляет общий входящий поток через иные каналы, но конкретный канал данного handoff UNKNOWN"
+    required: "YES"
+    existence_status: "CONFIRMED"
+    evidence_refs:
+      - "FACT-ACC-003"
+      - "FACT-ACC-006"
+    evidence_class: "EXPLICIT"
+    notes: "В Диадоке/СБИС могут находиться запросы налогового органа, фонда социального страхования и других контролирующих служб. Системы не считаются каналами; перечень не объявляется исчерпывающим."
+
+  - information_id: "IO-ACC-REG-REQ-REQUIREMENTS-001"
+    model_layer: "AS_IS"
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Требования запроса к документам и данным"
+    object_type: "OTHER"
+    document_class: null
+    lifecycle_role: "INPUT"
+    state_in: "Содержатся в запросе"
+    state_out: "Использованы для определения состава подготавливаемых материалов"
+    created_by_role_ref: null
+    consumed_by_role_refs:
+      - "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    related_step_refs:
+      - "REGREQ-A001"
+      - "REGREQ-A002"
+      - "REGREQ-A003"
+    system_refs: []
+    channel_refs: []
+    observed_channel_names: []
+    storage_location: "В составе запроса; отдельное хранение UNKNOWN"
+    format: null
+    required: "YES"
+    existence_status: "CONFIRMED"
+    evidence_refs: ["FACT-ACC-006"]
+    evidence_class: "EXPLICIT"
+    notes: "Источник говорит, что документы готовятся в зависимости от того, что указано в запросе; формальная структура требований не раскрыта."
+
+  - information_id: "IO-ACC-REG-REQ-SUPPORTING-001"
+    model_layer: "AS_IS"
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Подтверждающие документы из сетевых папок"
+    object_type: "DOCUMENT"
+    document_class: "TRANSACTIONAL"
+    lifecycle_role: "SUPPORTING"
+    state_in: "Хранятся в сетевых папках на серверах"
+    state_out: "Собраны/скопированы для включения в ответный пакет"
+    created_by_role_ref: null
+    consumed_by_role_refs:
+      - "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    related_step_refs:
+      - "REGREQ-A002"
+      - "REGREQ-A004"
+    system_refs:
+      - "SYS-REMOTE-DESKTOP-001"
+    channel_refs: []
+    observed_channel_names: []
+    storage_location: "Сетевые папки на серверах юридических лиц"
+    format: "Электронные документы; конкретные форматы UNKNOWN"
+    required: "UNKNOWN"
+    existence_status: "CONFIRMED"
+    evidence_refs:
+      - "FACT-ACC-006"
+      - "FACT-ACC-023"
+    evidence_class: "EXPLICIT"
+    notes: "Используются по потребности конкретного запроса. Структура сетевых папок и ownership хранения не унифицированы по source evidence."
+
+  - information_id: "IO-ACC-REG-REQ-1C-MATERIAL-001"
+    model_layer: "AS_IS"
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Бухгалтерские/налоговые документы или данные, сформированные из 1С"
+    object_type: "DOCUMENT"
+    document_class: "TRANSACTIONAL"
+    lifecycle_role: "SUPPORTING"
+    state_in: "Находятся в учетной программе 1С либо формируются в ней по запросу"
+    state_out: "Сформированы и скачаны для включения в ответный пакет"
+    created_by_role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    consumed_by_role_refs:
+      - "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    related_step_refs:
+      - "REGREQ-A003"
+      - "REGREQ-A004"
+    system_refs:
+      - "SYS-1C-ACCOUNTING-001"
+      - "SYS-REMOTE-DESKTOP-001"
+    channel_refs: []
+    observed_channel_names: []
+    storage_location: "1С и/или рабочая папка после выгрузки; точный путь UNKNOWN"
+    format: "Электронный документ/данные; конкретная форма UNKNOWN"
+    required: "UNKNOWN"
+    existence_status: "CONFIRMED"
+    evidence_refs: ["FACT-ACC-006"]
+    evidence_class: "EXPLICIT"
+    notes: "Не достраивать конкретные бухгалтерские формы, проводки или регистры: источник их для этого запроса не называет."
+
+  - information_id: "IO-ACC-REG-REQ-PACKAGE-001"
+    model_layer: "AS_IS"
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Подготовленный бухгалтерский пакет/папка ответа"
+    object_type: "OTHER"
+    document_class: null
+    lifecycle_role: "OUTPUT"
+    state_in: "Материалы собраны и/или сформированы"
+    state_out: "Подготовлены в папке для согласования и дальнейшего направления ответным письмом"
+    created_by_role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    consumed_by_role_refs: []
+    related_step_refs:
+      - "REGREQ-A004"
+    system_refs:
+      - "SYS-REMOTE-DESKTOP-001"
+    channel_refs: []
+    observed_channel_names: []
+    storage_location: "Папка на сервере/в сетевом контуре; точное расположение и ownership UNKNOWN"
+    format: "Набор электронных документов"
+    required: "YES"
+    existence_status: "CONFIRMED"
+    evidence_refs: ["FACT-ACC-006"]
+    evidence_class: "EXPLICIT"
+    notes: "Target согласования, факт фактической передачи, финальный sender и acknowledgement источником не установлены."
+
+communications:
+  - communication_id: "COM-ACC-REG-REQ-ROUTE-001"
+    model_layer: "AS_IS"
+    derived_from_communication_ref: null
+    introduced_by_change_refs: []
+    sender_role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    recipient_role_refs:
+      - "ROLE-FIN-DIRECTOR-001"
+      - "ROLE-SECURITY-001"
+    purpose: "Передать входящий налоговый запрос в группу Финансового директора и службы безопасности в применимых случаях"
+    payload_refs:
+      - "IO-ACC-REG-REQ-REQUEST-001"
+    message_information_ref: "IO-ACC-REG-REQ-REQUEST-001"
+    channel_ref: null
+    observed_channel_names: []
+    system_ref: null
+    related_step_refs: []
+    response_expected: "UNKNOWN"
+    expected_response_information_refs: []
+    response_deadline: null
+    evidence_refs: ["FACT-ACC-004"]
+    evidence_class: "EXPLICIT"
+    notes: "Boundary communication относится к CAND-ACC-INBOX-001/interface, а не к внутреннему sequence ACC-REG-REQ-001. Источник не называет process-specific channel этой передачи; общий перечень email/мессенджеров/телефона/WhatsApp не присваивается автоматически."
