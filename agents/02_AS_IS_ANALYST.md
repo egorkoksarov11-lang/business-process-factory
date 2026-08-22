@@ -33,6 +33,8 @@ Agent 02 отвечает не только за последовательно�
 
 Для уже существующего package schema v1.0 не требуется переписывать архитектуру только ради v1.1. Дополнительные artifacts создаются поверх утвержденной границы.
 
+Если Agent 02 естественным образом обновляет `process.yaml`, чтобы подключить detailed AS-IS artifacts, использовать только канонический контракт v1.1: `schema_version: "1.1"` и `model_refs.as_is_model`, `model_refs.information_objects`, `model_refs.handoff_register`, `model_refs.clarification_register`, `model_refs.issues`. Не создавать альтернативные секции вроде `as_is_artifacts` или собственные поля ссылок.
+
 ## 1. Evidence discipline
 
 Каждый значимый факт получает confidence class:
@@ -154,6 +156,10 @@ AS-IS Analyst не создает новые чек-листы и шаблоны
 - срок ответа, только если известен;
 - связанный шаг и evidence.
 
+Для `communications` поле `channel_ref` — только одно и только canonical `CH-*` ID либо `null`. Поле `channel_refs` внутри communication не использовать. Если canonical channel еще не определен, сохранить исходное название в `observed_channel_names` и передать предложение Coordinator.
+
+Acknowledgement моделируется как отдельная communication/information object только если источник подтверждает сам факт подтверждения. Если acknowledgement для канала `UNKNOWN`, нельзя изображать его как доказанно отсутствующий или превращать неизвестность в routing gateway.
+
 ## 5. Handoff
 
 Отдельно выявлять передачи ответственности/результата:
@@ -169,6 +175,8 @@ AS-IS Analyst не создает новые чек-листы и шаблоны
 
 Handoff нельзя заменять простой записью `next_process`, если происходит реальная передача объекта или ответственности.
 
+Не создавать отдельный handoff только ради технического перехода между L2 одного parent process, если payload/result/responsibility уже не передается другому участнику или процессу.
+
 ## 6. Systems and channels
 
 Различать:
@@ -178,7 +186,11 @@ Handoff нельзя заменять простой записью `next_proces
 - место хранения (`network folder`, server directory);
 - информационный объект (`файл`, письмо, отчет, запрос).
 
-Использовать канонические dictionaries. Если сущность не нормализована и нельзя установить эквивалент — зафиксировать UNKNOWN/новый candidate, не смешивать категории.
+Использовать канонические dictionaries. В `channel_ref/channel_refs` допустимы только canonical IDs вида `CH-*`; enum `EMAIL`, `PHONE`, `MESSENGER` и свободный текст являются типом/наблюдаемым названием, а не ссылкой.
+
+Если канал не нормализован, Agent 02 не создает `CH-*` самостоятельно: использовать `channel_ref: null` либо `channel_refs: []` в соответствии со schema и сохранить `observed_channel_names`. Новый dictionary ID — proposal Coordinator.
+
+То же правило действует для новых role/system IDs: Agent 02 не нормализует неоднозначную сущность молча, а передает dictionary change request Coordinator.
 
 ## 7. Решения, flows и исключения
 
@@ -205,6 +217,10 @@ Flow types v1.1:
 - `EXCEPTION`.
 
 Reference-derived conditional block не превращать в обязательный sequence flow без подтверждения текущей практики.
+
+Если источник подтверждает несколько действий, но не устанавливает их полный взаимный порядок, нельзя достраивать «удобную» линейную последовательность. Использовать `orchestration_constraints.confirmed_order` для доказанных зависимостей и `orchestration_constraints.order_unknown` для существенных отношений с `ORDER_UNKNOWN`. Отсутствие sequence flow в таком случае является сознательным сохранением неопределенности, а не недоделанной моделью.
+
+Decision и flow должны быть внутренне непротиворечивы: decision не должен перескакивать через подтвержденные шаги передачи/ожидания только ради компактной маршрутизации.
 
 ## 8. Quantitative facts
 
@@ -289,9 +305,13 @@ Agent 02 не меняет архитектуру молча.
 - [ ] у значимых шагов есть business object и результат;
 - [ ] все ключевые решения отражены;
 - [ ] significant waits/returns/parallel flows отражены;
+- [ ] подтвержденный partial order отражен, а существенный неизвестный порядок не заменен искусственными sequence flows;
 - [ ] значимые документы/сообщения/файлы/отчеты не потеряны;
 - [ ] значимые handoff зафиксированы;
 - [ ] системы и каналы не смешаны;
+- [ ] `channel_ref/channel_refs` содержат только canonical `CH-*`, а ненормализованные названия вынесены в `observed_channel_names`;
+- [ ] communication использует singular `channel_ref`;
+- [ ] UNKNOWN acknowledgement не выдан за отсутствие acknowledgement;
 - [ ] числовые сроки/частоты имеют evidence;
 - [ ] source refs есть у ключевых фактов;
 - [ ] противоречия не скрыты;
@@ -300,3 +320,9 @@ Agent 02 не меняет архитектуру молча.
 - [ ] граница не поплыла относительно архитектуры без возврата Coordinator.
 
 Если критический ответ отсутствует — `CLARIFICATION_REQUIRED`, а не выдуманная полнота.
+
+## 14. Pilot stabilization rule
+
+Правила этого документа закрепляют результаты пилотов `ACC-PRIMARY-001`, `HR-HIRE-001` и `IT-SUPPORT-001`. Новые Agent 02 должны применять их сразу, а не повторять локальные cleanup-паттерны из пилотных PR.
+
+При сомнении между «достроить модель» и «сохранить UNKNOWN» выбирать второе и формировать точечный clarification/dictionary proposal.

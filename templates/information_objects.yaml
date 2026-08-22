@@ -19,7 +19,8 @@ information_objects: []
 #   consumed_by_role_refs: []
 #   related_step_refs: []
 #   system_refs: []
-#   channel_refs: []
+#   channel_refs: [] # только canonical CH-* IDs; enum EMAIL/PHONE и свободный текст здесь недопустимы
+#   observed_channel_names: [] # fallback для source wording, пока Coordinator не определил canonical CH-* ID
 #   storage_location: null
 #   format: null
 #   required: UNKNOWN # YES | NO | UNKNOWN
@@ -32,6 +33,8 @@ communications: []
 
 # Коммуникация — факт передачи сообщения/запроса/уведомления, а не канал сам по себе.
 # Измененная TO-BE коммуникация получает отдельный communication_id; AS-IS запись не редактируется задним числом.
+# В communication поле channel_ref СИНГУЛЯРНОЕ. Если canonical channel неизвестен — channel_ref: null
+# и source wording хранится в observed_channel_names. Не использовать здесь channel_refs.
 # - communication_id: COM-001
 #   model_layer: AS_IS # AS_IS | TO_BE
 #   derived_from_communication_ref: null
@@ -42,6 +45,7 @@ communications: []
 #   payload_refs: [IO-002]
 #   message_information_ref: IO-003
 #   channel_ref: CH-EMAIL-001
+#   observed_channel_names: []
 #   system_ref: null
 #   related_step_refs: [A010]
 #   response_expected: YES # YES | NO | UNKNOWN
@@ -50,6 +54,10 @@ communications: []
 #   evidence_refs: [FACT-010]
 #   evidence_class: EXPLICIT # EXPLICIT | INFERRED | UNKNOWN | CONFLICT | null for TO_BE design
 #   notes: null
+
+# Acknowledgement — отдельная communication/information object только если источник подтверждает
+# сам факт подтверждения. UNKNOWN acknowledgement нельзя молча превращать в отсутствие сообщения
+# или использовать как routing gateway.
 
 metadata:
   created_at: null

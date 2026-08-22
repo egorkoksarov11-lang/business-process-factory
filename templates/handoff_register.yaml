@@ -15,7 +15,8 @@ handoffs: []
 #   payload_refs: [IO-001]
 #   communication_refs: [COM-001]
 #   system_refs: []
-#   channel_refs: []
+#   channel_refs: [] # только canonical CH-* IDs
+#   observed_channel_names: [] # fallback для source wording до Coordinator canonicalization
 #   acceptance_or_result: "Получатель принял документ в работу"
 #   acknowledgement_required: UNKNOWN # YES | NO | UNKNOWN
 #   timing:
@@ -27,6 +28,12 @@ handoffs: []
 #   evidence_class: EXPLICIT
 #   ambiguity: null
 #   notes: null
+
+# Handoff не создается только ради технического перехода между L2 одного parent process.
+# Он нужен, когда реально передается объект, результат или ответственность.
+# UNKNOWN acknowledgement означает неизвестность механизма подтверждения, а не доказанное отсутствие acknowledgement.
+# Канал и система не подменяют друг друга: system_refs — где выполняется/фиксируется действие,
+# channel_refs — через что передается payload/communication.
 
 metadata:
   created_at: null
