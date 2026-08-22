@@ -1,6 +1,6 @@
 source_id: SRC-HR-DIR-001
 source_type: interview_transcript
-source_status: RAW_REGISTERED
+source_status: ARCHITECTURE_PROCESSED
 language: ru
 original_filename: "HR 1.txt"
 repository_path: "sources/raw/hr/SRC-HR-DIR-001_hr_director_interview.txt"
@@ -28,8 +28,40 @@ provenance:
   semantic_corrections_applied: false
 notes:
   - "Источник хранится как сырой транскрипт; речевые оговорки и возможные ошибки распознавания не исправлялись."
-  - "Источник особенно релевантен для проверки границ HR-HIRE-001, HR-TERM-001 и архитектуры кадровой службы совместно с SRC-HR-KDP-001."
-  - "Фраза о вариантах сокращения/увольнения содержит возможную ошибку распознавания ('по закону дела ЦПТК') и не должна исправляться молча."
+  - "Источник синтезирован совместно с SRC-HR-KDP-001; авторство архитектурных фактов сохранено в sources/evidence/SRC-HR-DIR-001_architecture.yaml."
+  - "Перечисленные директором темы не были автоматически превращены в самостоятельные L1: контроль КДП классифицирован как cross-process responsibility; кратко описанные темы оставлены architecture candidates до boundary-review."
+source_quality_issues:
+  - issue_id: SQI-HR-DIR-001
+    fragment: "Либо это по закону дела ЦПТК, либо это увольнением, либо по договоренности с сотрудниками."
+    assessment: "Фрагмент содержит возможную ошибку распознавания. Неясная часть не интерпретирована как основание прекращения трудовых отношений и не использована для создания отдельного сценария."
+architecture:
+  synthesized_with:
+    - SRC-HR-KDP-001
+  evidence_ref: "sources/evidence/SRC-HR-DIR-001_architecture.yaml"
+  canonical_process_refs:
+    - HR-RECRUIT-001
+    - HR-HIRE-001
+    - HR-ADAPT-001
+    - HR-TERM-001
+  architecture_candidates:
+    - CAND-HR-MOVE-001
+    - CAND-HR-WORKFORCE-001
+    - CAND-HR-LEAVE-SCHEDULE-001
+    - CAND-HR-LNA-001
+    - CAND-HR-CONFLICT-001
+    - CAND-HR-INSPECTION-001
+    - CAND-HR-FOT-001
+    - CAND-HR-CORP-EVENT-001
+    - CAND-HR-TIME-LEAVE-001
+  cross_process_responsibilities:
+    - "Контроль кадрового делопроизводства по приемам, увольнениям, переводам/движениям, личным делам, приказам, табелированию, отпускам и больничным."
+  role_landscape_views:
+    - VIEW-HR-DIRECTOR-ROLE-001
+  end_to_end_views:
+    - VIEW-HR-HIRE-E2E-001
+  systems_observed:
+    - SYS-HH-001
 workflow:
-  status: NEW
-  next_agent: "01_COORDINATOR_PROCESS_ARCHITECT"
+  status: ARCHITECTURE_PROCESSED
+  next_agent: "02_AS_IS_ANALYST"
+  handoff_path: "handoffs/HR-SYNTHESIS-001_AGENT01_TO_AGENT02.md"

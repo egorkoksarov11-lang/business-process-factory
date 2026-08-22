@@ -1,6 +1,6 @@
 source_id: SRC-HR-MODEL-002
 source_type: existing_process_model
-source_status: REFERENCE_REGISTERED
+source_status: ARCHITECTURE_PROCESSED
 language: ru
 original_filename: "Заявка на подбор (1)(1).png"
 repository_path: "sources/reference_models/hr/SRC-HR-MODEL-002_recruitment_request_process.md"
@@ -24,8 +24,18 @@ provenance:
   normalization: "Текстовая транскрипция изображения без изменения бизнес-логики"
   semantic_corrections_applied: false
 notes:
-  - "Не считать модель автоматически действующим AS-IS или целевым TO-BE до подтверждения ее статуса."
-  - "Отдельно проверить архитектурную границу относительно HR-RECRUIT-001 и CAND-HR-WORKFORCE-001."
+  - "Не считать модель автоматически действующим AS-IS или TO-BE; lifecycle/approval status остается UNKNOWN."
+  - "Модель подтверждает самостоятельную архитектурную границу HR-STAFF-REQ-001, но фактическую обязательность отдельных правил должен проверить Agent 02."
+  - "Документы модели зарегистрированы как EXISTING_INTERNAL references; новые шаблоны Agent 01 не создавал."
+architecture:
+  canonical_process_refs:
+    - HR-STAFF-REQ-001
+    - HR-RECRUIT-001
+  views:
+    - VIEW-HR-MODEL-ENTRY-E2E-001
+  evidence_path: "sources/evidence/SRC-HR-MODEL-002_architecture.yaml"
+  mapping_path: "mappings/SRC-HR-MODEL-002.yaml"
 workflow:
-  status: NEW
-  next_agent: "01_COORDINATOR_PROCESS_ARCHITECT"
+  status: ARCHITECTURE_PROCESSED
+  next_agent: "02_AS_IS_ANALYST"
+  handoff_path: "handoffs/HR-SYNTHESIS-001_AGENT01_TO_AGENT02.md"

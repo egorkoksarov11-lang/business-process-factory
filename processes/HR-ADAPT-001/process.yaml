@@ -1,0 +1,62 @@
+schema_version: "1.0"
+process:
+  process_id: "HR-ADAPT-001"
+  name: "Сопровождение адаптации и испытательного срока сотрудника"
+  domain: "HR"
+  level: "L1"
+  status: "ARCHITECTURE_READY"
+  parent_process: null
+  owner_role: UNKNOWN
+  participants: [ROLE-HR-DIRECTOR-001, ROLE-EMPLOYEE-001]
+  conditional_participants:
+    - role_ref: ROLE-HR-KDP-001
+      applicability: BOUNDARY_ROLE_CONFLICT_ONLY
+      source_ref: SRC-HR-MODEL-001
+      note: "Модель размещает контроль выхода/начало адаптации у КДП; не доказано участие КДП во всем L1."
+  views:
+    - VIEW-HR-DIRECTOR-ROLE-001
+    - VIEW-HR-FUNCTION-001
+    - VIEW-HR-HIRE-E2E-001
+    - VIEW-HR-MODEL-ENTRY-E2E-001
+boundaries:
+  trigger: "Фактический выход сотрудника и начало периода адаптации/испытательного срока"
+  input: ["Сотрудник, фактически вышедший на работу", "Условия/ожидания периода; критерии UNKNOWN"]
+  previous_processes: []
+  business_result: "Период адаптации/испытательного срока проконтролирован, обратная связь получена и выявленные негативные моменты в зоне HR отработаны; формальное решение UNKNOWN"
+  consumer: "Сотрудник и организация"
+  next_processes: []
+boundary_handoff_from:
+  source_process: HR-HIRE-001
+  event: "Фактический выход сотрудника"
+  relation_to_source_completion: UNKNOWN_MAY_OVERLAP
+  note: "Не означает, что HR-HIRE-001 уже закрыт. Reference-модель показывает параллель с MIL/SFR, но ее lifecycle status UNKNOWN."
+sources:
+  source_refs: [SRC-HR-DIR-001, SRC-HR-MODEL-001]
+  evidence_refs:
+    - "sources/evidence/SRC-HR-DIR-001_architecture.yaml"
+    - "sources/evidence/SRC-HR-MODEL-001_architecture.yaml"
+architecture_evidence:
+  - source_ref: SRC-HR-DIR-001
+    evidence_class: EXPLICIT
+    statement: "Директор по персоналу контролирует адаптацию/испытательный срок после фактического выхода сотрудника."
+  - source_ref: SRC-HR-MODEL-001
+    evidence_class: EXPLICIT
+    statement: "Контроль выхода и начало адаптации показаны параллельно MIL/SFR после core оформления в lane Кадровика."
+  - source_ref: "SRC-HR-DIR-001 vs SRC-HR-MODEL-001"
+    evidence_class: CONFLICT
+    statement: "Нельзя молча назначить КДП владельцем полного L1; модель может описывать только boundary/control of entry."
+versions: {as_is_version: null, to_be_version: null}
+as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+issues: []
+changes: []
+to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+open_questions:
+  - "Является ли MODEL-001#7 только handoff/контролем выхода или подтверждает участие КДП во всем HR-ADAPT-001?"
+  - "Кто предоставляет обратную связь и какие критерии используются?"
+  - "Какое формальное решение завершает испытательный срок?"
+  - "В какой момент относительно закрытия HR-HIRE-001 фактически начинается HR-ADAPT-001?"
+delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+metadata:
+  created_at: "2026-08-21"
+  updated_at: "2026-08-22"
+  notes: "Запуск HR-ADAPT-001 основан на boundary event фактического выхода, а не на обязательном закрытии HR-HIRE-001. previous_processes пуст, чтобы не кодировать ложную строгую последовательность."

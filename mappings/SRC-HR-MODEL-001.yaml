@@ -1,0 +1,102 @@
+schema_version: "1.0"
+source_ref: SRC-HR-MODEL-001
+source_title: "Прием на работу"
+source_lifecycle_status: UNKNOWN
+mapping_status: COMPLETE_ARCHITECTURE_MAPPING
+
+elements:
+  - source_element: "MODEL-001#Start — Возникла потребность в сотруднике"
+    "canonical_process/subprocess": "HR-STAFF-REQ-001 / trigger"
+    classification: L1_TRIGGER
+    transformation_reason: "После SRC-HR-MODEL-002 возникновение потребности относится к самостоятельному процессу формирования/согласования заявки, а не к recruitment."
+    status: MAPPED
+
+  - source_element: "MODEL-001#1 — Сформировать и направить HR заявку на подбор"
+    "canonical_process/subprocess": "HR-STAFF-REQ-001"
+    classification: COLLAPSED_L1_REFERENCE
+    transformation_reason: "Элемент имеет самостоятельную расширенную модель SRC-HR-MODEL-002 с trigger/result/consumer; канонизирован как отдельный L1."
+    status: MAPPED_EXPANDED_BY_MODEL_002
+
+  - source_element: "MODEL-001#2 — Подбор и поиск кандидатов"
+    "canonical_process/subprocess": "HR-RECRUIT-001 / HR-RECRUIT-SOURCE-001"
+    classification: L2_COLLAPSED_SUBPROCESS
+    transformation_reason: "Business-significant sourcing block сохранен как L2, но не выделен в L1."
+    status: MAPPED
+
+  - source_element: "MODEL-001#3 — Отбор и собеседования, выбор кандидата"
+    "canonical_process/subprocess": "HR-RECRUIT-001 / HR-RECRUIT-SELECT-001"
+    classification: L2_COLLAPSED_SUBPROCESS
+    transformation_reason: "Самостоятельный бизнес-блок отбора внутри recruitment."
+    status: MAPPED
+
+  - source_element: "MODEL-001#4 — Проверка кандидата службой безопасности"
+    "canonical_process/subprocess": "HR-RECRUIT-001 / HR-RECRUIT-SEC-001"
+    classification: L2_COLLAPSED_SUBPROCESS
+    transformation_reason: "Сохранен отдельный L2 и новая роль Службы безопасности; наличие блока в фактическом AS-IS не подтверждено интервью."
+    status: MAPPED_SOURCE_LIFECYCLE_UNKNOWN
+
+  - source_element: "MODEL-001#GW4 — Выявлена негативная информация?"
+    "canonical_process/subprocess": "HR-RECRUIT-SEC-001 → HR-RECRUIT-OFFER-001"
+    classification: BUSINESS_DECISION
+    transformation_reason: "Gateway сохраняется как правило/ветвление между L2, отдельный process_id не создается."
+    status: MAPPED_AS_DECISION
+
+  - source_element: "MODEL-001#4.1 — Согласование оффера Генеральным директором"
+    "canonical_process/subprocess": "HR-RECRUIT-001 / HR-RECRUIT-OFFER-001"
+    classification: CONDITIONAL_L2_OPERATION
+    transformation_reason: "Условное согласование является частью offer L2; отдельный микропроцесс не создается."
+    status: MAPPED_SOURCE_LIFECYCLE_UNKNOWN
+
+  - source_element: "MODEL-001#GW4.1 — Оффер согласован Генеральным директором?"
+    "canonical_process/subprocess": "HR-RECRUIT-OFFER-001"
+    classification: BUSINESS_DECISION_WITH_RETURN
+    transformation_reason: "Несогласование возвращает recruitment к sourcing; это branch/loop, не новый процесс."
+    status: MAPPED
+
+  - source_element: "MODEL-001#5 — Предложение работы (оффер) кандидату"
+    "canonical_process/subprocess": "HR-RECRUIT-001 / HR-RECRUIT-OFFER-001"
+    classification: L2_COLLAPSED_SUBPROCESS
+    transformation_reason: "Объединено с подготовкой/согласованием и решением кандидата в один offer L2."
+    status: MAPPED
+
+  - source_element: "MODEL-001#GW5 — Кандидат согласился на оффер?"
+    "canonical_process/subprocess": "HR-RECRUIT-OFFER-001 → HR-HIRE-001 / возврат HR-RECRUIT-SOURCE-001"
+    classification: L1_HANDOFF_DECISION
+    transformation_reason: "Принятие оффера подтверждает business handoff в кадровое оформление; отказ возвращает к поиску."
+    status: MAPPED
+
+  - source_element: "MODEL-001#6 — Оформление приема сотрудника на работу"
+    "canonical_process/subprocess": "HR-HIRE-001 / HR-HIRE-KDP-001"
+    classification: L2_COLLAPSED_SUBPROCESS
+    transformation_reason: "Сохранено как core кадровое оформление; детальные операции интервью КДП остаются внутри L2."
+    status: MAPPED
+
+  - source_element: "MODEL-001#PAR — Параллель после оформления приема"
+    "canonical_process/subprocess": "HR-HIRE-001 boundary orchestration"
+    classification: PARALLEL_BRANCHING
+    transformation_reason: "Параллельность сохранена как архитектурная связь; gateway не становится процессом."
+    status: MAPPED_AS_FLOW
+
+  - source_element: "MODEL-001#7 — Контроль выхода сотрудника и начало адаптации"
+    "canonical_process/subprocess": "HR-HIRE-001 → HR-ADAPT-001 handoff/boundary"
+    classification: HANDOFF_ROLE_CONFLICT
+    transformation_reason: "Модель помещает элемент у Кадровика, тогда как SRC-HR-DIR-001 относит полноценный контроль адаптации к Директору по персоналу. Не выбран один owner; элемент не превращен в отдельный L2 до уточнения."
+    status: CONFLICT
+
+  - source_element: "MODEL-001#8 — Воинский учет"
+    "canonical_process/subprocess": "HR-HIRE-001 / HR-HIRE-MIL-001"
+    classification: CONDITIONAL_L2_COLLAPSED_SUBPROCESS
+    transformation_reason: "Это ветка воинского учета, вызванная приемом; не дублирует независимые периодические/событийные L1 воинского учета."
+    status: MAPPED
+
+  - source_element: "MODEL-001#9 — Подготовка и отправка отчета в СФР"
+    "canonical_process/subprocess": "HR-HIRE-001 / HR-HIRE-SFR-001"
+    classification: L2_COLLAPSED_SUBPROCESS_ROLE_CONFLICT
+    transformation_reason: "L2 сохранен, но распределение подготовки/отправки между Кадровиком и Главным бухгалтером конфликтует с SRC-HR-KDP-001."
+    status: CONFLICT
+
+  - source_element: "MODEL-001#End — Кадровое оформление завершено"
+    "canonical_process/subprocess": "HR-HIRE-001 / result; HR-ADAPT-001 только начат"
+    classification: SOURCE_E2E_END
+    transformation_reason: "Source end сохранен в VIEW-HR-MODEL-ENTRY-E2E-001; он не означает завершение полного HR-ADAPT-001."
+    status: MAPPED
