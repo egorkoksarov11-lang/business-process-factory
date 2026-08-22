@@ -4,9 +4,9 @@ channels:
     canonical_name: "Электронная почта"
     channel_type: EMAIL
     system_ref: null
-    aliases: ["email", "e-mail", "почта"]
+    aliases: ["email", "e-mail"]
     source_refs: [SRC-HR-KDP-001, SRC-IT-LEAD-001, SRC-ACC-CHIEF-001]
-    notes: "Канал передачи сообщений. Не является почтовой системой/клиентом и не заменяет information object MESSAGE/REQUEST."
+    notes: "Канал передачи сообщений. Не является почтовой системой/клиентом и не заменяет information object MESSAGE/REQUEST. Свободное слово «почта» намеренно не является alias из-за неоднозначности с физическим почтовым каналом."
 
   - channel_id: CH-PHONE-001
     canonical_name: "Телефон"
