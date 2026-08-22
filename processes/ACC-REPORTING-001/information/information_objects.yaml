@@ -1,0 +1,177 @@
+schema_version: "1.1"
+process_id: "ACC-REPORTING-001"
+
+information_objects:
+  - information_id: IO-ACC-REPORTING-DATA-001
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Данные бухгалтерского и налогового учета для отчетности"
+    object_type: DATASET
+    document_class: null
+    lifecycle_role: INPUT
+    state_in: "Отражены в учете"
+    state_out: "Проверены перед формированием отчетности"
+    created_by_role_ref: null
+    consumed_by_role_refs: [ROLE-FIN-CHIEF-ACCOUNTANT-001]
+    related_step_refs: [ACCRPT-A001, ACCRPT-A002]
+    system_refs: [SYS-1C-ACCOUNTING-001]
+    channel_refs: []
+    observed_channel_names: []
+    storage_location: null
+    format: null
+    required: YES
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-ACC-009, FACT-ACC-010]
+    evidence_class: EXPLICIT
+  - information_id: IO-ACC-REPORTING-REPORT-001
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Бухгалтерская и налоговая отчетность / отчетная форма"
+    object_type: REPORT
+    document_class: null
+    lifecycle_role: OUTPUT
+    state_in: PREPARED
+    state_out: ACCEPTED
+    created_by_role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    consumed_by_role_refs: [UNKNOWN]
+    related_step_refs: [ACCRPT-A002, ACCRPT-A003, ACCRPT-A004, ACCRPT-A005, ACCRPT-A006]
+    system_refs: []
+    channel_refs: []
+    observed_channel_names: []
+    storage_location: null
+    format: null
+    required: YES
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-ACC-011, FACT-ACC-012, FACT-ACC-013]
+    evidence_class: EXPLICIT
+    notes: "Lifecycle: PREPARED → SENT → ACCEPTED. SENT не приравнивается к ACCEPTED; REJECTED/NOT_ACCEPTED не подтвержден."
+  - information_id: IO-ACC-REPORTING-STATUS-001
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Статус сдачи/принятия отчетности"
+    object_type: OTHER
+    document_class: null
+    lifecycle_role: SUPPORTING
+    state_in: PREPARED
+    state_out: ACCEPTED
+    created_by_role_ref: null
+    consumed_by_role_refs: [ROLE-FIN-CHIEF-ACCOUNTANT-001]
+    related_step_refs: [ACCRPT-A002, ACCRPT-A003, ACCRPT-A004, ACCRPT-A005]
+    system_refs: []
+    channel_refs: []
+    observed_channel_names: []
+    storage_location: null
+    format: null
+    required: YES
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-ACC-013]
+    evidence_class: EXPLICIT
+    notes: "Точные status labels платформы UNKNOWN."
+  - information_id: IO-ACC-REPORTING-SEND-CONFIRM-001
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Квитанция/подтверждение отправки или получения отчетности"
+    object_type: NOTIFICATION
+    document_class: null
+    lifecycle_role: CONFIRMATION
+    state_in: null
+    state_out: "Доступно для включения в комплект отчетности"
+    created_by_role_ref: null
+    consumed_by_role_refs: [ROLE-FIN-CHIEF-ACCOUNTANT-001]
+    related_step_refs: [ACCRPT-A003, ACCRPT-A006]
+    system_refs: []
+    channel_refs: []
+    observed_channel_names: []
+    storage_location: null
+    format: null
+    required: UNKNOWN
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-ACC-013]
+    evidence_class: EXPLICIT
+  - information_id: IO-ACC-REPORTING-ACCEPT-CONFIRM-001
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Ответ/квитанция о принятии и прохождении отчетности"
+    object_type: NOTIFICATION
+    document_class: null
+    lifecycle_role: CONFIRMATION
+    state_in: null
+    state_out: "Получено подтверждение принятия"
+    created_by_role_ref: null
+    consumed_by_role_refs: [ROLE-FIN-CHIEF-ACCOUNTANT-001]
+    related_step_refs: [ACCRPT-A005, ACCRPT-A006]
+    system_refs: []
+    channel_refs: []
+    observed_channel_names: []
+    storage_location: null
+    format: null
+    required: YES
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-ACC-013]
+    evidence_class: EXPLICIT
+  - information_id: IO-ACC-REPORTING-ARCHIVE-PACKAGE-001
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Итоговый комплект принятой отчетности с подтверждениями"
+    object_type: FILE
+    document_class: null
+    lifecycle_role: ARCHIVE
+    state_in: "Отчетность и подтверждения выгружены"
+    state_out: "Размещено в общей доступной папке"
+    created_by_role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    consumed_by_role_refs: [UNKNOWN]
+    related_step_refs: [ACCRPT-A006, ACCRPT-A007, ACCRPT-A008]
+    system_refs: []
+    channel_refs: []
+    observed_channel_names: []
+    storage_location: "Общая доступная папка"
+    format: "Один файл либо набор файлов; при необходимости документы объединяются"
+    required: YES
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-ACC-013]
+    evidence_class: EXPLICIT
+
+communications:
+  - communication_id: COM-ACC-REPORTING-SUBMIT-001
+    model_layer: AS_IS
+    derived_from_communication_ref: null
+    introduced_by_change_refs: []
+    sender_role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    recipient_role_refs: [UNKNOWN]
+    purpose: "Передать сформированную отчетность в соответствующий государственный контролирующий орган"
+    payload_refs: [IO-ACC-REPORTING-REPORT-001]
+    message_information_ref: IO-ACC-REPORTING-REPORT-001
+    channel_ref: null
+    observed_channel_names: []
+    system_ref: null
+    related_step_refs: [ACCRPT-A003]
+    response_expected: YES
+    expected_response_information_refs: [IO-ACC-REPORTING-ACCEPT-CONFIRM-001]
+    response_deadline: null
+    evidence_refs: [FACT-ACC-012, FACT-ACC-013]
+    evidence_class: EXPLICIT
+    notes: "Источник называет электронную площадку/программу сдачи, но не называет ее и не позволяет однозначно классифицировать как canonical system/channel."
+  - communication_id: COM-ACC-REPORTING-ACCEPT-001
+    model_layer: AS_IS
+    derived_from_communication_ref: null
+    introduced_by_change_refs: []
+    sender_role_ref: UNKNOWN
+    recipient_role_refs: [ROLE-FIN-CHIEF-ACCOUNTANT-001]
+    purpose: "Сообщить результат приема отчетности и подтвердить, что отчетность принята"
+    payload_refs: [IO-ACC-REPORTING-ACCEPT-CONFIRM-001, IO-ACC-REPORTING-STATUS-001]
+    message_information_ref: IO-ACC-REPORTING-ACCEPT-CONFIRM-001
+    channel_ref: null
+    observed_channel_names: []
+    system_ref: null
+    related_step_refs: [ACCRPT-A004, ACCRPT-A005]
+    response_expected: NO
+    expected_response_information_refs: []
+    response_deadline: null
+    evidence_refs: [FACT-ACC-013]
+    evidence_class: EXPLICIT
