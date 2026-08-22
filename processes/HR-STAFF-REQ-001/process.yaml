@@ -16,6 +16,11 @@ process:
     - VIEW-HR-FUNCTION-001
     - VIEW-HR-MODEL-ENTRY-E2E-001
 
+applicability:
+  current_state: "PARTIAL_CURRENT"
+  condition: null
+  notes: "Interview-supported current evidence confirms receipt by ROLE-HR-DIRECTOR-001 of a request from an immediate manager. The upstream approval/rework/rejection lifecycle from SRC-HR-MODEL-002 remains REFERENCE_ONLY because source lifecycle/approval status is UNKNOWN."
+
 boundaries:
   trigger: "Возникла потребность в сотруднике"
   input:
@@ -26,11 +31,15 @@ boundaries:
   consumer: "HR/контур HR-RECRUIT-001 при согласовании; руководитель подразделения/организация при отказе"
   next_processes:
     - HR-RECRUIT-001
+  parent_entry: null
+  parent_exit: null
 
-architecture_boundary_review:
-  current_as_is_status: CLARIFICATION_REQUIRED
-  note: "Архитектурная boundary сохранена без молчаливого изменения. Detailed AS-IS выявил, что current interview подтверждает получение заявки от непосредственного руководителя, но не подтверждает обязательный CEO approval или статус 'согласована' перед handoff в recruitment."
-  coordinator_escalation_ref: ESC-HR-STAFF-REQ-001
+architecture:
+  subprocess_refs: []
+  boundary_handoff_refs:
+    - HO-HR-STAFF-MGR-TO-HR-CUR-001
+    - HO-HR-STAFF-TO-RECRUIT-REF-001
+  cross_domain_refs: []
 
 sources:
   source_refs:
@@ -129,5 +138,6 @@ metadata:
     Agent 01 architecture boundary is preserved; detailed Agent 02 AS-IS artifacts are connected through canonical Schema v1.1 model_refs.
     Current interview-supported evidence confirms that an immediate manager's request for a vacant position is received by ROLE-HR-DIRECTOR-001 before recruitment work. It does not confirm CEO approval, revision, rejection, the upstream trigger, request contents or channel.
     SRC-HR-MODEL-002 is retained as REFERENCE_ONLY in detailed AS-IS because lifecycle_status and approval_status remain UNKNOWN.
+    The architecture business result remains unchanged, but detailed AS-IS records ESC-HR-STAFF-REQ-001 for Coordinator review because current evidence does not prove the request has status 'согласована' before recruitment.
     Status is CLARIFICATION_REQUIRED because trigger, approval applicability and exact positive boundary handoff materially affect the L1 model.
     No TO-BE, BPMN, request template, registry/dictionary change or HR-RECRUIT-001 detailed business-logic change is introduced.
