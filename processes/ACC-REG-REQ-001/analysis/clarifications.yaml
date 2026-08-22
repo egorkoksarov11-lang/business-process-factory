@@ -1,0 +1,101 @@
+schema_version: "1.1"
+
+questions:
+  - question_id: "Q-ACC-REG-REQ-001"
+    process_id: "ACC-REG-REQ-001"
+    source_refs: [SRC-ACC-CHIEF-001]
+    related_steps:
+      - "REGREQ-A001"
+    related_flow_refs: []
+    related_handoff_refs:
+      - "HO-ACC-REG-REQ-INBOUND-001"
+    related_information_object_refs:
+      - "IO-ACC-REG-REQ-REQUEST-001"
+    question: "Где именно заканчивается общий входящий контур CAND-ACC-INBOX-001 и начинается ACC-REG-REQ-001: кто первоначально принимает запрос, кто определяет, что он требует бухгалтерской/налоговой подготовки, и каким событием запрос считается переданным Главному бухгалтеру?"
+    why_needed: "От ответа зависит точный trigger/boundary handoff и нельзя ли ошибочно приписать бухгалтерскому L1 ownership общего входящего потока."
+    blocking: true
+    status: "OPEN"
+    answer: null
+    answer_source_ref: null
+
+  - question_id: "Q-ACC-REG-REQ-002"
+    process_id: "ACC-REG-REQ-001"
+    source_refs: [SRC-ACC-CHIEF-001]
+    related_steps:
+      - "REGREQ-A001"
+      - "REGREQ-A004"
+    related_flow_refs: []
+    related_handoff_refs:
+      - "HO-ACC-REG-REQ-ROUTE-FIN-001"
+      - "HO-ACC-REG-REQ-ROUTE-SEC-001"
+    related_information_object_refs:
+      - "IO-ACC-REG-REQ-REQUEST-001"
+    question: "По какому критерию входящий запрос направляется в группу Финансового директора и службы безопасности, кто принимает решение о подключении Security/других специалистов и что происходит с запросами, которые не идут по этому маршруту?"
+    why_needed: "От ответа зависит условная маршрутизация и применимость Security. Сейчас source подтверждает только приблизительную частоту, но не routing rule."
+    blocking: true
+    status: "OPEN"
+    answer: null
+    answer_source_ref: null
+
+  - question_id: "Q-ACC-REG-REQ-003"
+    process_id: "ACC-REG-REQ-001"
+    source_refs: [SRC-ACC-CHIEF-001]
+    related_steps:
+      - "REGREQ-A004"
+    related_flow_refs: []
+    related_handoff_refs:
+      - "HO-ACC-REG-REQ-OUTBOUND-001"
+    related_information_object_refs:
+      - "IO-ACC-REG-REQ-PACKAGE-001"
+    question: "Что означает состояние «ответ/пакет готов»: достаточно ли Главному бухгалтеру собрать материалы в папку, или требуется обязательное согласование/резолюция, и кто именно подтверждает готовность к отправке?"
+    why_needed: "От ответа зависит business result, критерий завершения detailed boundary и наличие подтвержденного wait/approval handoff."
+    blocking: true
+    status: "OPEN"
+    answer: null
+    answer_source_ref: null
+
+  - question_id: "Q-ACC-REG-REQ-004"
+    process_id: "ACC-REG-REQ-001"
+    source_refs: [SRC-ACC-CHIEF-001]
+    related_steps:
+      - "REGREQ-A004"
+    related_flow_refs: []
+    related_handoff_refs:
+      - "HO-ACC-REG-REQ-OUTBOUND-001"
+    related_information_object_refs:
+      - "IO-ACC-REG-REQ-PACKAGE-001"
+    question: "Кто фактически отправляет подготовленный ответ контролирующему органу, каким каналом/в какой системе он отправляется и входит ли это действие в ACC-REG-REQ-001 или уже находится за его границей?"
+    why_needed: "От ответа зависит финальный actor, system/channel, outbound handoff и архитектурная граница процесса."
+    blocking: true
+    status: "OPEN"
+    answer: null
+    answer_source_ref: null
+
+  - question_id: "Q-ACC-REG-REQ-005"
+    process_id: "ACC-REG-REQ-001"
+    source_refs: [SRC-ACC-CHIEF-001]
+    related_steps:
+      - "REGREQ-A004"
+    related_flow_refs: []
+    related_handoff_refs:
+      - "HO-ACC-REG-REQ-OUTBOUND-001"
+    related_information_object_refs:
+      - "IO-ACC-REG-REQ-PACKAGE-001"
+    question: "Есть ли подтверждение отправки или получения ответа контролирующим органом; если да, кто его получает/проверяет и где оно хранится?"
+    why_needed: "От ответа зависит existence acknowledgement/confirmation object и возможность доказать завершение внешней передачи."
+    blocking: false
+    status: "OPEN"
+    answer: null
+    answer_source_ref: null
+
+boundary_uncertainties:
+  - uncertainty_id: "BND-ACC-REG-REQ-001"
+    topic: "Upstream intake ownership"
+    status: "UNKNOWN"
+    related_candidate_ref: "CAND-ACC-INBOX-001"
+    note: "Общий входящий поток не включен в detailed AS-IS и не превращен в canonical L1."
+  - uncertainty_id: "BND-ACC-REG-REQ-002"
+    topic: "Outbound coordination/sending boundary"
+    status: "UNKNOWN"
+    related_handoff_ref: "HO-ACC-REG-REQ-OUTBOUND-001"
+    note: "Подготовка пакета подтверждена; согласующий, sender, channel и acknowledgement UNKNOWN."
