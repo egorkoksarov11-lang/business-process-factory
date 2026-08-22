@@ -13,6 +13,7 @@ process:
     - ROLE-FIN-DIRECTOR-001
   views:
     - VIEW-ACC-CHIEF-ROLE-001
+    - VIEW-ACC-FUNCTION-001
 boundaries:
   trigger: "Наступил цикл расчета/выплаты заработной платы либо срок формирования отчетности по начислениям и персоналу"
   input:
