@@ -6,7 +6,7 @@ process:
   level: "L1"
   status: "ARCHITECTURE_READY"
   parent_process: null
-  owner_role: "ROLE-IT-LEAD-EXT-001"
+  owner_role: UNKNOWN
   participants:
     - ROLE-INTERNAL-USER-001
     - ROLE-IT-SUPPORT-EXT-001
@@ -36,6 +36,7 @@ architecture_boundary:
       status: "IN_DEVELOPMENT_NOT_AS_IS"
       source_refs: [SRC-IT-LEAD-001]
   closure_note: "Источник подтверждает последующую доработку временного решения, но не определяет точный HelpDesk-статус закрытия заявки в момент временного восстановления."
+  owner_note: "Формальный владелец процесса не назван; IT lead участвует как руководитель/маршрутизатор и лично подключается к архитектурным/безопасностным вопросам."
 
 architecture_subprocesses:
   - IT-SUPPORT-INTAKE-001
@@ -72,6 +73,7 @@ issues: []
 changes: []
 to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
 open_questions:
+  - "Кто является формальным владельцем L1 технической поддержки?"
   - "Что именно означает названный ориентир 30 минут: формальный SLA, внутренний target или другое правило?"
   - "Когда заявка считается закрытой в HelpDesk, если сотруднику сначала выдано временное решение?"
   - "Какие типы обращений требуют участия IT lead вместо сотрудников технической поддержки, кроме общей формулировки про архитектуру/безопасность?"
