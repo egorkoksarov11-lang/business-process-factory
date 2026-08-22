@@ -1,0 +1,41 @@
+schema_version: "1.1"
+process_id: "DOMAIN-PROCESS-001"
+to_be_version: "0.1"
+status: "TO_BE_DRAFT" # TO_BE_DRAFT | TO_BE_READY
+
+scope:
+  trigger: null
+  business_result: null
+  previous_process_refs: []
+  next_process_refs: []
+
+steps: []
+
+# - step_id: T001
+#   derived_from_as_is_refs: [A001]
+#   origin: AS_IS_TRANSFORM # AS_IS_TRANSFORM | DESIGN_CONTROL
+#   change_refs: [CHG-001]
+#   role_ref: ROLE-001
+#   action: "Проверить комплект по единому критерию"
+#   business_object: "Комплект документов"
+#   input_information_refs: []
+#   output_information_refs: []
+#   system_refs: []
+#   channel_refs: []
+#   incoming_flow_refs: []
+#   outgoing_flow_refs: []
+#   result: "Комплект проверен по единому правилу"
+#   notes: null
+
+flows: []
+decisions: []
+handoffs: []
+information_object_refs: []
+rules: []
+exceptions: []
+automation_options: []
+
+metadata:
+  created_at: null
+  updated_at: null
+  notes: null
