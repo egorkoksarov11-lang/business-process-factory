@@ -1,0 +1,86 @@
+schema_version: "1.0"
+process:
+  process_id: "IT-SUPPORT-001"
+  name: "Техническая поддержка пользователей"
+  domain: "IT"
+  level: "L1"
+  status: "ARCHITECTURE_READY"
+  parent_process: null
+  owner_role: "ROLE-IT-LEAD-EXT-001"
+  participants:
+    - ROLE-INTERNAL-USER-001
+    - ROLE-IT-SUPPORT-EXT-001
+    - ROLE-IT-LEAD-EXT-001
+  views:
+    - VIEW-IT-LEAD-ROLE-001
+    - VIEW-IT-FUNCTION-001
+
+boundaries:
+  trigger: "Внутреннему сотруднику требуется IT-помощь: возникла проблема либо иной запрос, и он направляет обращение в техническую поддержку"
+  input:
+    - "Описание проблемы/потребности сотрудника"
+    - "Обращение через один из действующих каналов: личный кабинет, телефон или email"
+  previous_processes: []
+  business_result: "Обращение зарегистрировано и обработано; сотрудник получил постоянное решение либо временное решение, позволяющее продолжить работу, с последующей доработкой временного решения"
+  consumer: "Внутренний сотрудник/пользователь и зависящие от его работы бизнес-процессы"
+  next_processes: []
+
+architecture_boundary:
+  current_channels:
+    - PERSONAL_CABINET
+    - PHONE
+    - EMAIL
+  channels_are_processes: false
+  planned_capabilities:
+    - capability: "Бот корпоративного мессенджера для подачи обращений"
+      status: "IN_DEVELOPMENT_NOT_AS_IS"
+      source_refs: [SRC-IT-LEAD-001]
+  closure_note: "Источник подтверждает последующую доработку временного решения, но не определяет точный HelpDesk-статус закрытия заявки в момент временного восстановления."
+
+architecture_subprocesses:
+  - IT-SUPPORT-INTAKE-001
+  - IT-SUPPORT-RESOLVE-001
+  - IT-SUPPORT-FINALIZE-001
+
+sources:
+  source_refs: [SRC-IT-LEAD-001]
+  evidence_refs:
+    - "sources/evidence/SRC-IT-LEAD-001_architecture.yaml"
+
+architecture_evidence:
+  - source_ref: SRC-IT-LEAD-001
+    evidence_class: EXPLICIT
+    statement: "Любой внутренний сотрудник может обратиться через три текущих канала; обращение поступает в HelpDesk, получает номер, берется в работу и получает временное либо постоянное решение."
+  - source_ref: SRC-IT-LEAD-001
+    evidence_class: EXPLICIT
+    statement: "При временном решении задача впоследствии дорабатывается, когда это возможно, до более постоянного решения."
+  - source_ref: SRC-IT-LEAD-001
+    evidence_class: EXPLICIT
+    statement: "Повторяющиеся проблемы встречаются часто, а дублирующие заявки от нескольких сотрудников — редкая проблема."
+
+operational_indicators:
+  - indicator_id: IT-SUPPORT-RESPONSE-001
+    stated_value: "30 минут"
+    observed_value: "10–15 минут"
+    evidence_class: EXPLICIT
+    formal_sla_status: UNKNOWN
+    note: "В транскрипте термин перед '30 минут' распознан неясно. Не считать формальным SLA без уточнения."
+
+versions: {as_is_version: null, to_be_version: null}
+as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+issues: []
+changes: []
+to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+open_questions:
+  - "Что именно означает названный ориентир 30 минут: формальный SLA, внутренний target или другое правило?"
+  - "Когда заявка считается закрытой в HelpDesk, если сотруднику сначала выдано временное решение?"
+  - "Какие типы обращений требуют участия IT lead вместо сотрудников технической поддержки, кроме общей формулировки про архитектуру/безопасность?"
+  - "Как фактически регистрируются телефонные обращения в HelpDesk и кто выполняет регистрацию?"
+delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: |
+    Agent 01 architecture only. Детальный AS-IS, TO-BE, BPMN и оптимизация намеренно не создавались.
+    Email, телефон и личный кабинет классифицированы как каналы одного L1, а не отдельные процессы.
+    Planned messenger bot не включен в current AS-IS scope.
