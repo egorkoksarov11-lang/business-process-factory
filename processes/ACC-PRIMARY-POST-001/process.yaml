@@ -1,0 +1,42 @@
+schema_version: "1.0"
+process:
+  process_id: "ACC-PRIMARY-POST-001"
+  name: "Принятие документа к учету и отражение в 1С"
+  domain: "ACC"
+  level: "L2"
+  status: "ARCHITECTURE_READY"
+  parent_process: "ACC-PRIMARY-001"
+  owner_role: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+  participants: [ROLE-FIN-CHIEF-ACCOUNTANT-001]
+  views: []
+boundaries:
+  trigger: "Получено положительное решение о принятии первичного документа к учету"
+  input:
+    - "Согласованный первичный документ"
+  previous_processes: [ACC-PRIMARY-APPROVE-001]
+  business_result: "Принятый документ отражен в учетной программе 1С"
+  consumer: "Parent ACC-PRIMARY-001 и последующее формирование учетной/налоговой отчетности"
+  next_processes: []
+parent_exit:
+  via_parent: ACC-PRIMARY-001
+  downstream_l1: ACC-REPORTING-001
+sources:
+  source_refs: [SRC-ACC-CHIEF-001]
+  evidence_refs: ["sources/evidence/SRC-ACC-CHIEF-001_architecture.yaml"]
+architecture_evidence:
+  - source_ref: SRC-ACC-CHIEF-001
+    evidence_class: EXPLICIT
+    statement: "После решения руководителей о принятии документов Главный бухгалтер отражает их в 1С для формирования отчетности."
+versions: {as_is_version: null, to_be_version: null}
+as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+issues: []
+changes: []
+to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+open_questions:
+  - "Какие поля/проводки/контрольные признаки обязательны при отражении документа — UNKNOWN и относятся к Agent 02."
+  - "Как фиксируется дата принятия к учету относительно даты документа и согласования?"
+delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Agent 01 L2 boundary only; interface operations intentionally omitted."
