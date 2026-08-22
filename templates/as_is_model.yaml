@@ -20,7 +20,8 @@ steps: []
 #   input_information_refs: [IO-001]
 #   output_information_refs: [IO-002]
 #   system_refs: []
-#   channel_refs: []
+#   channel_refs: [] # только canonical CH-* IDs
+#   observed_channel_names: [] # свободный текст только если canonical channel еще не определен
 #   incoming_flow_refs: [F001]
 #   outgoing_flow_refs: [F002]
 #   timing:
@@ -57,6 +58,30 @@ decisions: []
 #   evidence_refs: []
 #   evidence_class: EXPLICIT
 #   applicability: CONFIRMED_CURRENT
+
+# Если источник подтверждает только часть порядка действий, не соединять все шаги
+# искусственными SEQUENCE flows. Хранить подтвержденные зависимости и явно неизвестные
+# отношения отдельно. Эти constraints дополняют flows, а не создают скрытую бизнес-логику.
+orchestration_constraints:
+  confirmed_order: []
+  order_unknown: []
+
+# confirmed_order example:
+# - constraint_id: OC001
+#   before_ref: A001
+#   after_ref: A002
+#   relation: BEFORE
+#   evidence_refs: [FACT-001]
+#   evidence_class: EXPLICIT
+#
+# order_unknown example:
+# - constraint_id: OCU001
+#   ref_a: A010
+#   ref_b: A020
+#   relation: ORDER_UNKNOWN
+#   reason: "Источник подтверждает оба действия, но не их взаимный порядок"
+#   evidence_refs: []
+#   evidence_class: UNKNOWN
 
 exceptions: []
 
