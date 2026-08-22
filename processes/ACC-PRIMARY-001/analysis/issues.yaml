@@ -1,0 +1,71 @@
+schema_version: "1.1"
+issues:
+  - issue_id: "ISS-ACC-PRIMARY-001-001"
+    process_id: "ACC-PRIMARY-001"
+    category: "WAIT"
+    as_is_steps: ["A003", "A004"]
+    flow_refs: ["F003"]
+    handoff_refs: ["HO-ACC-PRIMARY-001", "HO-ACC-PRIMARY-002"]
+    information_object_refs: ["IO-ACC-PRIMARY-004", "IO-ACC-PRIMARY-005"]
+    description: "После передачи документа на согласование Главный бухгалтер ожидает ответ/резолюцию; формальный SLA и эскалация не подтверждены."
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-004", "FACT-ACC-PRIMARY-ASIS-005"]
+    consequence: "Задержка согласования может тормозить дальнейший документооборот и своевременное отражение документа в учете."
+    severity: "HIGH"
+    status: "OPEN"
+
+  - issue_id: "ISS-ACC-PRIMARY-001-002"
+    process_id: "ACC-PRIMARY-001"
+    category: "OWNERSHIP"
+    as_is_steps: ["A004", "A005-RESP"]
+    flow_refs: ["F004-RESP"]
+    handoff_refs: ["HO-ACC-PRIMARY-002", "HO-ACC-PRIMARY-004"]
+    information_object_refs: ["IO-ACC-PRIMARY-005"]
+    description: "Конкретная должность согласующего внутри ROLE-CONTRACT-OBLIGATION-RESP-001 и правило выбора согласующего по типам сделки не установлены."
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003", "FACT-ACC-PRIMARY-ASIS-005"]
+    consequence: "Нельзя однозначно восстановить владельца решения и маршрут согласования для каждого типа документа."
+    severity: "HIGH"
+    status: "OPEN"
+
+  - issue_id: "ISS-ACC-PRIMARY-001-003"
+    process_id: "ACC-PRIMARY-001"
+    category: "NO_RESPONSE"
+    as_is_steps: ["A004"]
+    flow_refs: []
+    handoff_refs: []
+    information_object_refs: ["IO-ACC-PRIMARY-005"]
+    description: "При отсутствии ответа источник описывает альтернативу: Главный бухгалтер либо принимает решение самостоятельно, либо продолжает ждать, но правило выбора и формальное полномочие не установлены."
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-005"]
+    consequence: "No-response ветка не может быть смоделирована как однозначный текущий маршрут и может приводить к задержке или переносу ответственности."
+    severity: "HIGH"
+    status: "OPEN"
+
+  - issue_id: "ISS-ACC-PRIMARY-001-004"
+    process_id: "ACC-PRIMARY-001"
+    category: "RETURN_PATH_UNKNOWN"
+    as_is_steps: ["A002", "A005-FIN", "A005-RESP"]
+    flow_refs: []
+    handoff_refs: []
+    information_object_refs: ["IO-ACC-PRIMARY-001", "IO-ACC-PRIMARY-005"]
+    description: "Источник не раскрывает reject/return ветку после выявленного несоответствия или решения 'не принимать документ к учету'."
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-005"]
+    consequence: "Неизвестны адресат возврата, сообщение, канал, критерий повторной подачи и условие завершения отрицательного сценария."
+    severity: "HIGH"
+    status: "OPEN"
+
+  - issue_id: "ISS-ACC-PRIMARY-001-005"
+    process_id: "ACC-PRIMARY-001"
+    category: "INFORMATION_OBJECT"
+    as_is_steps: ["A005-FIN", "A005-RESP", "A006"]
+    flow_refs: ["F005-FIN", "F005-RESP"]
+    handoff_refs: ["HO-ACC-PRIMARY-003", "HO-ACC-PRIMARY-004", "HO-ACC-PRIMARY-005"]
+    information_object_refs: ["IO-ACC-PRIMARY-005"]
+    description: "Форма, канал и место фиксации итоговой резолюции 'принять/не принять' документ не установлены."
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-007"]
+    consequence: "Нельзя точно определить наблюдаемый критерий завершения handoff APPROVE → POST."
+    severity: "MEDIUM"
+    status: "OPEN"
+
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Только AS-IS observations/gaps; TO-BE решения не предлагаются."
