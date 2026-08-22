@@ -1,0 +1,48 @@
+schema_version: "1.0"
+process:
+  process_id: "ACC-TAX-ENS-001"
+  name: "Контроль единого налогового счета и налоговых обязательств"
+  domain: "ACC"
+  level: "L1"
+  status: "ARCHITECTURE_READY"
+  parent_process: null
+  owner_role: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+  participants:
+    - ROLE-FIN-CHIEF-ACCOUNTANT-001
+    - ROLE-FIN-DIRECTOR-001
+  views:
+    - VIEW-ACC-CHIEF-ROLE-001
+boundaries:
+  trigger: "Возникла необходимость проверить состояние ЕНС/взаиморасчеты с налоговым органом в связи с налоговыми обязательствами, сроком уплаты или потребностью в подтверждении исполнения обязанности"
+  input:
+    - "Состояние единого налогового счета"
+    - "Информация о налоговых обязательствах и сроках"
+  previous_processes: []
+  business_result: "Состояние ЕНС и своевременность налоговых обязательств проконтролированы; риск отрицательного сальдо выявлен/не допущен в пределах ответственности бухгалтерии"
+  consumer: "Организация и финансовое управление; при необходимости внешний получатель справки об исполнении обязанностей"
+  next_processes: []
+sources:
+  source_refs: [SRC-ACC-CHIEF-001]
+  evidence_refs: ["sources/evidence/SRC-ACC-CHIEF-001_architecture.yaml"]
+architecture_evidence:
+  - source_ref: SRC-ACC-CHIEF-001
+    evidence_class: EXPLICIT
+    statement: "Главный бухгалтер проверяет взаиморасчеты на ЕНС и контролирует своевременность налоговых обязательств, чтобы не формировалось отрицательное сальдо и при необходимости можно было получить положительную справку."
+boundary_notes:
+  - "Процесс выделен как самостоятельный циклический контроль: у него есть внешний календарно-обязательственный trigger и отдельный результат состояния налоговых обязательств."
+  - "Фактический исполнитель платежа и точный handoff на оплату источником не раскрыты; не включены в подтвержденную границу."
+versions: {as_is_version: null, to_be_version: null}
+as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+issues: []
+changes: []
+to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+open_questions:
+  - "Какова фактическая периодичность проверки ЕНС и что является обязательным календарным trigger?"
+  - "Кто инициирует и выполняет платеж после выявления обязательства/дефицита?"
+  - "Как фиксируется завершение контроля по конкретному налоговому обязательству?"
+  - "Кто и в каких случаях запрашивает справку об исполнении обязанности?"
+delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Agent 01 architecture only; payment execution outside confirmed boundary."
