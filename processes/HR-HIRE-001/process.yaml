@@ -4,7 +4,7 @@ process:
   name: "Кадровое оформление приема сотрудника"
   domain: "HR"
   level: "L1"
-  status: "ARCHITECTURE_READY"
+  status: "CLARIFICATION_REQUIRED"
   parent_process: null
   owner_role: UNKNOWN
   participants:
@@ -24,7 +24,7 @@ boundaries:
   trigger: "Кандидат согласился на оффер и сведения о кандидате/условиях переданы в кадровое делопроизводство"
   input:
     - "Сведения о кандидате и условиях/дате выхода"
-    - "Документы сотрудника; полный состав на Agent 01 не нормализуется"
+    - "Документы сотрудника; полный состав требует уточнения Agent 02"
   previous_processes: [HR-RECRUIT-001]
   business_result: "Core кадровое оформление приема завершено; точная parent-close граница относительно применимой воинской ветки и СФР остается UNKNOWN"
   consumer: "Сотрудник и организация; HR-ADAPT-001 запускается отдельным boundary event фактического выхода"
@@ -35,7 +35,7 @@ boundary_handoffs:
     target_process: HR-ADAPT-001
     timing_relative_to_parent_close: UNKNOWN_MAY_OVERLAP
     source_refs: [SRC-HR-DIR-001, SRC-HR-MODEL-001]
-    note: "SRC-HR-DIR-001 подтверждает trigger адаптации. SRC-HR-MODEL-001 показывает начало адаптации параллельно MIL/SFR после core оформления, но lifecycle модели UNKNOWN."
+    note: "SRC-HR-DIR-001 подтверждает trigger адаптации. SRC-HR-MODEL-001 показывает начало адаптации параллельно MIL/SFR после core оформления, но lifecycle модели UNKNOWN. Detailed role/timing conflict сохранен в AS-IS handoff register."
 completion_boundary:
   included_l2: [HR-HIRE-KDP-001, HR-HIRE-MIL-001, HR-HIRE-SFR-001]
   closure_dependencies:
@@ -56,6 +56,7 @@ sources:
     - "sources/evidence/SRC-HR-KDP-001_architecture.yaml"
     - "sources/evidence/SRC-HR-DIR-001_architecture.yaml"
     - "sources/evidence/SRC-HR-MODEL-001_architecture.yaml"
+    - "processes/HR-HIRE-001/evidence/evidence.yaml"
 architecture_evidence:
   - source_ref: SRC-HR-KDP-001
     evidence_class: EXPLICIT
@@ -73,22 +74,34 @@ architecture_evidence:
     evidence_class: CONFLICT
     statement: "Роль в boundary 'контроль выхода/начало адаптации' различается; полноценный owner адаптации не выбирается молча."
 architecture_subprocesses: [HR-HIRE-KDP-001, HR-HIRE-MIL-001, HR-HIRE-SFR-001]
-versions: {as_is_version: null, to_be_version: null}
+versions: {as_is_version: "0.1", to_be_version: null}
+as_is_artifacts:
+  model_ref: "processes/HR-HIRE-001/as-is/model.yaml"
+  information_objects_ref: "processes/HR-HIRE-001/information/information_objects.yaml"
+  handoffs_ref: "processes/HR-HIRE-001/handoffs/handoffs.yaml"
+  clarifications_ref: "processes/HR-HIRE-001/analysis/clarifications.yaml"
+  issues_ref: "processes/HR-HIRE-001/analysis/issues.yaml"
+  status: CLARIFICATION_REQUIRED
 as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
 issues: []
 changes: []
 to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
 open_questions:
-  - "Должен ли HR-HIRE-MIL-001 завершиться до закрытия HR-HIRE-001 при применимости?"
-  - "Должен ли HR-HIRE-SFR-001 завершиться до закрытия HR-HIRE-001?"
-  - "Как фактически распределена ответственность за отчетность в СФР?"
-  - "Является ли MODEL-001#7 только контролем выхода/handoff или участием КДП в полном HR-ADAPT-001?"
+  - "Точный recruitment→hire payload и критерий принятия handoff."
+  - "CONFLICT: фактическое распределение подготовки/отправки/подтверждения СФР."
+  - "UNKNOWN: точная applicability HR-HIRE-MIL-001 и identity ROLE-MIL-RESP-001."
+  - "UNKNOWN: должен ли HR-HIRE-MIL-001 завершиться до закрытия HR-HIRE-001."
+  - "UNKNOWN: должен ли HR-HIRE-SFR-001 завершиться до закрытия HR-HIRE-001."
+  - "UNKNOWN: timing полного закрытия HR-HIRE-001 относительно начала HR-ADAPT-001."
+  - "CONFLICT: КДП vs Директор по персоналу на boundary начала адаптации."
+  - "UNKNOWN: lifecycle/approval status SRC-HR-MODEL-001."
 delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
 metadata:
   created_at: "2026-08-21"
   updated_at: "2026-08-22"
   notes: |
-    Agent 01 architecture only; AS-IS intentionally not created.
-    HR-HIRE-001 больше не моделируется как простая последовательность «закрыть прием → начать адаптацию».
-    Trigger HR-ADAPT-001 — отдельное boundary event фактического выхода. По reference-модели оно может возникать, пока MIL/SFR еще выполняются; фактическая timing relation остается UNKNOWN.
-    Cross-level HR-HIRE-KDP-001 → HR-ADAPT-001 удален.
+    Agent 01 architecture boundary preserved.
+    Agent 02 created unified v1.1 detailed AS-IS on parent HR-HIRE-001 and marked child steps with subprocess_id instead of duplicating L2 models.
+    Current status is CLARIFICATION_REQUIRED: no reference-derived parallel join or role placement was promoted to current AS-IS without confirmation.
+    Trigger HR-ADAPT-001 remains a parent boundary event; no cross-level L2 → external L1 next_process was introduced.
+    Shared registries/dictionaries were not modified by Agent 02.
