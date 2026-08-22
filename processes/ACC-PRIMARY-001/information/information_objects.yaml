@@ -1,0 +1,230 @@
+schema_version: "1.1"
+process_id: "ACC-PRIMARY-001"
+
+information_objects:
+  - information_id: "IO-ACC-PRIMARY-001"
+    model_layer: "AS_IS"
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Входящий первичный документ / документ контрагента"
+    object_type: "DOCUMENT"
+    document_class: "TRANSACTIONAL"
+    lifecycle_role: "INPUT"
+    state_in: "Поступил/доступен Главному бухгалтеру"
+    state_out: "Проверен; при положительном решении принят к учету"
+    created_by_role_ref: null
+    consumed_by_role_refs: ["ROLE-FIN-CHIEF-ACCOUNTANT-001", "ROLE-FIN-DIRECTOR-001", "ROLE-CONTRACT-OBLIGATION-RESP-001"]
+    related_step_refs: ["A001", "A002", "A003", "A005-FIN", "A005-RESP", "A006"]
+    system_refs: ["SYS-DIADOC-001", "SYS-SBIS-001"]
+    channel_refs: []
+    storage_location: "После скачивания — сервер соответствующего юридического лица; иное хранение UNKNOWN"
+    format: null
+    required: "UNKNOWN"
+    existence_status: "CONFIRMED"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-001", "FACT-ACC-PRIMARY-ASIS-002", "FACT-ACC-PRIMARY-ASIS-003"]
+    evidence_class: "EXPLICIT"
+    source_mentioned_document_types:
+      - "счет"
+      - "счет-фактура"
+      - "накладная"
+      - "акт"
+      - "ОПД (ровно формулировка транскрипта; точная расшифровка UNKNOWN)"
+      - "договор"
+    notes: "Перечень не считается исчерпывающим. Договор также используется как основание сверки реквизитов; отдельный ACC-CONTRACT-REVIEW-001 здесь не расширяется."
+
+  - information_id: "IO-ACC-PRIMARY-002"
+    model_layer: "AS_IS"
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Договор / реквизиты договора"
+    object_type: "DOCUMENT"
+    document_class: "TRANSACTIONAL"
+    lifecycle_role: "SUPPORTING"
+    state_in: "Доступен для сопоставления с первичным документом — точный источник/место хранения UNKNOWN"
+    state_out: "Использован как основание проверки соответствия реквизитов"
+    created_by_role_ref: null
+    consumed_by_role_refs: ["ROLE-FIN-CHIEF-ACCOUNTANT-001"]
+    related_step_refs: ["A002"]
+    system_refs: []
+    channel_refs: []
+    storage_location: null
+    format: null
+    required: "UNKNOWN"
+    existence_status: "CONFIRMED"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-002"]
+    evidence_class: "EXPLICIT"
+    notes: "Источник говорит о соответствии реквизитов договорам; не устанавливает, что договор обязателен для каждого документа."
+
+  - information_id: "IO-ACC-PRIMARY-003"
+    model_layer: "AS_IS"
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Скачанный файл входящего документа"
+    object_type: "FILE"
+    document_class: null
+    lifecycle_role: "SUPPORTING"
+    state_in: "Документ доступен в Диадоке/СБИС"
+    state_out: "Файл скачан на сервер соответствующего юридического лица"
+    created_by_role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    consumed_by_role_refs: ["ROLE-FIN-CHIEF-ACCOUNTANT-001", "ROLE-FIN-DIRECTOR-001", "ROLE-CONTRACT-OBLIGATION-RESP-001"]
+    related_step_refs: ["A001", "A002", "A003"]
+    system_refs: ["SYS-DIADOC-001", "SYS-SBIS-001"]
+    channel_refs: []
+    storage_location: "Сервер соответствующего юридического лица"
+    format: null
+    required: "UNKNOWN"
+    existence_status: "CONFIRMED"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-001"]
+    evidence_class: "EXPLICIT"
+    notes: "Межсерверный перенос файлов не выделяется в отдельный процесс."
+
+  - information_id: "IO-ACC-PRIMARY-004"
+    model_layer: "AS_IS"
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Передача/запрос на согласование принятия документа к учету"
+    object_type: "REQUEST"
+    document_class: null
+    lifecycle_role: "HANDOFF_PAYLOAD"
+    state_in: "Документ проверен"
+    state_out: "Документ передан согласующему; ожидается решение/резолюция"
+    created_by_role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    consumed_by_role_refs: ["ROLE-FIN-DIRECTOR-001", "ROLE-CONTRACT-OBLIGATION-RESP-001"]
+    related_step_refs: ["A003", "A004", "A005-FIN", "A005-RESP"]
+    system_refs: []
+    channel_refs: []
+    storage_location: null
+    format: null
+    required: "YES"
+    existence_status: "CONFIRMED"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003", "FACT-ACC-PRIMARY-ASIS-004"]
+    evidence_class: "INFERRED"
+    notes: "Факт направления на согласование explicit; классификация этой передачи как REQUEST — структурная интерпретация v1.1. Отдельный текст сообщения и канал источник не называет."
+
+  - information_id: "IO-ACC-PRIMARY-005"
+    model_layer: "AS_IS"
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Ответ/резолюция о принятии или непринятии документа к учету"
+    object_type: "MESSAGE"
+    document_class: null
+    lifecycle_role: "CONFIRMATION"
+    state_in: "Ожидается после передачи документа на согласование"
+    state_out: "Получена либо отсутствует; при положительном решении дает основание для отражения в 1С"
+    created_by_role_ref: null
+    consumed_by_role_refs: ["ROLE-FIN-CHIEF-ACCOUNTANT-001"]
+    related_step_refs: ["A004", "A005-FIN", "A005-RESP", "A006"]
+    system_refs: []
+    channel_refs: []
+    storage_location: null
+    format: null
+    required: "YES"
+    existence_status: "CONFIRMED"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003", "FACT-ACC-PRIMARY-ASIS-005", "FACT-ACC-PRIMARY-ASIS-007"]
+    evidence_class: "EXPLICIT"
+    notes: "Точная форма артефакта, канал, место фиксации и способ подтверждения получения UNKNOWN."
+
+  - information_id: "IO-ACC-PRIMARY-006"
+    model_layer: "AS_IS"
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Учетное отражение принятого документа в 1С"
+    object_type: "RECORD"
+    document_class: null
+    lifecycle_role: "OUTPUT"
+    state_in: "Получено положительное решение о принятии документа"
+    state_out: "Документ отражен в учетной программе 1С"
+    created_by_role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    consumed_by_role_refs: []
+    related_step_refs: ["A006"]
+    system_refs: ["SYS-1C-ACCOUNTING-001"]
+    channel_refs: []
+    storage_location: "SYS-1C-ACCOUNTING-001"
+    format: null
+    required: "YES"
+    existence_status: "CONFIRMED"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003"]
+    evidence_class: "EXPLICIT"
+    notes: "Источник не раскрывает поля, проводки, контрольные признаки или дату отражения."
+
+communications:
+  - communication_id: "COM-ACC-PRIMARY-001"
+    model_layer: "AS_IS"
+    derived_from_communication_ref: null
+    introduced_by_change_refs: []
+    sender_role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    recipient_role_refs: ["ROLE-FIN-DIRECTOR-001"]
+    purpose: "Передать проверенный документ на согласование и получить решение о принятии к учету"
+    payload_refs: ["IO-ACC-PRIMARY-001", "IO-ACC-PRIMARY-003"]
+    message_information_ref: "IO-ACC-PRIMARY-004"
+    channel_ref: null
+    system_ref: null
+    related_step_refs: ["A003", "A004"]
+    response_expected: "YES"
+    expected_response_information_refs: ["IO-ACC-PRIMARY-005"]
+    response_deadline: null
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003", "FACT-ACC-PRIMARY-ASIS-004"]
+    evidence_class: "EXPLICIT"
+    notes: "Канал передачи и SLA UNKNOWN. Маршрут альтернативен функциональному согласующему."
+
+  - communication_id: "COM-ACC-PRIMARY-002"
+    model_layer: "AS_IS"
+    derived_from_communication_ref: null
+    introduced_by_change_refs: []
+    sender_role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    recipient_role_refs: ["ROLE-CONTRACT-OBLIGATION-RESP-001"]
+    purpose: "Передать проверенный документ на согласование и получить решение о принятии к учету"
+    payload_refs: ["IO-ACC-PRIMARY-001", "IO-ACC-PRIMARY-003"]
+    message_information_ref: "IO-ACC-PRIMARY-004"
+    channel_ref: null
+    system_ref: null
+    related_step_refs: ["A003", "A004"]
+    response_expected: "YES"
+    expected_response_information_refs: ["IO-ACC-PRIMARY-005"]
+    response_deadline: null
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003", "FACT-ACC-PRIMARY-ASIS-005"]
+    evidence_class: "EXPLICIT"
+    notes: "Функциональная категория; конкретная должность по типу сделки и канал передачи UNKNOWN."
+
+  - communication_id: "COM-ACC-PRIMARY-003"
+    model_layer: "AS_IS"
+    derived_from_communication_ref: null
+    introduced_by_change_refs: []
+    sender_role_ref: "ROLE-FIN-DIRECTOR-001"
+    recipient_role_refs: ["ROLE-FIN-CHIEF-ACCOUNTANT-001"]
+    purpose: "Передать решение/резолюцию о принятии или непринятии документа к учету"
+    payload_refs: ["IO-ACC-PRIMARY-005"]
+    message_information_ref: "IO-ACC-PRIMARY-005"
+    channel_ref: null
+    system_ref: null
+    related_step_refs: ["A005-FIN", "A006"]
+    response_expected: "NO"
+    expected_response_information_refs: []
+    response_deadline: null
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003", "FACT-ACC-PRIMARY-ASIS-007"]
+    evidence_class: "EXPLICIT"
+    notes: "Форма/канал решения UNKNOWN."
+
+  - communication_id: "COM-ACC-PRIMARY-004"
+    model_layer: "AS_IS"
+    derived_from_communication_ref: null
+    introduced_by_change_refs: []
+    sender_role_ref: "ROLE-CONTRACT-OBLIGATION-RESP-001"
+    recipient_role_refs: ["ROLE-FIN-CHIEF-ACCOUNTANT-001"]
+    purpose: "Передать решение/резолюцию о принятии или непринятии документа к учету"
+    payload_refs: ["IO-ACC-PRIMARY-005"]
+    message_information_ref: "IO-ACC-PRIMARY-005"
+    channel_ref: null
+    system_ref: null
+    related_step_refs: ["A005-RESP", "A006"]
+    response_expected: "NO"
+    expected_response_information_refs: []
+    response_deadline: null
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-005", "FACT-ACC-PRIMARY-ASIS-007"]
+    evidence_class: "EXPLICIT"
+    notes: "Форма/канал решения и конкретная должность отправителя UNKNOWN."
+
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "1С, Диадок и СБИС зафиксированы как systems. Каналы коммуникации не смешаны с systems; для approval communications канал остается UNKNOWN."
