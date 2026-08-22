@@ -5,18 +5,14 @@ view:
   view_type: "END_TO_END"
   subject_role: null
   subject_department: null
-  purpose: "Сохранить архитектурное представление пользовательской схемы SRC-HR-MODEL-001 как отдельного E2E-маппинга без превращения всей схемы в один канонический L1."
+  purpose: "Сохранить пользовательскую схему SRC-HR-MODEL-001 как source-oriented E2E mapping без превращения всей схемы в один L1 и без признания ее действующим AS-IS."
   level: "L0"
-  process_refs:
-    - HR-STAFF-REQ-001
-    - HR-RECRUIT-001
-    - HR-HIRE-001
-    - HR-ADAPT-001
+  process_refs: [HR-STAFF-REQ-001, HR-RECRUIT-001, HR-HIRE-001, HR-ADAPT-001]
   entry_point: "Возникла потребность в сотруднике"
-  exit_point: "Кадровое оформление завершено; начало адаптации запущено согласно boundary-элементу модели"
+  exit_point: "Source-модель объявляет кадровое оформление завершенным после схождения веток; полный HR-ADAPT-001 только начат"
   notes: |
-    Source scope: SRC-HR-MODEL-001. Lifecycle/approval status модели UNKNOWN — view не объявляет ее AS-IS или TO-BE.
-    HR-STAFF-REQ-001 включен потому, что MODEL-001#1 — свернутый подпроцесс заявки, детализированный SRC-HR-MODEL-002.
-    HR-ADAPT-001 включен только как процесс, которого касается MODEL-001#7; существующая схема не описывает весь период адаптации до его бизнес-результата.
-    Element-level transformation хранится в mappings/SRC-HR-MODEL-001.yaml.
-    Схема показывает параллель после кадрового оформления: начало адаптации, воинский учет и СФР. Каноническая архитектура сохраняет эти элементы как handoff и L2 HR-HIRE-001, а не как отдельные L1.
+    Lifecycle/approval status SRC-HR-MODEL-001 = UNKNOWN.
+    MODEL-001#PAR сохранен: после core HR-HIRE-KDP-001 source-модель показывает параллельные ветки начала адаптации, воинского учета и СФР.
+    В канонической архитектуре MODEL-001#7 — boundary handoff HR-HIRE-001 → HR-ADAPT-001, а не прямой HR-HIRE-KDP-001 → HR-ADAPT-001.
+    Не установлено, должны ли HR-HIRE-MIL-001 и HR-HIRE-SFR-001 завершиться до parent close; это UNKNOWN для Agent 02.
+    Element-level mapping остается в mappings/SRC-HR-MODEL-001.yaml.
