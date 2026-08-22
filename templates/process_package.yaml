@@ -1,5 +1,6 @@
-schema_version: "1.0"
+schema_version: "1.1"
 
+# v1.1 backward-compatible: существующие v1.0 process packages остаются допустимыми.
 process:
   process_id: "DOMAIN-OBJECT-001"
   name: ""
@@ -11,6 +12,13 @@ process:
   participants: []
   views: []
 
+# Applicability отделяет устойчивую архитектурную границу от доказательства,
+# что конкретный вариант является текущим фактическим AS-IS.
+applicability:
+  current_state: "UNKNOWN_CURRENT" # CONFIRMED_CURRENT | PARTIAL_CURRENT | UNKNOWN_CURRENT | REFERENCE_ONLY | CONDITIONAL
+  condition: null
+  notes: null
+
 boundaries:
   trigger: null
   input: []
@@ -18,14 +26,24 @@ boundaries:
   business_result: null
   consumer: null
   next_processes: []
+  parent_entry: null
+  parent_exit: null
+
+architecture:
+  subprocess_refs: []
+  boundary_handoff_refs: []
+  cross_domain_refs: []
 
 sources:
   source_refs: []
+  evidence_refs: []
 
 versions:
   as_is_version: null
   to_be_version: null
 
+# Эти секции сохранены для совместимости и компактных моделей.
+# Для детального AS-IS v1.1 предпочтительно использовать model_refs.as_is_model.
 as_is:
   steps: []
   flows: []
@@ -45,6 +63,16 @@ to_be:
   rules: []
   exceptions: []
   automation_options: []
+
+# Ссылки на насыщенные v1.1 artifacts. Поля optional.
+model_refs:
+  as_is_model: null
+  information_objects: null
+  handoff_register: null
+  clarification_register: null
+  issues: null
+  change_log: null
+  to_be_model: null
 
 open_questions: []
 
