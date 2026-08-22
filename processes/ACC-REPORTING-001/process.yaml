@@ -11,6 +11,7 @@ process:
     - ROLE-FIN-CHIEF-ACCOUNTANT-001
   views:
     - VIEW-ACC-CHIEF-ROLE-001
+    - VIEW-ACC-FUNCTION-001
     - VIEW-ACC-ACCOUNT-TO-REPORT-E2E-001
 boundaries:
   trigger: "Наступил отчетный период/государственный срок подготовки и сдачи бухгалтерской или налоговой отчетности"
