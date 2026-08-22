@@ -9,21 +9,24 @@ view:
   level: "L0"
   process_refs:
     - ACC-REG-REQ-001
-    - ACC-BANK-001
     - ACC-MGMT-REQ-001
     - ACC-PRIMARY-001
     - ACC-REPORTING-001
     - ACC-PAYROLL-001
     - ACC-TAX-ENS-001
     - ACC-CONTRACT-REVIEW-001
+  related_views:
+    - VIEW-ACC-FUNCTION-001
   entry_point: null
   exit_point: null
   notes: |
     Это ROLE_LANDSCAPE, а не end-to-end поток: перечисленные L1 имеют независимые событийные/календарные triggers.
+    После повторного boundary-test банковский блок не проходит как самостоятельный L1: источник подтверждает получение файла и загрузку в 1С, но независимый business result бухгалтерского уровня не установлен без дополнительного вывода. Он сохранен как CAND-ACC-BANK-001.
     CAND-ACC-INBOX-001 (прием и маршрутизация входящих документов/запросов) не включен в process_refs: деятельность подтверждена, но доменная граница и владелец функции остаются UNKNOWN.
     Перенос файлов между тремя серверами, удаление временных файлов и работа со структурой сетевых папок не являются process_refs: они сохранены как cross-process technical constraints/problems.
     Отсутствие части электронного архива учредительных документов также не канонизировано как ACC process.
 architecture_candidates:
+  - CAND-ACC-BANK-001
   - CAND-ACC-INBOX-001
   - CAND-ACC-FOUNDING-ARCHIVE-001
 cross_domain_notes:
