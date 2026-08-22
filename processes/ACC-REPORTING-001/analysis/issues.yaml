@@ -1,0 +1,28 @@
+schema_version: "1.1"
+
+issues:
+  - issue_id: ISS-ACC-REPORTING-001
+    process_id: ACC-REPORTING-001
+    category: EXTERNAL_WAIT
+    as_is_steps: [ACCRPT-A004, ACCRPT-A005]
+    flow_refs: [ACCRPT-F004]
+    handoff_refs: [HO-ACC-REPORTING-AUTHORITY-TO-CHIEF-001]
+    information_object_refs: [IO-ACC-REPORTING-STATUS-001, IO-ACC-REPORTING-ACCEPT-CONFIRM-001]
+    description: "После отправки Главный бухгалтер контролирует результат и ожидает ответ контролирующего органа о принятии отчетности; как правило, информация поступает на следующий день, но ожидание может продолжаться до фактического ответа."
+    evidence_refs: [FACT-ACC-013]
+    consequence: "Завершение процесса зависит от внешнего ответа и может оставаться в состоянии ожидания дольше наблюдаемого следующего дня."
+    severity: MEDIUM
+    status: OPEN
+
+  - issue_id: ISS-ACC-REPORTING-002
+    process_id: ACC-REPORTING-001
+    category: MANUAL_FILE_ASSEMBLY
+    as_is_steps: [ACCRPT-A006, ACCRPT-A007]
+    flow_refs: [ACCRPT-F006, ACCRPT-F008]
+    handoff_refs: []
+    information_object_refs: [IO-ACC-REPORTING-SEND-CONFIRM-001, IO-ACC-REPORTING-ACCEPT-CONFIRM-001, IO-ACC-REPORTING-ARCHIVE-PACKAGE-001]
+    description: "Разные площадки сдачи отчетности формируют отчетность и подтверждающие документы по-разному: где-то комплект может выгружаться одним файлом, а где-то отдельными документами, которые при потребности пользователя приходится объединять."
+    evidence_refs: [FACT-ACC-013]
+    consequence: "Формирование итогового комплекта требует дополнительного ручного времени и зависит от формата выгрузки используемой площадки."
+    severity: MEDIUM
+    status: OPEN
