@@ -1,0 +1,75 @@
+schema_version: "1.0"
+process:
+  process_id: "IT-SUPPORT-RESOLVE-001"
+  name: "Обработка обращения и восстановление возможности работы"
+  domain: "IT"
+  level: "L2"
+  status: "ARCHITECTURE_READY"
+  parent_process: "IT-SUPPORT-001"
+  owner_role: "ROLE-IT-SUPPORT-EXT-001"
+  participants:
+    - ROLE-IT-SUPPORT-EXT-001
+    - ROLE-INTERNAL-USER-001
+    - ROLE-IT-LEAD-EXT-001
+  views:
+    - VIEW-IT-LEAD-ROLE-001
+    - VIEW-IT-FUNCTION-001
+
+boundaries:
+  trigger: "Зарегистрированное обращение доступно технической поддержке и взято в работу"
+  input:
+    - "Зарегистрированная заявка HelpDesk"
+    - "Описание проблемы/потребности"
+  previous_processes: [IT-SUPPORT-INTAKE-001]
+  business_result: "Пользователь получил постоянное решение либо временное решение, позволяющее продолжить работу"
+  consumer: "Внутренний сотрудник/пользователь"
+  next_processes: []
+
+parent_exit:
+  parent_process: IT-SUPPORT-001
+  outcomes:
+    - outcome: PERMANENT_SOLUTION
+      next: PARENT_CAN_COMPLETE
+    - outcome: TEMPORARY_SOLUTION
+      next_process: IT-SUPPORT-FINALIZE-001
+      note: "Источник подтверждает последующую доработку, но точный HelpDesk closure status до доработки UNKNOWN."
+
+architecture_scope:
+  included:
+    - "Взятие заявки в работу"
+    - "Обработка заявки"
+    - "Выдача временного либо постоянного решения"
+  escalation_to_it_lead:
+    evidence_class: EXPLICIT
+    rule: "При обращениях архитектурного/безопасностного характера IT lead подключается сам; точный критерий и маршрут эскалации не раскрыты."
+    applicability: UNKNOWN_BOUNDARY
+  response_indicator:
+    stated_target: "30 минут"
+    observed_practice: "10–15 минут"
+    formal_sla_status: UNKNOWN
+
+sources:
+  source_refs: [SRC-IT-LEAD-001]
+  evidence_refs: ["sources/evidence/SRC-IT-LEAD-001_architecture.yaml"]
+architecture_evidence:
+  - source_ref: SRC-IT-LEAD-001
+    evidence_class: EXPLICIT
+    statement: "После регистрации сотрудники поддержки сразу берут заявку в работу; результатом может быть временное или постоянное решение."
+  - source_ref: SRC-IT-LEAD-001
+    evidence_class: EXPLICIT
+    statement: "Временное решение должно позволить сотруднику продолжить работу."
+
+versions: {as_is_version: null, to_be_version: null}
+as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+issues: []
+changes: []
+to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+open_questions:
+  - "Как определяется приоритет/срочность заявок и кто принимает это решение?"
+  - "Какие категории обращений эскалируются IT lead и как это фиксируется?"
+  - "Что именно измеряют названные 30 минут и 10–15 минут?"
+delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Agent 01 architecture only; подробные действия диагностики и решения не достраивались."
