@@ -1,15 +1,16 @@
-schema_version: "1.0"
+schema_version: "1.1"
 
 process:
   process_id: "HR-STAFF-REQ-001"
   name: "Формирование и согласование заявки на подбор"
   domain: "HR"
   level: "L1"
-  status: "ARCHITECTURE_READY"
+  status: "CLARIFICATION_REQUIRED"
   parent_process: null
   owner_role: UNKNOWN
   participants:
     - ROLE-HIRING-MANAGER-001
+    - ROLE-HR-DIRECTOR-001
     - ROLE-CEO-001
   views:
     - VIEW-HR-FUNCTION-001
@@ -26,6 +27,11 @@ boundaries:
   next_processes:
     - HR-RECRUIT-001
 
+architecture_boundary_review:
+  current_as_is_status: CLARIFICATION_REQUIRED
+  note: "Архитектурная boundary сохранена без молчаливого изменения. Detailed AS-IS выявил, что current interview подтверждает получение заявки от непосредственного руководителя, но не подтверждает обязательный CEO approval или статус 'согласована' перед handoff в recruitment."
+  coordinator_escalation_ref: ESC-HR-STAFF-REQ-001
+
 sources:
   source_refs:
     - SRC-HR-MODEL-002
@@ -33,6 +39,7 @@ sources:
     - SRC-HR-DIR-001
   evidence_refs:
     - "sources/evidence/SRC-HR-MODEL-002_architecture.yaml"
+    - "sources/evidence/SRC-HR-DIR-001_architecture.yaml"
 
 architecture_evidence:
   - source_ref: SRC-HR-MODEL-002
@@ -66,22 +73,61 @@ architecture_documents:
     status: REFERENCE_ONLY
 
 versions:
-  as_is_version: null
+  as_is_version: "0.1"
   to_be_version: null
-as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+
+as_is:
+  steps: []
+  flows: []
+  documents: []
+  systems: []
+  rules: []
+  exceptions: []
+  observations: []
+
 issues: []
 changes: []
-to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+
+to_be:
+  steps: []
+  flows: []
+  documents: []
+  rules: []
+  exceptions: []
+  automation_options: []
+
+model_refs:
+  as_is_model: "processes/HR-STAFF-REQ-001/as-is/model.yaml"
+  information_objects: "processes/HR-STAFF-REQ-001/information/information_objects.yaml"
+  handoff_register: "processes/HR-STAFF-REQ-001/handoffs/handoffs.yaml"
+  clarification_register: "processes/HR-STAFF-REQ-001/analysis/clarifications.yaml"
+  issues: "processes/HR-STAFF-REQ-001/analysis/issues.yaml"
+  change_log: null
+  to_be_model: null
+
 open_questions:
-  - "Каков lifecycle/approval status SRC-HR-MODEL-002: действующий AS-IS, утвержденная модель, черновик или TO-BE?"
-  - "Является ли согласование Генеральным директором обязательным в текущем процессе?"
+  - "Что именно является фактическим trigger текущего HR-STAFF-REQ-001: возникновение потребности, решение руководителя или иной факт?"
+  - "Является ли согласование Генеральным директором обязательным текущим этапом и для каких случаев?"
+  - "Кто фактически формирует текущую заявку и какие сведения/документы обязательны до передачи HR?"
+  - "Существует ли current revision loop и куда именно возвращается заявка на доработку?"
+  - "Существует ли current rejection/stop path и как инициатор узнает об отказе?"
+  - "Какая заявка фактически запускает HR-RECRUIT-001: любая заявка непосредственного руководителя или только отдельно согласованная?"
+  - "Какие каналы/системы используются для передачи заявки, решения и замечаний?"
+  - "Используются ли сейчас reference documents: таблица оценки загрузки и составной документ-основание?"
   - "Кто является владельцем HR-STAFF-REQ-001?"
-delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+
+delivery:
+  diagrams: []
+  attachments: []
+  qa_status: null
+  client_package_status: null
+
 metadata:
   created_at: "2026-08-21"
   updated_at: "2026-08-22"
   notes: |
-    Agent 01 architecture only; AS-IS intentionally not created.
-    Boundary признана самостоятельным L1: есть отдельный trigger, самостоятельный положительный/отрицательный business result, потребитель и управленчески осмысленная передача в recruitment.
-    Элементы 1.1–1.7 SRC-HR-MODEL-002 остаются действиями/решениями внутри этого L1 и не превращаются в отдельные L2 микропроцессы.
-    EXISTING_INTERNAL документы зафиксированы только как references; новые шаблоны не создавались.
+    Agent 01 architecture boundary is preserved; detailed Agent 02 AS-IS artifacts are connected through canonical Schema v1.1 model_refs.
+    Current interview-supported evidence confirms that an immediate manager's request for a vacant position is received by ROLE-HR-DIRECTOR-001 before recruitment work. It does not confirm CEO approval, revision, rejection, the upstream trigger, request contents or channel.
+    SRC-HR-MODEL-002 is retained as REFERENCE_ONLY in detailed AS-IS because lifecycle_status and approval_status remain UNKNOWN.
+    Status is CLARIFICATION_REQUIRED because trigger, approval applicability and exact positive boundary handoff materially affect the L1 model.
+    No TO-BE, BPMN, request template, registry/dictionary change or HR-RECRUIT-001 detailed business-logic change is introduced.
