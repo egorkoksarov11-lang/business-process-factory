@@ -1,4 +1,4 @@
-schema_version: "1.0"
+schema_version: "1.1"
 process:
   process_id: "HR-HIRE-001"
   name: "Кадровое оформление приема сотрудника"
@@ -75,17 +75,18 @@ architecture_evidence:
     statement: "Роль в boundary 'контроль выхода/начало адаптации' различается; полноценный owner адаптации не выбирается молча."
 architecture_subprocesses: [HR-HIRE-KDP-001, HR-HIRE-MIL-001, HR-HIRE-SFR-001]
 versions: {as_is_version: "0.1", to_be_version: null}
-as_is_artifacts:
-  model_ref: "processes/HR-HIRE-001/as-is/model.yaml"
-  information_objects_ref: "processes/HR-HIRE-001/information/information_objects.yaml"
-  handoffs_ref: "processes/HR-HIRE-001/handoffs/handoffs.yaml"
-  clarifications_ref: "processes/HR-HIRE-001/analysis/clarifications.yaml"
-  issues_ref: "processes/HR-HIRE-001/analysis/issues.yaml"
-  status: CLARIFICATION_REQUIRED
 as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
 issues: []
 changes: []
 to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+model_refs:
+  as_is_model: "processes/HR-HIRE-001/as-is/model.yaml"
+  information_objects: "processes/HR-HIRE-001/information/information_objects.yaml"
+  handoff_register: "processes/HR-HIRE-001/handoffs/handoffs.yaml"
+  clarification_register: "processes/HR-HIRE-001/analysis/clarifications.yaml"
+  issues: "processes/HR-HIRE-001/analysis/issues.yaml"
+  change_log: null
+  to_be_model: null
 open_questions:
   - "Точный recruitment→hire payload и критерий принятия handoff."
   - "CONFLICT: фактическое распределение подготовки/отправки/подтверждения СФР."
