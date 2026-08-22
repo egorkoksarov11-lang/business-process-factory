@@ -6,7 +6,7 @@ process:
   level: "L2"
   status: "ARCHITECTURE_READY"
   parent_process: "IT-SUPPORT-001"
-  owner_role: "ROLE-IT-SUPPORT-EXT-001"
+  owner_role: UNKNOWN
   participants:
     - ROLE-INTERNAL-USER-001
     - ROLE-IT-SUPPORT-EXT-001
@@ -38,6 +38,7 @@ architecture_scope:
     - "Телефон"
     - "Личный кабинет"
   unknowns:
+    - "Формальный владелец L2"
     - "Кто и как регистрирует телефонное обращение в HelpDesk"
     - "Одинаково ли подтверждение приема работает для всех каналов"
 
@@ -55,6 +56,7 @@ issues: []
 changes: []
 to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
 open_questions:
+  - "Кто является формальным владельцем L2 приема/регистрации?"
   - "Кто фиксирует телефонные обращения в HelpDesk и является ли регистрация обязательной для каждого телефонного обращения?"
   - "Получает ли пользователь автоматическое/ручное подтверждение для личного кабинета и телефона?"
 delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
