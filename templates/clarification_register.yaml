@@ -1,4 +1,4 @@
-schema_version: "1.0"
+schema_version: "1.1"
 questions: []
 
 # Пример:
@@ -6,6 +6,9 @@ questions: []
 #   process_id: HR-HIRE-001
 #   source_refs: [SRC-HR-002]
 #   related_steps: [A05]
+#   related_flow_refs: []
+#   related_handoff_refs: []
+#   related_information_object_refs: []
 #   question: "Где фиксируется, что комплект документов для приема полный?"
 #   why_needed: "От ответа зависит контрольная точка перед внесением данных в 1С"
 #   blocking: true
