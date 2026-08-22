@@ -13,6 +13,7 @@ process:
     - ROLE-CEO-001
   views:
     - VIEW-ACC-CHIEF-ROLE-001
+    - VIEW-ACC-FUNCTION-001
 boundaries:
   trigger: "Договор поступил Главному бухгалтеру на бухгалтерское/налоговое согласование"
   input:
@@ -35,6 +36,7 @@ architecture_evidence:
 boundary_notes:
   - "Это бухгалтерская часть более широкого корпоративного lifecycle договора; общий договорный процесс и его владелец не моделируются в ACC branch."
   - "Источник указывает downstream зависимость первичных документов от договора, но между согласованием договора и ACC-PRIMARY-001 есть исполнение сделки; прямой next_process не устанавливается."
+  - "ROLE-CEO-001 сохранен здесь, поскольку Генеральный директор прямо назван источником как один из отправителей договоров на бухгалтерское согласование."
 versions: {as_is_version: null, to_be_version: null}
 as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
 issues: []
