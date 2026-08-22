@@ -1,0 +1,75 @@
+schema_version: "1.1"
+
+issues:
+  - issue_id: "ISS-ACC-REG-REQ-001"
+    process_id: "ACC-REG-REQ-001"
+    category: "BOUNDARY_AMBIGUITY"
+    as_is_steps:
+      - "REGREQ-A001"
+    flow_refs: []
+    handoff_refs:
+      - "HO-ACC-REG-REQ-INBOUND-001"
+    information_object_refs:
+      - "IO-ACC-REG-REQ-REQUEST-001"
+    description: "Общий прием/классификация/маршрутизация входящих документов и запросов существует как CAND-ACC-INBOX-001, но его owner и точная точка handoff в бухгалтерский процесс не установлены."
+    evidence_refs:
+      - "FACT-ACC-002"
+      - "FACT-ACC-003"
+      - "FACT-ACC-004"
+      - "FACT-ACC-025"
+    consequence: "Нельзя надежно приписать ACC-REG-REQ-001 первоначальный прием запроса или построить доказанный trigger до момента, когда запрос уже оказался в бухгалтерской границе."
+    severity: "HIGH"
+    status: "OPEN"
+
+  - issue_id: "ISS-ACC-REG-REQ-002"
+    process_id: "ACC-REG-REQ-001"
+    category: "ROUTING_CRITERION_UNKNOWN"
+    as_is_steps:
+      - "REGREQ-A001"
+      - "REGREQ-A004"
+    flow_refs: []
+    handoff_refs:
+      - "HO-ACC-REG-REQ-ROUTE-FIN-001"
+      - "HO-ACC-REG-REQ-ROUTE-SEC-001"
+    information_object_refs:
+      - "IO-ACC-REG-REQ-REQUEST-001"
+    description: "Источник говорит, что большая часть (примерно 90%) входящих налоговых запросов направляется в группу Финансового директора и службы безопасности, но критерий такого маршрута и обработка оставшейся части запросов не раскрыты."
+    evidence_refs: ["FACT-ACC-004"]
+    consequence: "Нельзя построить воспроизводимое условие ветвления и нельзя считать Security обязательным участником всех запросов."
+    severity: "HIGH"
+    status: "OPEN"
+
+  - issue_id: "ISS-ACC-REG-REQ-003"
+    process_id: "ACC-REG-REQ-001"
+    category: "STORAGE_STRUCTURE_VARIABILITY"
+    as_is_steps:
+      - "REGREQ-A002"
+      - "REGREQ-A004"
+    flow_refs: []
+    handoff_refs: []
+    information_object_refs:
+      - "IO-ACC-REG-REQ-SUPPORTING-001"
+      - "IO-ACC-REG-REQ-PACKAGE-001"
+    description: "Процесс использует сетевые папки для сбора/подготовки документов, при этом source evidence фиксирует неунифицированную структуру общих папок и неясный ownership их формирования/контроля."
+    evidence_refs:
+      - "FACT-ACC-006"
+      - "FACT-ACC-023"
+    consequence: "Место поиска и размещения материалов может зависеть от текущей структуры/представления пользователей, а точный storage location подготовленного пакета нельзя нормализовать как единое правило."
+    severity: "MEDIUM"
+    status: "OPEN"
+
+  - issue_id: "ISS-ACC-REG-REQ-004"
+    process_id: "ACC-REG-REQ-001"
+    category: "CLOSURE_HANDOFF_AMBIGUITY"
+    as_is_steps:
+      - "REGREQ-A004"
+    flow_refs: []
+    handoff_refs:
+      - "HO-ACC-REG-REQ-OUTBOUND-001"
+    information_object_refs:
+      - "IO-ACC-REG-REQ-PACKAGE-001"
+    description: "Источник подтверждает подготовку пакета для согласования и дальнейшего ответного письма, но не устанавливает согласующего, фактического receiver пакета, финального sender, канал и подтверждение отправки/получения."
+    evidence_refs: ["FACT-ACC-006"]
+    consequence: "Нельзя однозначно определить доказанный момент завершения процесса и проследить передачу результата до внешнего адресата."
+    severity: "HIGH"
+    status: "OPEN"
