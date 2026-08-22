@@ -61,7 +61,7 @@ questions:
     source_refs: ["SRC-ACC-CHIEF-001"]
     related_steps: ["A005-FIN", "A005-RESP", "A006"]
     related_flow_refs: ["F005-FIN", "F005-RESP"]
-    related_handoff_refs: ["HO-ACC-PRIMARY-003", "HO-ACC-PRIMARY-004", "HO-ACC-PRIMARY-005"]
+    related_handoff_refs: ["HO-ACC-PRIMARY-003", "HO-ACC-PRIMARY-004"]
     related_information_object_refs: ["IO-ACC-PRIMARY-005"]
     question: "В какой форме и где фиксируется итоговая резолюция 'принять/не принять' документ к учету?"
     why_needed: "От ответа зависит точный information object подтверждения решения и критерий перехода APPROVE → POST."
