@@ -1,0 +1,68 @@
+schema_version: "1.1"
+
+questions:
+  - question_id: Q-ACC-REPORTING-001
+    process_id: ACC-REPORTING-001
+    source_refs: [SRC-ACC-CHIEF-001]
+    related_steps: [ACCRPT-A001]
+    related_flow_refs: []
+    related_handoff_refs: []
+    related_information_object_refs: [IO-ACC-REPORTING-DATA-001]
+    question: "Какое фактическое событие запускает подготовку отчетности: наступление внутренней даты, завершение учета за период, отдельная задача или иное событие?"
+    why_needed: "Источник подтверждает государственно регламентированные сроки, но не устанавливает точный operational trigger начала подготовки; ответ изменит границу старта L1."
+    blocking: true
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+  - question_id: Q-ACC-REPORTING-002
+    process_id: ACC-REPORTING-001
+    source_refs: [SRC-ACC-CHIEF-001]
+    related_steps: [ACCRPT-A003, ACCRPT-A004, ACCRPT-A005, ACCRPT-A006]
+    related_flow_refs: [ACCRPT-F003, ACCRPT-F004, ACCRPT-F005]
+    related_handoff_refs: [HO-ACC-REPORTING-TO-AUTHORITY-001, HO-ACC-REPORTING-AUTHORITY-TO-CHIEF-001]
+    related_information_object_refs: [IO-ACC-REPORTING-REPORT-001, IO-ACC-REPORTING-STATUS-001]
+    question: "Какие электронные платформы/программы фактически используются для сдачи отчетности и где именно в них видны отправка и результат приема?"
+    why_needed: "От ответа зависит подтвержденная system/channel mapping, место фиксации статусов SENT/ACCEPTED и communications traceability."
+    blocking: true
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+  - question_id: Q-ACC-REPORTING-003
+    process_id: ACC-REPORTING-001
+    source_refs: [SRC-ACC-CHIEF-001]
+    related_steps: [ACCRPT-A004, ACCRPT-A005]
+    related_flow_refs: [ACCRPT-F004]
+    related_handoff_refs: [HO-ACC-REPORTING-AUTHORITY-TO-CHIEF-001]
+    related_information_object_refs: [IO-ACC-REPORTING-STATUS-001, IO-ACC-REPORTING-ACCEPT-CONFIRM-001]
+    question: "Какой конкретный ответ, статус или вид квитанции считается достаточным подтверждением того, что отчетность именно принята, а не только отправлена/получена?"
+    why_needed: "Ответ определяет criterion of completion L2 ACCEPT и не позволяет смешивать SENT с ACCEPTED."
+    blocking: true
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+  - question_id: Q-ACC-REPORTING-004
+    process_id: ACC-REPORTING-001
+    source_refs: [SRC-ACC-CHIEF-001]
+    related_steps: [ACCRPT-A004, ACCRPT-A005]
+    related_flow_refs: []
+    related_handoff_refs: []
+    related_information_object_refs: [IO-ACC-REPORTING-REPORT-001, IO-ACC-REPORTING-STATUS-001]
+    question: "Что фактически происходит, если направленная отчетность не принята или получена ошибка: кто исправляет, формируется ли новая версия и как выполняется повторная отправка?"
+    why_needed: "От ответа зависит наличие reject/return/resubmit ветки, дополнительных шагов, communications и статусов information object."
+    blocking: true
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+  - question_id: Q-ACC-REPORTING-005
+    process_id: ACC-REPORTING-001
+    source_refs: [SRC-ACC-CHIEF-001]
+    related_steps: [ACCRPT-A008]
+    related_flow_refs: []
+    related_handoff_refs: []
+    related_information_object_refs: [IO-ACC-REPORTING-ARCHIVE-PACKAGE-001]
+    question: "Кто фактически пользуется итоговой общей папкой отчетности и кто определяет требования к формату комплекта, если нет отдельного внешнего запроса?"
+    why_needed: "Ответ уточнит consumer итогового результата и handoff/acceptance semantics архива."
+    blocking: false
+    status: OPEN
+    answer: null
+    answer_source_ref: null

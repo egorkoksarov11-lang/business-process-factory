@@ -1,0 +1,59 @@
+schema_version: "1.1"
+process_id: "ACC-REPORTING-001"
+
+handoffs:
+  - handoff_id: HO-ACC-REPORTING-TO-AUTHORITY-001
+    handoff_type: ROLE_TO_ROLE
+    from_process_ref: ACC-REPORTING-001
+    from_subprocess_ref: ACC-REPORTING-PREPARE-001
+    from_role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    to_process_ref: null
+    to_subprocess_ref: null
+    to_role_ref: UNKNOWN
+    trigger_or_condition: "Отчетность сформирована и должна быть направлена в соответствующий государственный контролирующий орган в установленный срок"
+    payload_refs: [IO-ACC-REPORTING-REPORT-001]
+    communication_refs: [COM-ACC-REPORTING-SUBMIT-001]
+    system_refs: []
+    channel_refs: []
+    observed_channel_names: []
+    acceptance_or_result: "Отчетность направлена; окончательное принятие подтверждается отдельным последующим ответом органа"
+    acknowledgement_required: YES
+    timing:
+      deadline: "Государственно регламентированный срок; конкретная дата в источнике не указана"
+      expected_wait: "Как правило, информация о принятии поступает на следующий день; иначе ожидание продолжается до ответа"
+      sla: null
+    applicability: CONFIRMED_CURRENT
+    evidence_refs: [FACT-ACC-012, FACT-ACC-013]
+    evidence_class: EXPLICIT
+    ambiguity: "Конкретная роль получателя, название платформы и ее system/channel classification UNKNOWN."
+    notes: "Реальная внешняя передача, не технический handoff между sibling L2."
+  - handoff_id: HO-ACC-REPORTING-AUTHORITY-TO-CHIEF-001
+    handoff_type: ROLE_TO_ROLE
+    from_process_ref: null
+    from_subprocess_ref: null
+    from_role_ref: UNKNOWN
+    to_process_ref: ACC-REPORTING-001
+    to_subprocess_ref: ACC-REPORTING-ACCEPT-001
+    to_role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger_or_condition: "Контролирующий орган сформировал ответ по ранее направленной отчетности"
+    payload_refs: [IO-ACC-REPORTING-ACCEPT-CONFIRM-001, IO-ACC-REPORTING-STATUS-001]
+    communication_refs: [COM-ACC-REPORTING-ACCEPT-001]
+    system_refs: []
+    channel_refs: []
+    observed_channel_names: []
+    acceptance_or_result: "Главный бухгалтер получает информацию, что отчетность принята, и может завершить итоговый комплект"
+    acknowledgement_required: NO
+    timing:
+      deadline: null
+      expected_wait: "Как правило, на следующий день после отправки; иначе до поступления ответа"
+      sla: null
+    applicability: CONFIRMED_CURRENT
+    evidence_refs: [FACT-ACC-013]
+    evidence_class: EXPLICIT
+    ambiguity: "Точный вид ответа/квитанции, sender role, платформа и поведение при непринятии UNKNOWN."
+    notes: "Reject/resubmit branch не моделируется без evidence."
+
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Только реальные внешние передачи; sibling L2 не соединены искусственными handoff."
