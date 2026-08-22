@@ -50,14 +50,14 @@ facts:
     notes: "Маршрутизация подтверждена, но владелец общего incoming/front-door процесса UNKNOWN."
 
   - fact_id: FACT-ACC-005
-    process_refs: [ACC-BANK-001]
+    process_refs: []
     statement: "Операционисты по расчетным счетам утром направляют электронные выписки, которые Главный бухгалтер скачивает и загружает в 1С."
     evidence_class: EXPLICIT
     source_locator: "lines 15-18"
     role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
-    object_refs: [ROLE-FIN-BANK-OPERATOR-001, SYS-1C-ACCOUNTING-001]
+    object_refs: [CAND-ACC-BANK-001, ROLE-FIN-BANK-OPERATOR-001, SYS-1C-ACCOUNTING-001]
     conflicts_with: []
-    notes: null
+    notes: "После повторного boundary-test факт не используется для подтверждения самостоятельного L1: независимый business result сверх загрузки в 1С источником не установлен."
 
   - fact_id: FACT-ACC-006
     process_refs: [ACC-REG-REQ-001]
@@ -91,13 +91,13 @@ facts:
 
   - fact_id: FACT-ACC-009
     process_refs: [ACC-PRIMARY-001, ACC-PRIMARY-APPROVE-001, ACC-PRIMARY-POST-001]
-    statement: "После проверки документы направляются руководителю либо Финансовому директору; после решения о принятии они отражаются Главным бухгалтером в 1С для формирования отчетности."
+    statement: "После проверки документы направляются руководителю либо Финансовому директору; после решения о принятии они отражаются Главным бухгалтером в 1С для формирования отчетности. В дополнительном описании ожидания резолюции отдельно названы руководитель проекта и иное лицо, отвечающее за исполнение обязательств по договору."
     evidence_class: EXPLICIT
-    source_locator: "line 29"
+    source_locator: "line 29; lines 185-240"
     role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
-    object_refs: [ROLE-FIN-DIRECTOR-001, SYS-1C-ACCOUNTING-001]
+    object_refs: [ROLE-FIN-DIRECTOR-001, ROLE-CONTRACT-OBLIGATION-RESP-001, SYS-1C-ACCOUNTING-001]
     conflicts_with: []
-    notes: "Точная матрица согласующих UNKNOWN."
+    notes: "ROLE-CONTRACT-OBLIGATION-RESP-001 — функциональная нормализация explicit формулировок 'руководитель / руководитель проекта / иное ответственное лицо'. Слово 'руководитель' не приравнивается к ROLE-CEO-001."
 
   - fact_id: FACT-ACC-010
     process_refs: [ACC-REPORTING-001, ACC-REPORTING-PRECHECK-001]
@@ -197,7 +197,7 @@ facts:
     role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
     object_refs: [ROLE-FIN-DIRECTOR-001, ROLE-CEO-001]
     conflicts_with: []
-    notes: null
+    notes: "ROLE-CEO-001 здесь сохранен: источник прямо говорит, что договоры на бухгалтерское согласование поступают в основном от Финансового и Генерального директора."
 
   - fact_id: FACT-ACC-020
     process_refs: [ACC-CONTRACT-REVIEW-001, ACC-PRIMARY-001]
@@ -217,7 +217,7 @@ facts:
     role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
     object_refs: []
     conflicts_with: []
-    notes: "Это позиция/предлагаемый принцип интервьюируемой, а не подтвержденное действующее правило AS-IS."
+    notes: "Это позиция/предлагаемый принцип интервьюируемой, а не подтвержденное действующее правило AS-IS и не подтверждение текущей роли 'инициатор договора'."
 
   - fact_id: FACT-ACC-022
     process_refs: []
@@ -280,6 +280,25 @@ facts:
     notes: "Сохранено только как automation observation; Agent 01 не формирует TO-BE recommendation."
 
 architecture_candidates:
+  - candidate_id: CAND-ACC-BANK-001
+    working_name: "Получение банковских выписок и загрузка данных в 1С"
+    domain: ACC
+    proposed_level: "L2_OR_OPERATION"
+    status: BUSINESS_RESULT_INSUFFICIENT_FOR_L1
+    source_refs: [SRC-ACC-CHIEF-001]
+    evidence_note: "Операционисты направляют выписки; Главный бухгалтер скачивает и загружает их в учетную 1С. Источник не проговаривает независимый business result после загрузки."
+    boundary_test:
+      trigger: "Получены электронные выписки от операциониста"
+      independent_business_result: UNKNOWN
+      consumer: UNKNOWN
+      technical_action_only_explicit: true
+      decision: "Не canonical L1; сохранить как operation/future L2 candidate до дополнительного evidence."
+    missing_for_canonicalization:
+      - "самостоятельный business result"
+      - "consumer результата"
+      - "подтверждение, что загрузка завершает отражение движения по расчетным счетам в учете"
+      - "parent boundary, если это L2"
+
   - candidate_id: CAND-ACC-INBOX-001
     working_name: "Прием, классификация и маршрутизация входящих документов/запросов"
     domain: CROSS_DOMAIN_DOCUMENT_MANAGEMENT
@@ -334,7 +353,8 @@ cross_process_problems:
   - issue_id: XISS-ACC-TECH-001
     name: "Высокая трудоемкость файлового обмена между тремя серверами"
     evidence_class: EXPLICIT
-    affected_process_refs: [ACC-BANK-001, ACC-REG-REQ-001, ACC-PRIMARY-001, ACC-REPORTING-001, ACC-CONTRACT-REVIEW-001]
+    affected_process_refs: [ACC-REG-REQ-001, ACC-PRIMARY-001, ACC-REPORTING-001, ACC-CONTRACT-REVIEW-001]
+    affected_candidate_refs: [CAND-ACC-BANK-001]
     statement: "Скачивание, перенос и удаление файлов между серверами занимает больше всего рабочего времени."
     classification: CROSS_PROCESS_TECHNICAL_CONSTRAINT
 
@@ -353,8 +373,14 @@ cross_process_problems:
 cross_domain_handoffs:
   - handoff_id: HDO-ACC-HR-001
     target_domain: HR
-    statement: "Ведомости на аванс/зарплату передаются Директору по персоналу; HR также обращается за данными в части начислений, налогов и связанной отчетности."
-    process_refs: [ACC-PAYROLL-001, ACC-PAYROLL-PAY-001, ACC-PAYROLL-REPORT-001]
+    statement: "Ведомости на аванс/зарплату передаются Директору по персоналу."
+    process_refs: [ACC-PAYROLL-001, ACC-PAYROLL-PAY-001]
+    evidence_class: EXPLICIT
+
+  - handoff_id: HDO-ACC-HR-002
+    target_domain: HR
+    statement: "Кадровая функция запрашивает у бухгалтерии информацию по сотрудникам в части начисления оплаты, налогов и связанной отчетности; остальной кадровый учет/отчетность выполняется кадровой функцией самостоятельно."
+    process_refs: [ACC-PAYROLL-001, ACC-PAYROLL-REPORT-001]
     evidence_class: EXPLICIT
 
   - handoff_id: HDO-ACC-IT-001
@@ -371,7 +397,7 @@ cross_domain_handoffs:
 
   - handoff_id: HDO-ACC-FIN-001
     target_domain: FINANCIAL_MANAGEMENT
-    statement: "Финансовый директор является основным инициатором внутренних запросов, адресатом входящих документов, участником согласования первички/договоров и получателем зарплатных ведомостей."
+    statement: "Финансовый директор является основным инициатором внутренних запросов, адресатом входящих документов, отдельным подтвержденным согласующим первички/договоров и получателем зарплатных ведомостей."
     process_refs: [ACC-MGMT-REQ-001, ACC-PRIMARY-001, ACC-CONTRACT-REVIEW-001, ACC-PAYROLL-001]
     evidence_class: EXPLICIT
 
@@ -382,9 +408,12 @@ cross_domain_handoffs:
     evidence_class: EXPLICIT
 
 classification_decisions:
+  - object: "Получение банковских выписок и загрузка в 1С"
+    decision: ARCHITECTURE_CANDIDATE_OPERATION_OR_FUTURE_L2
+    rationale: "Источник подтверждает trigger и техническую загрузку, но не самостоятельный business result/consumer L1. Формулировка 'движение отражено в бухгалтерском учете' без дополнительного evidence была бы аналитическим достраиванием."
   - object: "Перенос файлов между серверами"
     decision: CROSS_PROCESS_TECHNICAL_CONSTRAINT
-    rationale: "Нет самостоятельного бизнес-результата и отдельного потребителя; операция повторяется внутри нескольких процессов."
+    rationale: "Нет самостоятельного бизнес-результата и отдельного потребителя; операция повторяется внутри нескольких процессов/candidates."
   - object: "Удаление временных файлов на серверах"
     decision: TECHNICAL_OPERATION_RULE
     rationale: "Это правило эксплуатации ресурсов, а не L1/L2."
