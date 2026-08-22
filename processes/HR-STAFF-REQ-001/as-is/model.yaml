@@ -4,337 +4,60 @@ as_is_version: "0.1"
 status: "CLARIFICATION_REQUIRED"
 
 scope:
-  trigger: "UNKNOWN_CURRENT: SRC-HR-MODEL-002 показывает trigger 'Возникла потребность в сотруднике'; SRC-HR-DIR-001 начинает наблюдаемую текущую цепочку с уже существующей заявки, которую Директор по персоналу получает от непосредственного руководителя."
-  business_result: "PARTIAL_CURRENT: интервью подтверждает, что заявка на необходимую вакантную позицию поступает Директору по персоналу и далее начинается работа по подбору; статус 'согласованная заявка' и отрицательный end-state подтверждены только SRC-HR-MODEL-002 с UNKNOWN lifecycle/approval status."
-  applicability: "PARTIAL_CURRENT"
+  trigger: "UNKNOWN_CURRENT: SRC-HR-DIR-001 starts from an already existing request received by ROLE-HR-DIRECTOR-001; SRC-HR-MODEL-002 trigger remains reference-only."
+  business_result: "UNKNOWN_CURRENT: current evidence confirms request receipt before recruitment work, but does not confirm a standalone STAFF-REQ lifecycle or approved request result."
+  applicability: "UNKNOWN_CURRENT"
   source_refs:
     - SRC-HR-DIR-001
     - SRC-HR-MODEL-002
 
 steps:
   - step_id: HRREQ-C001
-    subprocess_id: null
     role_ref: ROLE-HIRING-MANAGER-001
-    action: "Передать Директору по персоналу заявку на необходимую вакантную позицию"
-    business_object: "Потребность в закрытии вакантной позиции"
-    input_information_refs: []
+    action: "Передать заявку на вакантную позицию Директору по персоналу"
+    business_object: "Заявка на вакантную позицию"
     output_information_refs:
       - IO-HR-STAFF-REQUEST-CUR-001
     system_refs: []
     channel_refs: []
-    observed_channel_names: []
-    incoming_flow_refs: []
-    outgoing_flow_refs:
-      - HRREQ-F-C001
-    timing:
-      duration: null
-      deadline: null
-      frequency: null
-      wait_for: null
-    result: "Заявка исходит от непосредственного руководителя и передается Директору по персоналу"
     evidence_refs:
       - FACT-HR-DIR-001
-    evidence_class: INFERRED
-    notes: "SRC-HR-DIR-001 прямо говорит, что Директор по персоналу принимает заявки от непосредственных руководителей. Само действие отправки руководителем логически следует из подтвержденного источника заявки, но способ формирования, содержание, предварительное согласование и канал не раскрыты."
+    evidence_class: EXPLICIT
+    notes: "Подтвержден только факт передачи заявки руководителем. Формирование заявки, содержание, согласование и канал не установлены."
 
   - step_id: HRREQ-C002
-    subprocess_id: null
     role_ref: ROLE-HR-DIRECTOR-001
-    action: "Получить заявку непосредственного руководителя на необходимую вакантную позицию"
+    action: "Получить заявку непосредственного руководителя на вакантную позицию"
     business_object: "Заявка на вакантную позицию"
     input_information_refs:
       - IO-HR-STAFF-REQUEST-CUR-001
-    output_information_refs:
-      - IO-HR-STAFF-REQUEST-CUR-001
-    system_refs: []
-    channel_refs: []
-    observed_channel_names: []
-    incoming_flow_refs:
-      - HRREQ-F-C001
-    outgoing_flow_refs: []
-    timing:
-      duration: null
-      deadline: null
-      frequency: null
-      wait_for: null
-    result: "Директор по персоналу получил заявку; далее источник описывает формирование и согласование профиля вакансии и последующий подбор, что относится к HR-RECRUIT-001 и не детализируется здесь"
     evidence_refs:
       - FACT-HR-DIR-001
     evidence_class: EXPLICIT
-    notes: "Интервью не подтверждает, что заявка к этому моменту согласована Генеральным директором, и не раскрывает upstream-последовательность HR-STAFF-REQ-001."
+    notes: "После получения заявки источник описывает дальнейший подбор. Отдельный current STAFF-REQ approval lifecycle не подтвержден."
 
-  - step_id: HRREQ-R101
-    subprocess_id: null
-    role_ref: ROLE-HIRING-MANAGER-001
-    action: "Оценить фактическую загрузку подразделения и рассчитать потребность в сотруднике"
-    business_object: "Потребность подразделения в сотруднике"
-    input_information_refs: []
-    output_information_refs:
-      - IO-HR-STAFF-LOAD-REF-001
-    system_refs: []
-    channel_refs: []
-    observed_channel_names: []
-    incoming_flow_refs: []
-    outgoing_flow_refs:
-      - HRREQ-F-R101
-    timing:
-      duration: null
-      deadline: null
-      frequency: null
-      wait_for: null
-    result: "В reference model рассчитана потребность в сотруднике"
+  - step_id: HRREQ-R001
+    role_ref: null
+    action: "Выполнить reference model шаги формирования и согласования заявки"
+    business_object: "Reference model HR-STAFF-REQ-001"
     evidence_refs:
       - MODEL002-FACT-002
-    evidence_class: EXPLICIT
-    notes: "REFERENCE_ONLY: элемент присутствует в SRC-HR-MODEL-002; его current applicability UNKNOWN из-за UNKNOWN lifecycle/approval status модели."
-
-  - step_id: HRREQ-R102
-    subprocess_id: null
-    role_ref: ROLE-HIRING-MANAGER-001
-    action: "Принять решение о необходимости введения позиции или заполнения вакантной штатной единицы"
-    business_object: "Позиция / вакантная штатная единица"
-    input_information_refs:
-      - IO-HR-STAFF-LOAD-REF-001
-      - IO-HR-STAFF-AUTHORITY-REF-001
-    output_information_refs: []
-    system_refs: []
-    channel_refs: []
-    observed_channel_names: []
-    incoming_flow_refs:
-      - HRREQ-F-R101
-    outgoing_flow_refs:
-      - HRREQ-F-R102
-    timing:
-      duration: null
-      deadline: null
-      frequency: null
-      wait_for: null
-    result: "В reference model принято решение о необходимости позиции / заполнения вакансии"
-    evidence_refs:
-      - MODEL002-FACT-002
-    evidence_class: EXPLICIT
-    notes: "REFERENCE_ONLY; current applicability UNKNOWN. Источник не устанавливает универсальное правило, когда используется каждый из перечисленных документов-оснований."
-
-  - step_id: HRREQ-R103
-    subprocess_id: null
-    role_ref: ROLE-HIRING-MANAGER-001
-    action: "Определить функции и задачи будущего сотрудника"
-    business_object: "Содержание будущей позиции"
-    input_information_refs: []
-    output_information_refs:
-      - IO-HR-STAFF-FUNCTIONS-REF-001
-    system_refs: []
-    channel_refs: []
-    observed_channel_names: []
-    incoming_flow_refs:
-      - HRREQ-F-R102
-    outgoing_flow_refs:
-      - HRREQ-F-R103
-    timing:
-      duration: null
-      deadline: null
-      frequency: null
-      wait_for: null
-    result: "В reference model определен перечень функций и задач будущего сотрудника"
-    evidence_refs:
-      - MODEL002-FACT-003
-    evidence_class: EXPLICIT
-    notes: "REFERENCE_ONLY; не приравнивается к текущему профилю вакансии из интервью."
-
-  - step_id: HRREQ-R104
-    subprocess_id: null
-    role_ref: ROLE-HIRING-MANAGER-001
-    action: "Сформировать заявку на подбор с обоснованием потребности и перечнем функций и направить ее Генеральному директору на согласование"
-    business_object: "Заявка на подбор"
-    input_information_refs:
-      - IO-HR-STAFF-FUNCTIONS-REF-001
-    output_information_refs:
-      - IO-HR-STAFF-REQUEST-REF-001
-    system_refs: []
-    channel_refs: []
-    observed_channel_names: []
-    incoming_flow_refs:
-      - HRREQ-F-R103
-    outgoing_flow_refs:
-      - HRREQ-F-R104
-    timing:
-      duration: null
-      deadline: null
-      frequency: null
-      wait_for: "Рассмотрение заявки Генеральным директором — только в reference model; срок не указан"
-    result: "В reference model заявка сформирована и передана Генеральному директору на рассмотрение"
-    evidence_refs:
-      - MODEL002-FACT-003
       - MODEL002-FACT-004
-    evidence_class: EXPLICIT
-    notes: "REFERENCE_ONLY; SRC-HR-DIR-001 не подтверждает обязательность CEO approval и не раскрывает, кто фактически формирует заявку в текущем процессе."
-
-  - step_id: HRREQ-R105
-    subprocess_id: null
-    role_ref: ROLE-CEO-001
-    action: "Рассмотреть заявку на подбор"
-    business_object: "Заявка на подбор"
-    input_information_refs:
-      - IO-HR-STAFF-REQUEST-REF-001
-    output_information_refs:
-      - IO-HR-STAFF-DECISION-REF-001
-    system_refs: []
-    channel_refs: []
-    observed_channel_names: []
-    incoming_flow_refs:
-      - HRREQ-F-R104
-    outgoing_flow_refs:
-      - HRREQ-F-R105-REV
-      - HRREQ-F-R105-APP
-    timing:
-      duration: null
-      deadline: null
-      frequency: null
-      wait_for: null
-    result: "В reference model получен один из результатов рассмотрения: требуется доработка, согласовано либо подбор не согласован"
-    evidence_refs:
-      - MODEL002-FACT-004
+      - MODEL002-FACT-005
+      - MODEL002-FACT-006
       - MODEL002-FACT-007
     evidence_class: EXPLICIT
-    notes: "REFERENCE_ONLY. Не моделируется как безусловный CONFIRMED_CURRENT CEO approval. Ветка отказа завершает reference flow без отдельного сообщения, так как источник подтверждает end-state, но не коммуникацию отказа."
-
-  - step_id: HRREQ-R106
-    subprocess_id: null
-    role_ref: ROLE-CEO-001
-    action: "Сформировать и направить замечания и рекомендации по доработке"
-    business_object: "Заявка на подбор / перечень функций"
-    input_information_refs:
-      - IO-HR-STAFF-REQUEST-REF-001
-      - IO-HR-STAFF-DECISION-REF-001
-    output_information_refs:
-      - IO-HR-STAFF-REVISION-REF-001
-    system_refs: []
-    channel_refs: []
-    observed_channel_names: []
-    incoming_flow_refs:
-      - HRREQ-F-R105-REV
-    outgoing_flow_refs: []
-    timing:
-      duration: null
-      deadline: null
-      frequency: null
-      wait_for: null
-    result: "В reference model замечания направлены для доработки заявки/функций"
-    evidence_refs:
-      - MODEL002-FACT-005
-    evidence_class: EXPLICIT
-    notes: "REFERENCE_ONLY. Точная точка возврата на доработку между содержанием функций и самой заявкой в текстовой нормализации не зафиксирована однозначно, поэтому искусственный RETURN к конкретному шагу не создается."
-
-  - step_id: HRREQ-R107
-    subprocess_id: null
-    role_ref: ROLE-HIRING-MANAGER-001
-    action: "Направить согласованную заявку HR"
-    business_object: "Согласованная заявка на подбор"
-    input_information_refs:
-      - IO-HR-STAFF-REQUEST-REF-001
-      - IO-HR-STAFF-DECISION-REF-001
-    output_information_refs:
-      - IO-HR-STAFF-REQUEST-REF-001
-    system_refs: []
-    channel_refs: []
-    observed_channel_names: []
-    incoming_flow_refs:
-      - HRREQ-F-R105-APP
-    outgoing_flow_refs: []
-    timing:
-      duration: null
-      deadline: null
-      frequency: null
-      wait_for: null
-    result: "В reference model согласованная заявка направлена HR и процесс завершается положительным результатом"
-    evidence_refs:
-      - MODEL002-FACT-006
-    evidence_class: EXPLICIT
-    notes: "REFERENCE_ONLY. Получатель в source назван generic 'HR'; не приравнивается автоматически к ROLE-HR-DIRECTOR-001."
+    notes: "REFERENCE_ONLY: оценка потребности, документы, CEO approval, revision, rejection и approved request flow не повышаются до current AS-IS."
 
 flows:
   - flow_id: HRREQ-F-C001
     from_ref: HRREQ-C001
     to_ref: HRREQ-C002
     flow_type: HANDOFF
-    condition: "Заявка на необходимую вакантную позицию предоставлена непосредственным руководителем"
     evidence_refs:
       - FACT-HR-DIR-001
     applicability: CONFIRMED_CURRENT
-
-  - flow_id: HRREQ-F-R101
-    from_ref: HRREQ-R101
-    to_ref: HRREQ-R102
-    flow_type: SEQUENCE
-    condition: null
-    evidence_refs:
-      - MODEL002-FACT-002
-    applicability: REFERENCE_ONLY
-
-  - flow_id: HRREQ-F-R102
-    from_ref: HRREQ-R102
-    to_ref: HRREQ-R103
-    flow_type: SEQUENCE
-    condition: null
-    evidence_refs:
-      - MODEL002-FACT-002
-      - MODEL002-FACT-003
-    applicability: REFERENCE_ONLY
-
-  - flow_id: HRREQ-F-R103
-    from_ref: HRREQ-R103
-    to_ref: HRREQ-R104
-    flow_type: SEQUENCE
-    condition: null
-    evidence_refs:
-      - MODEL002-FACT-003
-    applicability: REFERENCE_ONLY
-
-  - flow_id: HRREQ-F-R104
-    from_ref: HRREQ-R104
-    to_ref: HRREQ-R105
-    flow_type: HANDOFF
-    condition: "Заявка сформирована и направлена Генеральному директору на согласование — только reference flow"
-    evidence_refs:
-      - MODEL002-FACT-004
-    applicability: REFERENCE_ONLY
-
-  - flow_id: HRREQ-F-R105-REV
-    from_ref: HRREQ-R105
-    to_ref: HRREQ-R106
-    flow_type: CONDITIONAL
-    condition: "Результат рассмотрения: требуется доработка"
-    evidence_refs:
-      - MODEL002-FACT-004
-      - MODEL002-FACT-005
-    applicability: REFERENCE_ONLY
-
-  - flow_id: HRREQ-F-R105-APP
-    from_ref: HRREQ-R105
-    to_ref: HRREQ-R107
-    flow_type: CONDITIONAL
-    condition: "Результат рассмотрения: согласовано"
-    evidence_refs:
-      - MODEL002-FACT-004
-      - MODEL002-FACT-006
-    applicability: REFERENCE_ONLY
-
-decisions:
-  - decision_id: HRREQ-D-R001
-    after_step_ref: HRREQ-R105
-    question: "Результат рассмотрения заявки?"
-    branches:
-      - outcome: "Требуется доработка"
-        next_ref: HRREQ-R106
-      - outcome: "Согласовано"
-        next_ref: HRREQ-R107
-      - outcome: "Не согласовано с подбором"
-        next_ref: null
-    evidence_refs:
-      - MODEL002-FACT-004
-      - MODEL002-FACT-007
-    evidence_class: EXPLICIT
-    applicability: REFERENCE_ONLY
+    condition: "Руководитель передал заявку, которую получает Директор по персоналу"
 
 orchestration_constraints:
   confirmed_order:
@@ -344,66 +67,27 @@ orchestration_constraints:
       relation: BEFORE
       evidence_refs:
         - FACT-HR-DIR-001
-      evidence_class: INFERRED
+      evidence_class: EXPLICIT
   order_unknown:
     - constraint_id: HRREQ-OCU-001
       ref_a: HRREQ-C002
-      ref_b: HRREQ-R101
+      ref_b: HRREQ-R001
       relation: ORDER_UNKNOWN
-      reason: "Нельзя объединять interview-supported receipt of request с reference step оценки загрузки: интервью не подтверждает, выполнялся ли этот reference block в текущем процессе и в каком отношении он находится к полученной заявке."
+      reason: "Reference model lifecycle cannot be merged with current interview sequence."
       evidence_refs:
         - FACT-HR-DIR-001
         - MODEL002-FACT-002
       evidence_class: UNKNOWN
-    - constraint_id: HRREQ-OCU-002
-      ref_a: HRREQ-C002
-      ref_b: HRREQ-R105
-      relation: ORDER_UNKNOWN
-      reason: "Не установлено, предшествует ли обязательное рассмотрение Генеральным директором текущей заявке, которую получает Директор по персоналу, либо CEO approval является только reference-derived правилом."
-      evidence_refs:
-        - FACT-HR-DIR-001
-        - MODEL002-FACT-004
-      evidence_class: UNKNOWN
 
-exceptions:
-  - exception_id: HRREQ-EX-R001
-    related_step_refs:
-      - HRREQ-R105
-      - HRREQ-R106
-    condition: "Reference result: требуется доработка"
-    behavior: "SRC-HR-MODEL-002 подтверждает возврат к доработке содержания заявки/функций, но current applicability и точная точка возврата UNKNOWN."
-    evidence_refs:
-      - MODEL002-FACT-005
-    evidence_class: EXPLICIT
-    applicability: REFERENCE_ONLY
-
-  - exception_id: HRREQ-EX-R002
-    related_step_refs:
-      - HRREQ-R105
-    condition: "Reference result: не согласовано с подбором"
-    behavior: "Reference flow завершается результатом 'Подбор сотрудника не согласован'; дальнейшая коммуникация или действие не показаны. Current applicability UNKNOWN."
-    evidence_refs:
-      - MODEL002-FACT-007
-    evidence_class: EXPLICIT
-    applicability: REFERENCE_ONLY
-
+decisions: []
+exceptions: []
 quantitative_observations: []
-
 open_questions:
-  - Q-HR-STAFF-REQ-001
-  - Q-HR-STAFF-REQ-002
-  - Q-HR-STAFF-REQ-003
-  - Q-HR-STAFF-REQ-004
-  - Q-HR-STAFF-REQ-005
-  - Q-HR-STAFF-REQ-006
-  - Q-HR-STAFF-REQ-007
-  - Q-HR-STAFF-REQ-008
+  - "Подтверждается ли самостоятельный текущий STAFF-REQ lifecycle до передачи заявки в HR-RECRUIT-001?"
+  - "Является ли CEO approval текущим обязательным правилом?"
+  - "Какой именно результат передается на границе HR-STAFF-REQ-001 → HR-RECRUIT-001?"
 
 metadata:
   created_at: "2026-08-22"
   updated_at: "2026-08-22"
-  notes: |
-    Detailed AS-IS intentionally keeps two source-authored tracks separate.
-    CONFIRMED/PARTIAL CURRENT evidence from SRC-HR-DIR-001 is limited to the request originating from an immediate manager and being received by ROLE-HR-DIRECTOR-001 before recruitment work.
-    SRC-HR-MODEL-002 steps, CEO approval, revision and rejection are preserved as REFERENCE_ONLY because model lifecycle/approval status is UNKNOWN.
-    No TO-BE, BPMN, request-form design, HR-RECRUIT detailed logic or shared dictionary changes are introduced.
+  notes: "Current evidence is limited to request receipt by HR Director before recruitment. Reference model remains separated."
