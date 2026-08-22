@@ -1,0 +1,118 @@
+schema_version: "1.1"
+
+questions:
+  - question_id: Q-IT-SUPPORT-001
+    process_id: IT-SUPPORT-001
+    source_refs: [SRC-IT-LEAD-001]
+    related_steps:
+      - ITSUP-A001
+      - ITSUP-A002
+    related_flow_refs: [ITSUP-F001]
+    related_handoff_refs: [HO-IT-SUPPORT-USER-TO-SUPPORT-001]
+    related_information_object_refs:
+      - IO-IT-SUPPORT-REQUEST-001
+      - IO-IT-SUPPORT-TICKET-001
+    question: "Как именно телефонное обращение становится записью HelpDesk: кто его регистрирует, в какой момент и обязательно ли это для каждого телефонного запроса?"
+    why_needed: "От ответа зависит фактический actor и маршрут шага регистрации для телефонного канала."
+    blocking: true
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+  - question_id: Q-IT-SUPPORT-002
+    process_id: IT-SUPPORT-001
+    source_refs: [SRC-IT-LEAD-001]
+    related_steps: [ITSUP-A003]
+    related_flow_refs: [ITSUP-F002]
+    related_handoff_refs: [HO-IT-SUPPORT-USER-TO-SUPPORT-001]
+    related_information_object_refs: [IO-IT-SUPPORT-ACK-001]
+    question: "Подтверждается ли прием обращения пользователю при подаче через личный кабинет и телефон, и если да — каким сообщением/механизмом?"
+    why_needed: "От ответа зависит communication pattern intake; сейчас acknowledgement подтвержден только для электронной почты, а для телефона и личного кабинета остается UNKNOWN_CURRENT. Основной переход INTAKE → RESOLVE от этого не зависит."
+    blocking: false
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+  - question_id: Q-IT-SUPPORT-003
+    process_id: IT-SUPPORT-001
+    source_refs: [SRC-IT-LEAD-001]
+    related_steps:
+      - ITSUP-A006
+      - ITSUP-A008
+    related_flow_refs: [ITSUP-F008]
+    related_handoff_refs:
+      - HO-IT-SUPPORT-TEMP-TO-USER-001
+      - HO-IT-SUPPORT-RESOLVE-TO-FINALIZE-001
+    related_information_object_refs:
+      - IO-IT-SUPPORT-TICKET-001
+      - IO-IT-SUPPORT-STATUS-001
+      - IO-IT-SUPPORT-TEMP-SOLUTION-001
+    question: "Когда HelpDesk-заявка считается закрытой, если пользователю сначала выдано временное решение: сразу после восстановления работы или только после постоянной доработки?"
+    why_needed: "От ответа зависит граница завершения L1, статус ticket и точное место условного IT-SUPPORT-FINALIZE-001 относительно closure."
+    blocking: true
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+  - question_id: Q-IT-SUPPORT-004
+    process_id: IT-SUPPORT-001
+    source_refs: [SRC-IT-LEAD-001]
+    related_steps:
+      - ITSUP-A004
+      - ITSUP-A005
+    related_flow_refs: [ITSUP-F005]
+    related_handoff_refs: []
+    related_information_object_refs: [IO-IT-SUPPORT-TICKET-001]
+    question: "Как определяется приоритет/срочность заявки и кто принимает решение о том, какие обращения нужно выполнить быстрее?"
+    why_needed: "Источник говорит, что отдельные заявки требуют времени и скорость может согласовываться, но правило приоритизации/срочности не раскрыто."
+    blocking: false
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+  - question_id: Q-IT-SUPPORT-005
+    process_id: IT-SUPPORT-001
+    source_refs: [SRC-IT-LEAD-001]
+    related_steps:
+      - ITSUP-A004
+      - ITSUP-A005
+    related_flow_refs: []
+    related_handoff_refs: []
+    related_information_object_refs: [IO-IT-SUPPORT-TICKET-001]
+    question: "Что именно измеряют названные 30 минут и наблюдаемые 10–15 минут: время до регистрации, до взятия в работу, до первого ответа, до решения или иной интервал?"
+    why_needed: "Без ответа числовые факты нельзя корректно привязать к конкретному шагу/переходу или считать SLA."
+    blocking: false
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+  - question_id: Q-IT-SUPPORT-006
+    process_id: IT-SUPPORT-001
+    source_refs: [SRC-IT-LEAD-001]
+    related_steps: [ITSUP-A005]
+    related_flow_refs: []
+    related_handoff_refs: [HO-IT-SUPPORT-TO-IT-LEAD-001]
+    related_information_object_refs:
+      - IO-IT-SUPPORT-TICKET-001
+      - IO-IT-SUPPORT-DESCRIPTION-001
+    question: "При каких критериях заявка передается от сотрудников технической поддержки к IT lead и как фиксируется такая передача?"
+    why_needed: "От ответа зависит роль в RESOLVE, наличие handoff и отделение обычной поддержки от архитектурно/безопасностного контура."
+    blocking: true
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+cross_domain_observations:
+  - observation_id: XDOM-IT-SUPPORT-REF-001
+    process_id: IT-SUPPORT-001
+    mapping_ref: mappings/IT-HR-CROSS-DOMAIN-001.yaml
+    source_refs: [SRC-IT-LEAD-001]
+    evidence_refs:
+      - FACT-IT-LEAD-015
+      - FACT-IT-LEAD-016
+      - FACT-IT-LEAD-017
+    related_external_process_refs:
+      - HR-HIRE-001
+      - HR-TERM-001
+    status: REFERENCE_ONLY
+    note: "IT-интервью подтверждает нестабильные HR↔IT уведомления при приеме/увольнении и риск доступов, но этот AS-IS пакет не реконструирует HR-HIRE/HR-TERM."
