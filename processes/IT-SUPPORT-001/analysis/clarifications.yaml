@@ -23,13 +23,11 @@ questions:
     process_id: IT-SUPPORT-001
     source_refs: [SRC-IT-LEAD-001]
     related_steps: [ITSUP-A003]
-    related_flow_refs:
-      - ITSUP-F002
-      - ITSUP-F003
+    related_flow_refs: [ITSUP-F002]
     related_handoff_refs: [HO-IT-SUPPORT-USER-TO-SUPPORT-001]
     related_information_object_refs: [IO-IT-SUPPORT-ACK-001]
     question: "Подтверждается ли прием обращения пользователю при подаче через личный кабинет и телефон, и если да — каким сообщением/механизмом?"
-    why_needed: "От ответа зависит communication pattern intake; сейчас подтверждение приема доказано только для email."
+    why_needed: "От ответа зависит communication pattern intake; сейчас acknowledgement подтвержден только для электронной почты, а для телефона и личного кабинета остается UNKNOWN_CURRENT. Основной переход INTAKE → RESOLVE от этого не зависит."
     blocking: false
     status: OPEN
     answer: null
