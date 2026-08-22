@@ -1,0 +1,94 @@
+schema_version: "1.0"
+process:
+  process_id: "HR-HIRE-001"
+  name: "Кадровое оформление приема сотрудника"
+  domain: "HR"
+  level: "L1"
+  status: "ARCHITECTURE_READY"
+  parent_process: null
+  owner_role: UNKNOWN
+  participants:
+    - ROLE-HR-KDP-001
+    - ROLE-HR-DIRECTOR-001
+    - ROLE-EMPLOYEE-001
+    - ROLE-FIN-CHIEF-ACCOUNTANT-001
+    - ROLE-CEO-001
+    - ROLE-MIL-RESP-001
+  views:
+    - VIEW-HR-KDP-ROLE-001
+    - VIEW-HR-DIRECTOR-ROLE-001
+    - VIEW-HR-FUNCTION-001
+    - VIEW-HR-HIRE-E2E-001
+    - VIEW-HR-MODEL-ENTRY-E2E-001
+boundaries:
+  trigger: "Кандидат согласился на оффер и сведения о кандидате/условиях переданы в кадровое делопроизводство"
+  input:
+    - "Сведения о кандидате и условиях/дате выхода"
+    - "Документы сотрудника; полный состав на Agent 01 не нормализуется"
+  previous_processes: [HR-RECRUIT-001]
+  business_result: "Core кадровое оформление приема завершено; точная parent-close граница относительно применимой воинской ветки и СФР остается UNKNOWN"
+  consumer: "Сотрудник и организация; HR-ADAPT-001 запускается отдельным boundary event фактического выхода"
+  next_processes: []
+boundary_handoffs:
+  - handoff_id: HIRE_TO_ADAPT_START
+    event: "Фактический выход сотрудника и начало адаптации/испытательного срока"
+    target_process: HR-ADAPT-001
+    timing_relative_to_parent_close: UNKNOWN_MAY_OVERLAP
+    source_refs: [SRC-HR-DIR-001, SRC-HR-MODEL-001]
+    note: "SRC-HR-DIR-001 подтверждает trigger адаптации. SRC-HR-MODEL-001 показывает начало адаптации параллельно MIL/SFR после core оформления, но lifecycle модели UNKNOWN."
+completion_boundary:
+  included_l2: [HR-HIRE-KDP-001, HR-HIRE-MIL-001, HR-HIRE-SFR-001]
+  closure_dependencies:
+    - process_ref: HR-HIRE-KDP-001
+      applicability: CORE
+      required_before_parent_close: YES
+    - process_ref: HR-HIRE-MIL-001
+      applicability: CONDITIONAL
+      required_before_parent_close: UNKNOWN
+    - process_ref: HR-HIRE-SFR-001
+      applicability: SOURCE_SUPPORTED_BRANCH
+      required_before_parent_close: UNKNOWN
+  parent_close_rule: UNKNOWN
+  note: "Нельзя считать HR-HIRE-001 закрытым до/после MIL и SFR без подтверждения. Нельзя требовать закрытия parent до запуска адаптации."
+sources:
+  source_refs: [SRC-HR-KDP-001, SRC-HR-DIR-001, SRC-HR-MODEL-001]
+  evidence_refs:
+    - "sources/evidence/SRC-HR-KDP-001_architecture.yaml"
+    - "sources/evidence/SRC-HR-DIR-001_architecture.yaml"
+    - "sources/evidence/SRC-HR-MODEL-001_architecture.yaml"
+architecture_evidence:
+  - source_ref: SRC-HR-KDP-001
+    evidence_class: EXPLICIT
+    statement: "КДП описывает core оформление, СФР и применимую воинскую ветку приема."
+  - source_ref: SRC-HR-MODEL-001
+    evidence_class: EXPLICIT
+    statement: "Reference-модель после core оформления показывает параллельные ветки: начало адаптации, воинский учет, СФР."
+  - source_ref: SRC-HR-DIR-001
+    evidence_class: EXPLICIT
+    statement: "Фактический выход сотрудника запускает контроль адаптации/испытательного срока Директором по персоналу."
+  - source_ref: "SRC-HR-KDP-001 vs SRC-HR-MODEL-001"
+    evidence_class: CONFLICT
+    statement: "Распределение подготовки/отправки СФР различается; owner HR-HIRE-SFR-001 остается UNKNOWN."
+  - source_ref: "SRC-HR-DIR-001 vs SRC-HR-MODEL-001"
+    evidence_class: CONFLICT
+    statement: "Роль в boundary 'контроль выхода/начало адаптации' различается; полноценный owner адаптации не выбирается молча."
+architecture_subprocesses: [HR-HIRE-KDP-001, HR-HIRE-MIL-001, HR-HIRE-SFR-001]
+versions: {as_is_version: null, to_be_version: null}
+as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+issues: []
+changes: []
+to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+open_questions:
+  - "Должен ли HR-HIRE-MIL-001 завершиться до закрытия HR-HIRE-001 при применимости?"
+  - "Должен ли HR-HIRE-SFR-001 завершиться до закрытия HR-HIRE-001?"
+  - "Как фактически распределена ответственность за отчетность в СФР?"
+  - "Является ли MODEL-001#7 только контролем выхода/handoff или участием КДП в полном HR-ADAPT-001?"
+delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+metadata:
+  created_at: "2026-08-21"
+  updated_at: "2026-08-22"
+  notes: |
+    Agent 01 architecture only; AS-IS intentionally not created.
+    HR-HIRE-001 больше не моделируется как простая последовательность «закрыть прием → начать адаптацию».
+    Trigger HR-ADAPT-001 — отдельное boundary event фактического выхода. По reference-модели оно может возникать, пока MIL/SFR еще выполняются; фактическая timing relation остается UNKNOWN.
+    Cross-level HR-HIRE-KDP-001 → HR-ADAPT-001 удален.

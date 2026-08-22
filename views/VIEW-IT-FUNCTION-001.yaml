@@ -1,0 +1,56 @@
+schema_version: "1.0"
+view:
+  view_id: "VIEW-IT-FUNCTION-001"
+  name: "Landscape IT-функции"
+  view_type: "FUNCTION_LANDSCAPE"
+  subject_role: null
+  subject_department: null
+  subject_function: "IT-функция"
+  official_department_name: UNKNOWN
+  purpose: "Показать подтвержденные канонические процессы IT-функции отдельно от архитектурных capability/candidates и cross-domain handoffs. Это не последовательный E2E и не утверждение об официальном подразделении."
+  level: "L0"
+  process_refs:
+    - IT-SUPPORT-001
+  l1_groups:
+    - group_id: USER_SUPPORT
+      name: "Техническая поддержка пользователей"
+      process_refs: [IT-SUPPORT-001]
+      status: CONFIRMED_L1
+    - group_id: ARCHITECTURE_SECURITY_INFRASTRUCTURE
+      name: "Архитектурные решения / безопасность / развитие IT-инфраструктуры"
+      process_refs: []
+      architecture_candidates: [CAND-IT-ARCH-001, CAND-IT-GOV-001]
+      status: BOUNDARY_UNKNOWN
+      note: "Интервью подтверждает направление деятельности, но не одну устойчивую L1-границу."
+  support_l2_refs:
+    - IT-SUPPORT-INTAKE-001
+    - IT-SUPPORT-RESOLVE-001
+    - IT-SUPPORT-FINALIZE-001
+  architecture_candidates:
+    - CAND-IT-ARCH-001
+    - CAND-IT-GOV-001
+  cross_domain_refs:
+    - IT-HR-CROSS-DOMAIN-001
+  excluded_from_l1_decomposition:
+    - "Серверы"
+    - "Программное обеспечение"
+    - "Телефония"
+    - "Мониторинг"
+    - "Видеонаблюдение"
+    - "Почта"
+    - "Корпоративные мессенджеры"
+    - "Сайты"
+    - "Email/телефон/личный кабинет как support-каналы"
+  role_participation:
+    - role_ref: ROLE-IT-LEAD-EXT-001
+      refs: [IT-SUPPORT-001, CAND-IT-ARCH-001, CAND-IT-GOV-001]
+    - role_ref: ROLE-IT-SUPPORT-EXT-001
+      refs: [IT-SUPPORT-001]
+    - role_ref: ROLE-INTERNAL-USER-001
+      refs: [IT-SUPPORT-001]
+  entry_point: null
+  exit_point: null
+  notes: |
+    FUNCTION_LANDSCAPE — карта функции, а не последовательность.
+    Архитектурно-безопасностный контур оставлен candidate/capability group до дополнительного интервью.
+    E2E для технической поддержки не создается: подтвержден один L1 с внутренними L2.

@@ -1,0 +1,120 @@
+schema_version: "1.0"
+source:
+  source_id: "SRC-HR-MODEL-001"
+  title: "Существующая схема «Прием на работу»"
+  source_type: "DIAGRAM"
+  interviewee_role: null
+  interviewee_name: null
+  date: "2026-08-21"
+  file_ref: "sources/reference_models/hr/SRC-HR-MODEL-001_employee_entry_process.md"
+
+facts:
+  - fact_id: MODEL001-FACT-001
+    process_refs: [HR-STAFF-REQ-001]
+    statement: "Схема начинается с возникновения потребности в сотруднике и показывает 'Сформировать и направить HR заявку на подбор' как свернутый подпроцесс."
+    evidence_class: EXPLICIT
+    source_locator: "Start + MODEL-001#1"
+    role_ref: ROLE-HIRING-MANAGER-001
+    object_refs: []
+    conflicts_with: []
+    notes: "Внутреннее содержание collapsed subprocess детализируется отдельным SRC-HR-MODEL-002."
+
+  - fact_id: MODEL001-FACT-002
+    process_refs: [HR-RECRUIT-001, HR-RECRUIT-SOURCE-001]
+    statement: "Подбор и поиск кандидатов показан отдельным свернутым подпроцессом в lane HR."
+    evidence_class: EXPLICIT
+    source_locator: "MODEL-001#2"
+    role_ref: null
+    object_refs: []
+    conflicts_with: []
+    notes: "Lane HR не приписан автоматически ROLE-HR-DIRECTOR-001."
+
+  - fact_id: MODEL001-FACT-003
+    process_refs: [HR-RECRUIT-001, HR-RECRUIT-SELECT-001]
+    statement: "Отбор, собеседования и выбор кандидата показаны отдельным свернутым подпроцессом."
+    evidence_class: EXPLICIT
+    source_locator: "MODEL-001#3"
+    role_ref: null
+    object_refs: []
+    conflicts_with: []
+    notes: null
+
+  - fact_id: MODEL001-FACT-004
+    process_refs: [HR-RECRUIT-001, HR-RECRUIT-SEC-001]
+    statement: "После выбора кандидата схема показывает проверку Службой безопасности и решение о наличии негативной информации."
+    evidence_class: EXPLICIT
+    source_locator: "MODEL-001#4 + gateway 'Выявлена негативная информация?'"
+    role_ref: ROLE-SECURITY-001
+    object_refs: []
+    conflicts_with: []
+    notes: "Этого блока нет в интервью; lifecycle модели UNKNOWN."
+
+  - fact_id: MODEL001-FACT-005
+    process_refs: [HR-RECRUIT-001, HR-RECRUIT-OFFER-001]
+    statement: "При негативной информации модель показывает условное согласование оффера Генеральным директором; при несогласовании — возврат к поиску."
+    evidence_class: EXPLICIT
+    source_locator: "MODEL-001#4.1 + gateway согласования"
+    role_ref: ROLE-CEO-001
+    object_refs: []
+    conflicts_with: []
+    notes: "Не приписывать как действующее AS-IS без проверки."
+
+  - fact_id: MODEL001-FACT-006
+    process_refs: [HR-RECRUIT-001, HR-RECRUIT-OFFER-001]
+    statement: "Модель показывает предложение оффера кандидату и возврат к поиску при отказе кандидата."
+    evidence_class: EXPLICIT
+    source_locator: "MODEL-001#5 + gateway 'Кандидат согласился на оффер?'"
+    role_ref: ROLE-CANDIDATE-001
+    object_refs: []
+    conflicts_with: []
+    notes: "Принятый оффер подтверждает устойчивую границу перехода к HR-HIRE-001."
+
+  - fact_id: MODEL001-FACT-007
+    process_refs: [HR-HIRE-001, HR-HIRE-KDP-001]
+    statement: "После принятия оффера схема показывает 'Оформление приема сотрудника на работу' в lane Кадровика."
+    evidence_class: EXPLICIT
+    source_locator: "MODEL-001#6"
+    role_ref: ROLE-HR-KDP-001
+    object_refs: []
+    conflicts_with: []
+    notes: null
+
+  - fact_id: MODEL001-FACT-008
+    process_refs: [HR-ADAPT-001]
+    statement: "После оформления приема элемент 'Контроль выхода сотрудника и начало адаптации' расположен в lane Кадровика."
+    evidence_class: CONFLICT
+    source_locator: "MODEL-001#7"
+    role_ref: ROLE-HR-KDP-001
+    object_refs: []
+    conflicts_with: [DIR001-ADAPT-ROLE]
+    notes: "SRC-HR-DIR-001 относит полноценный контроль адаптации к Директору по персоналу. Agent 01 трактует элемент как boundary/handoff до уточнения."
+
+  - fact_id: MODEL001-FACT-009
+    process_refs: [HR-HIRE-001, HR-HIRE-MIL-001]
+    statement: "После оформления приема схема показывает параллельную ветку 'Воинский учет' в lane Кадровика."
+    evidence_class: EXPLICIT
+    source_locator: "MODEL-001#8"
+    role_ref: ROLE-HR-KDP-001
+    object_refs: []
+    conflicts_with: []
+    notes: "Сопоставлено с условной веткой приема из SRC-HR-KDP-001, а не с независимыми периодическими процессами воинского учета."
+
+  - fact_id: MODEL001-FACT-010
+    process_refs: [HR-HIRE-001, HR-HIRE-SFR-001]
+    statement: "После оформления приема схема показывает 'Подготовка и отправка отчета в СФР' в lane Главного бухгалтера."
+    evidence_class: CONFLICT
+    source_locator: "MODEL-001#9"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: []
+    conflicts_with: [KDP001-SFR-ROLE]
+    notes: "SRC-HR-KDP-001 описывает формирование сведений Кадровиком и передачу Главному бухгалтеру на отправку/подтверждение."
+
+  - fact_id: MODEL001-FACT-011
+    process_refs: [HR-HIRE-001, HR-ADAPT-001]
+    statement: "После оформления приема три ветки — начало адаптации, воинский учет и СФР — выполняются параллельно, затем схема заканчивается 'Кадровое оформление завершено'."
+    evidence_class: EXPLICIT
+    source_locator: "parallel split after MODEL-001#6 → #7/#8/#9 → End"
+    role_ref: null
+    object_refs: []
+    conflicts_with: []
+    notes: "Каноническая архитектура сохраняет параллельность как boundary information и не превращает три ветки в отдельные L1."

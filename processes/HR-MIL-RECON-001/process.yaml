@@ -1,0 +1,75 @@
+schema_version: "1.0"
+
+process:
+  process_id: "HR-MIL-RECON-001"
+  name: "Ежегодная сверка воинского учета с военным комиссариатом"
+  domain: "HR"
+  level: "L1"
+  status: "ARCHITECTURE_READY"
+  parent_process: null
+  owner_role: UNKNOWN
+  participants:
+    - ROLE-HR-KDP-001
+    - ROLE-MIL-RESP-001
+  views:
+    - VIEW-HR-KDP-ROLE-001
+
+boundaries:
+  trigger: "Ежегодный период сверки: начиная с 1 октября и до конца года"
+  input:
+    - "Сведения по сотрудникам, состоящим на воинском учете"
+    - "Приложение №23"
+    - "Карточка по форме 18"
+    - "План по ведению воинского учета"
+    - "Приказ"
+  previous_processes:
+    - HR-MIL-ORG-001
+  business_result: "Ежегодная сверка с военным комиссариатом выполнена, а подготовленные документы переданы на согласование/получены после согласования в пределах описанного источником сценария"
+  consumer: "Организация и военный комиссариат"
+  next_processes: []
+
+sources:
+  source_refs:
+    - SRC-HR-KDP-001
+
+versions:
+  as_is_version: null
+  to_be_version: null
+
+as_is:
+  steps: []
+  flows: []
+  documents: []
+  systems: []
+  rules: []
+  exceptions: []
+  observations: []
+
+issues: []
+changes: []
+
+to_be:
+  steps: []
+  flows: []
+  documents: []
+  rules: []
+  exceptions: []
+  automation_options: []
+
+open_questions:
+  - "Какой конкретный документ, отметка или иной артефакт подтверждает, что ежегодная сверка завершена?"
+  - "Кто назначает дату получения согласованных документов и кто фактически их забирает?"
+  - "ROLE-HR-KDP-001 и ROLE-MIL-RESP-001 — одна фактическая роль в этой организации или разные участники?"
+
+delivery:
+  diagrams: []
+  attachments: []
+  qa_status: null
+  client_package_status: null
+
+metadata:
+  created_at: "2026-08-21"
+  updated_at: "2026-08-21"
+  notes: |
+    Этот блок сохранен как самостоятельный периодический L1: у него отдельный календарный trigger и результат сверки, независимые от конкретного приема, увольнения или персонального изменения сотрудника.
+    Внутренние действия по формированию отдельных документов в 1С не являются самостоятельными процессами.

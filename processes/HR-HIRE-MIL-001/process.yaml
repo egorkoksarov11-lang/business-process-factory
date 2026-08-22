@@ -1,0 +1,39 @@
+schema_version: "1.0"
+process:
+  process_id: "HR-HIRE-MIL-001"
+  name: "Воинский учет при приеме сотрудника"
+  domain: "HR"
+  level: "L2"
+  status: "ARCHITECTURE_READY"
+  parent_process: "HR-HIRE-001"
+  owner_role: UNKNOWN
+  participants: [ROLE-HR-KDP-001, ROLE-MIL-RESP-001, ROLE-EMPLOYEE-001]
+  views: []
+boundaries:
+  trigger: "Принимаемый сотрудник подпадает под применимую ветку воинского учета"
+  input: ["Кадровые данные приема", "Данные/документы воинского учета"]
+  previous_processes: [HR-HIRE-KDP-001]
+  business_result: "Связанные с приемом действия/документы воинского учета обработаны и необходимые сведения направлены в пределах источника"
+  consumer: "Parent HR-HIRE-001 / внешний военный комиссариат в соответствующей части"
+  next_processes: []
+architecture_applicability:
+  mode: CONDITIONAL_L2
+  as_is_applicability: CONDITIONAL
+  source_confidence: INTERVIEW_SUPPORTED
+  parent_completion_dependency: UNKNOWN
+sources:
+  source_refs: [SRC-HR-KDP-001, SRC-HR-MODEL-001]
+versions: {as_is_version: null, to_be_version: null}
+as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+issues: []
+changes: []
+to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+open_questions:
+  - "ROLE-MIL-RESP-001 — отдельная роль или функция КДП?"
+  - "Каков точный критерий применимости ветки?"
+  - "Обязано ли завершение этого L2 предшествовать закрытию HR-HIRE-001?"
+delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+metadata:
+  created_at: "2026-08-21"
+  updated_at: "2026-08-22"
+  notes: "Conditional sibling L2 внутри HR-HIRE-001. Parent closure dependency остается UNKNOWN."

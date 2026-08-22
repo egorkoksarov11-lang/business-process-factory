@@ -1,0 +1,60 @@
+schema_version: "1.0"
+source:
+  source_id: "SRC-HR-KDP-001"
+  title: "Интервью ведущего специалиста по кадровому делопроизводству — архитектурные факты"
+  source_type: "INTERVIEW"
+  interviewee_role: "ROLE-HR-KDP-001"
+  interviewee_name: null
+  date: null
+  file_ref: "sources/raw/hr/SRC-HR-KDP-001_kadrovik_interview.txt"
+
+facts:
+  - fact_id: FACT-HR-KDP-001
+    process_refs: [HR-HIRE-001]
+    statement: "Для приема кадровый специалист сначала получает данные от директора по персоналу посредством электронного сообщения."
+    evidence_class: EXPLICIT
+    source_locator: "фрагмент: 'Сейчас расскажу, как происходит приём сотрудников... данные поступают от директора по персоналу...'"
+    role_ref: ROLE-HR-KDP-001
+    object_refs: [ROLE-HR-DIRECTOR-001]
+    conflicts_with: []
+    notes: "После synthesis с SRC-HR-DIR-001 классифицировано как handoff из подбора в кадровое оформление, а не как бизнес-триггер всей E2E-цепочки."
+
+  - fact_id: FACT-HR-KDP-002
+    process_refs: [HR-HIRE-001]
+    statement: "Внутри приема кадровый специалист проверяет комплект документов, оформляет сотрудника в 1С, организует подписание кадровых документов, формирует отчетность и при необходимости выполняет связанные действия воинского учета."
+    evidence_class: EXPLICIT
+    source_locator: "блок приема от проверки документов до фразы 'Это то, что касается приёма сотрудника на работу'"
+    role_ref: ROLE-HR-KDP-001
+    object_refs: [SYS-1C-HR-001]
+    conflicts_with: []
+    notes: "Это внутренние L2-блоки/операции HR-HIRE-001; отдельные L1 не создаются."
+
+  - fact_id: FACT-HR-KDP-003
+    process_refs: [HR-TERM-001]
+    statement: "Подробно раскрыт сценарий прекращения трудовых отношений по заявлению сотрудника, включая кадровое оформление, выдачу документов и подготовку отчетности."
+    evidence_class: EXPLICIT
+    source_locator: "фрагмент: 'Когда как происходит увольнение сотрудника?' и последующий блок"
+    role_ref: ROLE-HR-KDP-001
+    object_refs: [ROLE-EMPLOYEE-001]
+    conflicts_with: []
+    notes: "После SRC-HR-DIR-001 этот сценарий трактуется как L2 внутри более широкого HR-TERM-001."
+
+  - fact_id: FACT-HR-KDP-004
+    process_refs: [CAND-HR-MOVE-001]
+    statement: "Перевод и кадровое перемещение названы основными направлениями работы, но фактическая кадровая последовательность не раскрыта."
+    evidence_class: EXPLICIT
+    source_locator: "первый абзац; отдельные упоминания перевода в блоке воинского учета"
+    role_ref: ROLE-HR-KDP-001
+    object_refs: []
+    conflicts_with: []
+    notes: "Недостаточно для canonical process_id."
+
+  - fact_id: FACT-HR-KDP-005
+    process_refs: [HR-HIRE-001, HR-TERM-001]
+    statement: "Формирование отчетности в 1С и передача сообщения главному бухгалтеру о необходимости отправки в СФР происходят как часть событий приема/увольнения."
+    evidence_class: EXPLICIT
+    source_locator: "блоки отчетности о приеме и увольнении"
+    role_ref: ROLE-HR-KDP-001
+    object_refs: [ROLE-FIN-CHIEF-ACCOUNTANT-001, SYS-1C-HR-001]
+    conflicts_with: []
+    notes: "Смена системы/исполнителя не считается самостоятельной L1-границей."

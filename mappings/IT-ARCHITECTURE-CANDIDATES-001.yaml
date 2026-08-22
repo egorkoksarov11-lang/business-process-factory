@@ -1,0 +1,106 @@
+schema_version: "1.0"
+architecture_synthesis:
+  synthesis_id: "IT-ARCHITECTURE-CANDIDATES-001"
+  domain: IT
+  source_refs: [SRC-IT-LEAD-001]
+
+confirmed_l1:
+  - process_ref: IT-SUPPORT-001
+    decision: CONFIRMED_L1
+    rationale: "Есть устойчивый trigger (обращение сотрудника), сквозной результат (решение IT-проблемы/запроса и восстановление возможности работы), потребитель и повторяемая граница через HelpDesk."
+
+candidates:
+  - candidate_id: CAND-IT-ARCH-001
+    name: "Управление изменениями IT-архитектуры / безопасности / инфраструктуры"
+    candidate_level: L1_OR_CAPABILITY_GROUP
+    decision: BOUNDARY_UNKNOWN
+    evidence_class: EXPLICIT
+    trigger: UNKNOWN_MULTIPLE_AND_OFTEN_SELF_INITIATED
+    business_result: "В интервью в общем виде — найденное архитектурное/безопасностное решение внедрено"
+    consumer: UNKNOWN_MULTIPLE_BUSINESS_FUNCTIONS
+    rationale: |
+      Интервьюируемый называет это одним из двух крупных направлений, но сам описывает контур как очень большой и абстрактный.
+      Инициатива может возникать из собственного наблюдения/опыта, потребностей других отделов или нестандартной задачи.
+      Нет достаточных данных, чтобы доказать один устойчивый L1 вместо capability/governance-контура с несколькими процессами.
+    candidate_blocks:
+      - block_id: CAND-IT-ARCH-NEED-001
+        name: "Выявление/инициирование необходимости изменения"
+        boundary_status: UNKNOWN
+      - block_id: CAND-IT-ARCH-DESIGN-001
+        name: "Проектирование архитектурного или безопасностного решения"
+        boundary_status: UNKNOWN
+      - block_id: CAND-IT-ARCH-IMPLEMENT-001
+        name: "Внедрение изменения"
+        boundary_status: PARTIALLY_CONFIRMED
+        evidence_note: "Источник говорит, что найденные решения внедряются, но маршрут внедрения не раскрыт."
+      - block_id: CAND-IT-ARCH-OPS-HANDOFF-001
+        name: "Передача результата в эксплуатацию/поддержку"
+        boundary_status: UNKNOWN
+    next_research_needed:
+      - "Типовые triggers архитектурных изменений"
+      - "Кто заказывает/согласует и кто принимает результат"
+      - "Где заканчивается проектирование и начинается внедрение"
+      - "Как изменения передаются в эксплуатацию и техническую поддержку"
+      - "Какие виды изменений имеют отдельные устойчивые lifecycle"
+
+  - candidate_id: CAND-IT-GOV-001
+    name: "Регламентирование повторяющихся IT/support/security требований"
+    candidate_level: GOVERNANCE_CAPABILITY_OR_L2
+    decision: NOT_L1_YET
+    evidence_class: EXPLICIT
+    trigger: "Повторяемое действие/вопрос, который IT lead считает целесообразным регламентировать"
+    business_result: "Регламент/правило создано и доведено до сотрудников — формальный acceptance и lifecycle UNKNOWN"
+    consumer: "Сотрудники компании"
+    rationale: "Попытки писать и внедрять регламенты подтверждены, но источник больше раскрывает проблему их непрочтения и повторных вопросов, чем самостоятельный сквозной процесс."
+
+not_separate_l1_objects:
+  - "Серверное оборудование"
+  - "Программное обеспечение"
+  - "Информационная безопасность как перечень тем"
+  - "Дизайн и брендинг"
+  - "Разработка сайтов"
+  - "Телефония"
+  - "Мониторинг"
+  - "Инфраструктура"
+  - "Видеонаблюдение"
+  - "Корпоративные мессенджеры"
+  - "Почтовые серверы"
+  - "Email как канал поддержки"
+  - "Телефон как канал поддержки"
+  - "Личный кабинет как канал поддержки"
+  - "Бот корпоративного мессенджера, пока он в разработке"
+
+cross_process_problems:
+  - issue_id: XISS-IT-001
+    category: KNOWLEDGE_GOVERNANCE
+    description: "Созданные IT/security регламенты могут не читаться, а одинаковые вопросы продолжают поступать."
+    evidence_refs: [FACT-IT-LEAD-012]
+    affected_refs: [IT-SUPPORT-001, CAND-IT-GOV-001]
+    status: OPEN
+  - issue_id: XISS-IT-002
+    category: RECURRING_DEMAND
+    description: "Одинаковые IT-проблемы/задачи повторяются многократно."
+    evidence_refs: [FACT-IT-LEAD-011]
+    affected_refs: [IT-SUPPORT-001, CAND-IT-ARCH-001]
+    status: OPEN
+  - issue_id: XISS-IT-003
+    category: DUPLICATE_REQUESTS
+    description: "Несколько сотрудников иногда независимо создают дублирующие заявки об одной проблеме."
+    evidence_refs: [FACT-IT-LEAD-011]
+    affected_refs: [IT-SUPPORT-001]
+    frequency_note: "Источник характеризует проблему как редкую."
+    status: OPEN
+  - issue_id: XISS-IT-004
+    category: VISIBILITY_GAP
+    description: "Из-за широкого охвата IT lead не всегда видит потребности всех отделов и не всегда успевает со всеми взаимодействовать."
+    evidence_refs: [FACT-IT-LEAD-003]
+    affected_refs: [CAND-IT-ARCH-001]
+    status: OPEN
+
+view_decisions:
+  technical_support_e2e_view:
+    decision: NOT_CREATED
+    reason: "Подтвержден один L1 с внутренними L2. Создание multi-process E2E дублировало бы один процесс и нарушало бы архитектурную гранулярность."
+  hr_it_e2e_view:
+    decision: DEFERRED_TO_CROSS_DOMAIN_SYNTHESIS
+    reason: "Источник IT подтверждает handoffs и проблемы, но HR-HIRE/HR-TERM принадлежат другому домену и не должны изменяться/переопределяться из этой ветки."

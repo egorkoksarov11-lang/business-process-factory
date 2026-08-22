@@ -1,0 +1,19 @@
+schema_version: "1.0"
+view:
+  view_id: "VIEW-HR-KDP-ROLE-001"
+  name: "Landscape роли — Ведущий специалист по кадровому делопроизводству"
+  view_type: "ROLE_LANDSCAPE"
+  subject_role: "ROLE-HR-KDP-001"
+  subject_department: "Администрация"
+  purpose: "Показать канонические L1-процессы с подтвержденным участием КДП; boundary-роль в начале адаптации хранится как CONFLICT, а не как полноценное участие во всем HR-ADAPT-001."
+  level: "L0"
+  process_refs: [HR-HIRE-001, HR-TERM-001, HR-MIL-ORG-001, HR-MIL-CHANGE-001, HR-MIL-RECON-001, HR-REPORT-REQ-001]
+  related_views: [VIEW-HR-FUNCTION-001]
+  entry_point: null
+  exit_point: null
+  notes: |
+    Это landscape, не E2E.
+    SRC-HR-KDP-001 подтверждает прием, прекращение отношений, воинский учет и отчеты.
+    MODEL-001#7 остается boundary/handoff role conflict; HR-ADAPT-001 не добавлен в process_refs КДП.
+    HR-HIRE-SFR-001 сохраняет CONFLICT распределения ответственности.
+    Architecture candidates показаны отдельно в VIEW-HR-FUNCTION-001.

@@ -2,9 +2,10 @@ schema_version: "1.0"
 view:
   view_id: "VIEW-DOMAIN-001"
   name: ""
-  view_type: "END_TO_END" # ROLE_LANDSCAPE | DEPARTMENT_LANDSCAPE | END_TO_END
+  view_type: "END_TO_END" # ROLE_LANDSCAPE | DEPARTMENT_LANDSCAPE | FUNCTION_LANDSCAPE | END_TO_END
   subject_role: null
   subject_department: null
+  subject_function: null
   purpose: ""
   level: "L0"
   process_refs: []
