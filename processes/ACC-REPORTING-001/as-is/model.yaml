@@ -1,0 +1,183 @@
+schema_version: "1.1"
+process_id: "ACC-REPORTING-001"
+as_is_version: "0.1"
+status: "CLARIFICATION_REQUIRED"
+
+scope:
+  trigger: "Подготовка отчетности выполняется к срокам сдачи, регламентированным государством; точное событие фактического запуска подготовки до предотчетной проверки источником не установлено."
+  business_result: "Получено подтверждение, что направленная отчетность принята контролирующим органом; отчетность и подтверждающие квитанции/файлы выгружены, при необходимости приведены к удобному формату и размещены в общей доступной папке."
+  applicability: "CONFIRMED_CURRENT"
+  source_refs: [SRC-ACC-CHIEF-001]
+  subprocess_refs: [ACC-REPORTING-PRECHECK-001, ACC-REPORTING-PREPARE-001, ACC-REPORTING-ACCEPT-001]
+
+steps:
+  - step_id: ACCRPT-A001
+    subprocess_id: ACC-REPORTING-PRECHECK-001
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    action: "Проверить взаиморасчеты с контрагентами и правильность отражения хозяйственных операций на счетах бухгалтерского и налогового учета перед формированием отчетности"
+    business_object: "Данные бухгалтерского и налогового учета"
+    input_information_refs: [IO-ACC-REPORTING-DATA-001]
+    output_information_refs: [IO-ACC-REPORTING-DATA-001]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: []
+    outgoing_flow_refs: [ACCRPT-F001]
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "Данные и отражение операций проверены перед формированием отчетности в пределах прямо названных предотчетных проверок"
+    evidence_refs: [FACT-ACC-010]
+    evidence_class: EXPLICIT
+  - step_id: ACCRPT-A002
+    subprocess_id: ACC-REPORTING-PREPARE-001
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    action: "Сформировать бухгалтерскую и налоговую отчетность за применимый отчетный период"
+    business_object: "Бухгалтерская и налоговая отчетность"
+    input_information_refs: [IO-ACC-REPORTING-DATA-001]
+    output_information_refs: [IO-ACC-REPORTING-REPORT-001, IO-ACC-REPORTING-STATUS-001]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [ACCRPT-F001]
+    outgoing_flow_refs: [ACCRPT-F002]
+    timing: {duration: null, deadline: "Своевременно к государственно регламентированному сроку; конкретные календарные сроки в источнике не указаны", frequency: null, wait_for: null}
+    result: "Отчетность сформирована и готова к направлению"
+    evidence_refs: [FACT-ACC-011, FACT-ACC-012]
+    evidence_class: EXPLICIT
+  - step_id: ACCRPT-A003
+    subprocess_id: ACC-REPORTING-PREPARE-001
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    action: "Направить сформированную отчетность в соответствующий государственный контролирующий орган через используемую электронную площадку/программу"
+    business_object: "Подготовленная отчетность"
+    input_information_refs: [IO-ACC-REPORTING-REPORT-001, IO-ACC-REPORTING-STATUS-001]
+    output_information_refs: [IO-ACC-REPORTING-REPORT-001, IO-ACC-REPORTING-STATUS-001, IO-ACC-REPORTING-SEND-CONFIRM-001]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [ACCRPT-F002]
+    outgoing_flow_refs: [ACCRPT-F003]
+    timing: {duration: null, deadline: "Государственно регламентированный срок; точная дата в источнике не указана", frequency: null, wait_for: null}
+    result: "Отчетность направлена; SENT отделено от последующего ACCEPTED"
+    evidence_refs: [FACT-ACC-012, FACT-ACC-013]
+    evidence_class: EXPLICIT
+    notes: "Платформа не названа; Диадок/СБИС не приписываются сдаче отчетности автоматически."
+  - step_id: ACCRPT-A004
+    subprocess_id: ACC-REPORTING-ACCEPT-001
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    action: "После отправки проверять наличие результата исполнения и ожидать ответ контролирующего органа о принятии отчетности"
+    business_object: "Отправленная отчетность"
+    input_information_refs: [IO-ACC-REPORTING-REPORT-001, IO-ACC-REPORTING-STATUS-001]
+    output_information_refs: [IO-ACC-REPORTING-STATUS-001]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [ACCRPT-F003]
+    outgoing_flow_refs: [ACCRPT-F004]
+    timing: {duration: null, deadline: null, frequency: null, wait_for: "Как правило, ответ о принятии поступает на следующий день; иначе ожидание продолжается до ответа"}
+    result: "Процесс ожидает подтверждение принятия; отправка не считается завершением"
+    evidence_refs: [FACT-ACC-013]
+    evidence_class: EXPLICIT
+  - step_id: ACCRPT-A005
+    subprocess_id: ACC-REPORTING-ACCEPT-001
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    action: "Получить и зафиксировать ответ/подтверждение контролирующего органа о том, что отчетность принята"
+    business_object: "Результат приема отчетности"
+    input_information_refs: [IO-ACC-REPORTING-REPORT-001, IO-ACC-REPORTING-STATUS-001]
+    output_information_refs: [IO-ACC-REPORTING-ACCEPT-CONFIRM-001, IO-ACC-REPORTING-STATUS-001]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [ACCRPT-F004]
+    outgoing_flow_refs: [ACCRPT-F005]
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "Получено подтверждение принятия; состояние отчетности ACCEPTED"
+    evidence_refs: [FACT-ACC-013]
+    evidence_class: EXPLICIT
+  - step_id: ACCRPT-A006
+    subprocess_id: ACC-REPORTING-ACCEPT-001
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    action: "Выгрузить отчетность и связанные квитанции/подтверждения из электронной платформы и сформировать комплект для пользователей"
+    business_object: "Принятая отчетность и подтверждающие файлы"
+    input_information_refs: [IO-ACC-REPORTING-REPORT-001, IO-ACC-REPORTING-SEND-CONFIRM-001, IO-ACC-REPORTING-ACCEPT-CONFIRM-001]
+    output_information_refs: [IO-ACC-REPORTING-ARCHIVE-PACKAGE-001]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [ACCRPT-F005]
+    outgoing_flow_refs: [ACCRPT-F006, ACCRPT-F007]
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "Отчетность и подтверждения выгружены; определена необходимость дополнительного объединения файлов"
+    evidence_refs: [FACT-ACC-013]
+    evidence_class: EXPLICIT
+  - step_id: ACCRPT-A007
+    subprocess_id: ACC-REPORTING-ACCEPT-001
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    action: "При необходимости объединить отдельные файлы отчетности и квитанций в удобный для пользователя формат"
+    business_object: "Комплект отчетности и подтверждений"
+    input_information_refs: [IO-ACC-REPORTING-ARCHIVE-PACKAGE-001]
+    output_information_refs: [IO-ACC-REPORTING-ARCHIVE-PACKAGE-001]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [ACCRPT-F006]
+    outgoing_flow_refs: [ACCRPT-F008]
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "Раздельные файлы при необходимости объединены"
+    evidence_refs: [FACT-ACC-013]
+    evidence_class: EXPLICIT
+  - step_id: ACCRPT-A008
+    subprocess_id: ACC-REPORTING-ACCEPT-001
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    action: "Разместить итоговый комплект принятой отчетности и подтверждений в общей доступной папке"
+    business_object: "Итоговый комплект принятой отчетности"
+    input_information_refs: [IO-ACC-REPORTING-ARCHIVE-PACKAGE-001]
+    output_information_refs: [IO-ACC-REPORTING-ARCHIVE-PACKAGE-001]
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [ACCRPT-F007, ACCRPT-F008]
+    outgoing_flow_refs: []
+    timing: {duration: null, deadline: null, frequency: null, wait_for: null}
+    result: "Подтвержденная отчетность с квитанциями доступна пользователям в общей папке"
+    evidence_refs: [FACT-ACC-013]
+    evidence_class: EXPLICIT
+
+flows:
+  - {flow_id: ACCRPT-F001, from_ref: ACCRPT-A001, to_ref: ACCRPT-A002, flow_type: SEQUENCE, condition: null, evidence_refs: [FACT-ACC-010, FACT-ACC-011], applicability: CONFIRMED_CURRENT}
+  - {flow_id: ACCRPT-F002, from_ref: ACCRPT-A002, to_ref: ACCRPT-A003, flow_type: SEQUENCE, condition: "Отчетность сформирована", evidence_refs: [FACT-ACC-011, FACT-ACC-012], applicability: CONFIRMED_CURRENT}
+  - {flow_id: ACCRPT-F003, from_ref: ACCRPT-A003, to_ref: ACCRPT-A004, flow_type: SEQUENCE, condition: "Отчетность направлена; принятие еще не подтверждено", evidence_refs: [FACT-ACC-013], applicability: CONFIRMED_CURRENT}
+  - {flow_id: ACCRPT-F004, from_ref: ACCRPT-A004, to_ref: ACCRPT-A005, flow_type: SEQUENCE, condition: "Поступил ответ о принятии", evidence_refs: [FACT-ACC-013], applicability: CONFIRMED_CURRENT}
+  - {flow_id: ACCRPT-F005, from_ref: ACCRPT-A005, to_ref: ACCRPT-A006, flow_type: SEQUENCE, condition: null, evidence_refs: [FACT-ACC-013], applicability: CONFIRMED_CURRENT}
+  - {flow_id: ACCRPT-F006, from_ref: ACCRPT-A006, to_ref: ACCRPT-A007, flow_type: CONDITIONAL, condition: "Нужно дополнительно объединить/форматировать отдельные файлы", evidence_refs: [FACT-ACC-013], applicability: CONDITIONAL}
+  - {flow_id: ACCRPT-F007, from_ref: ACCRPT-A006, to_ref: ACCRPT-A008, flow_type: CONDITIONAL, condition: "Дополнительное объединение не требуется", evidence_refs: [FACT-ACC-013], applicability: CONDITIONAL}
+  - {flow_id: ACCRPT-F008, from_ref: ACCRPT-A007, to_ref: ACCRPT-A008, flow_type: SEQUENCE, condition: null, evidence_refs: [FACT-ACC-013], applicability: CONFIRMED_CURRENT}
+
+decisions:
+  - decision_id: ACCRPT-D001
+    after_step_ref: ACCRPT-A006
+    question: "Требуется ли дополнительно объединить/привести файлы к удобному для пользователя формату?"
+    branches:
+      - {outcome: "Да", next_ref: ACCRPT-A007}
+      - {outcome: "Нет", next_ref: ACCRPT-A008}
+    evidence_refs: [FACT-ACC-013]
+    evidence_class: EXPLICIT
+    applicability: CONDITIONAL
+
+exceptions:
+  - exception_id: ACCRPT-EX001
+    related_step_refs: [ACCRPT-A004, ACCRPT-A005]
+    condition: "Отчетность не принята / получен отказ или ошибка приема"
+    behavior: "UNKNOWN: источник не описывает reject/not accepted branch, исправление или повторную отправку"
+    evidence_refs: []
+    evidence_class: UNKNOWN
+    applicability: UNKNOWN_CURRENT
+
+quantitative_observations:
+  - observation_id: ACCRPT-QO001
+    metric_type: WAIT
+    related_refs: [ACCRPT-A004, ACCRPT-A005]
+    value: 1
+    unit: day
+    qualifier: "Как правило, информация о результате приема поступает на следующий день; иначе ожидание продолжается до ответа"
+    measurement_scope: "После отправки до информации о принятии"
+    formal_sla_status: UNKNOWN
+    evidence_refs: [FACT-ACC-013]
+    evidence_class: EXPLICIT
+    notes: "Не считать гарантированным SLA."
+
+open_questions: [Q-ACC-REPORTING-001, Q-ACC-REPORTING-002, Q-ACC-REPORTING-003, Q-ACC-REPORTING-004, Q-ACC-REPORTING-005]
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "AS-IS only; reject/resubmit, platform identity, SLA and system/channel mapping were not invented."
