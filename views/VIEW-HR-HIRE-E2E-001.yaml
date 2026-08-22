@@ -1,0 +1,18 @@
+schema_version: "1.0"
+view:
+  view_id: "VIEW-HR-HIRE-E2E-001"
+  name: "HR End-to-End — от согласованной заявки до завершения адаптации"
+  view_type: "END_TO_END"
+  subject_role: null
+  subject_department: null
+  purpose: "Показать multi-process достижение результата после согласованной заявки: подбор → кадровое оформление и boundary запуска адаптации → сопровождение адаптации/испытательного срока, не кодируя ложное ожидание полного закрытия HR-HIRE-001 до старта адаптации."
+  level: "L0"
+  process_refs: [HR-RECRUIT-001, HR-HIRE-001, HR-ADAPT-001]
+  entry_point: "Согласованная заявка на подбор получена HR из HR-STAFF-REQ-001"
+  exit_point: "Период адаптации/испытательного срока проконтролирован; формальный итог периода остается UNKNOWN"
+  notes: |
+    Это conceptual multi-process E2E, не детальная последовательная BPMN.
+    HR-RECRUIT-001 → HR-HIRE-001 связан parent-level handoff после принятого оффера.
+    HR-ADAPT-001 запускается отдельным событием фактического выхода сотрудника. Нельзя читать view как требование сначала полностью закрыть HR-HIRE-001.
+    SRC-HR-MODEL-001 показывает после core оформления параллель: начало адаптации, MIL и SFR; lifecycle модели UNKNOWN, поэтому фактическая timing relation и closure dependency остаются UNKNOWN.
+    Source conflicts по роли адаптации и СФР сохранены в packages/mappings.

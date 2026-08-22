@@ -1,0 +1,57 @@
+schema_version: "1.0"
+view:
+  view_id: "VIEW-HR-FUNCTION-001"
+  name: "Landscape HR / кадровой функции"
+  view_type: "FUNCTION_LANDSCAPE"
+  subject_role: null
+  subject_department: null
+  subject_function: "HR / кадровая функция"
+  official_department_name: UNKNOWN
+  purpose: "Показать канонические L1-процессы HR/кадровой функции, их архитектурные группы, участие Директора по персоналу и КДП и отдельно architecture candidates. Это не последовательный E2E и не название официального подразделения."
+  level: "L0"
+  process_refs:
+    - HR-STAFF-REQ-001
+    - HR-RECRUIT-001
+    - HR-HIRE-001
+    - HR-ADAPT-001
+    - HR-TERM-001
+    - HR-MIL-ORG-001
+    - HR-MIL-CHANGE-001
+    - HR-MIL-RECON-001
+    - HR-REPORT-REQ-001
+  l1_groups:
+    - group_id: STAFFING_AND_ENTRY
+      name: "Потребность, подбор и вход сотрудника"
+      process_refs: [HR-STAFF-REQ-001, HR-RECRUIT-001, HR-HIRE-001, HR-ADAPT-001]
+    - group_id: EMPLOYMENT_RELATIONS
+      name: "Прекращение трудовых отношений"
+      process_refs: [HR-TERM-001]
+    - group_id: MILITARY_ACCOUNTING
+      name: "Воинский учет"
+      process_refs: [HR-MIL-ORG-001, HR-MIL-CHANGE-001, HR-MIL-RECON-001]
+    - group_id: HR_REPORTING
+      name: "Кадровая отчетность по запросу"
+      process_refs: [HR-REPORT-REQ-001]
+  role_participation:
+    - role_ref: ROLE-HR-DIRECTOR-001
+      process_refs: [HR-RECRUIT-001, HR-HIRE-001, HR-ADAPT-001, HR-TERM-001]
+      note: "Generic lane HR reference-модели не приписывается автоматически Директору по персоналу."
+    - role_ref: ROLE-HR-KDP-001
+      process_refs: [HR-HIRE-001, HR-TERM-001, HR-MIL-ORG-001, HR-MIL-CHANGE-001, HR-MIL-RECON-001, HR-REPORT-REQ-001]
+      note: "MODEL-001#7 не делает КДП участником полного HR-ADAPT-001; boundary role conflict сохраняется отдельно."
+  architecture_candidates:
+    - CAND-HR-MOVE-001
+    - CAND-HR-WORKFORCE-001
+    - CAND-HR-LEAVE-SCHEDULE-001
+    - CAND-HR-LNA-001
+    - CAND-HR-CONFLICT-001
+    - CAND-HR-INSPECTION-001
+    - CAND-HR-FOT-001
+    - CAND-HR-CORP-EVENT-001
+    - CAND-HR-TIME-LEAVE-001
+  entry_point: null
+  exit_point: null
+  notes: |
+    FUNCTION_LANDSCAPE — карта функции, а не последовательность.
+    Architecture candidates перечислены отдельно и не входят в process_refs как подтвержденные канонические процессы.
+    Официальное название подразделения не установлено.

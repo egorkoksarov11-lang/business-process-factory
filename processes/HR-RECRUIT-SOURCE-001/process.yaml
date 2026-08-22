@@ -1,0 +1,40 @@
+schema_version: "1.0"
+process:
+  process_id: "HR-RECRUIT-SOURCE-001"
+  name: "Поиск и привлечение кандидатов"
+  domain: "HR"
+  level: "L2"
+  status: "ARCHITECTURE_READY"
+  parent_process: "HR-RECRUIT-001"
+  owner_role: UNKNOWN
+  participants: [ROLE-HR-DIRECTOR-001]
+  views: []
+boundaries:
+  trigger: "Parent HR-RECRUIT-001 запущен согласованной заявкой и требования готовы для поиска"
+  input: ["Согласованная заявка", "Требования/профиль вакансии"]
+  previous_processes: []
+  business_result: "Получены кандидаты/отклики для дальнейшего отбора"
+  consumer: "HR-RECRUIT-SELECT-001"
+  next_processes: [HR-RECRUIT-SELECT-001]
+parent_handoffs:
+  entry_from_l1: HR-STAFF-REQ-001
+  via_parent: HR-RECRUIT-001
+  note: "Cross-level L1→L2 не хранится в previous_processes."
+architecture_applicability:
+  mode: CANONICAL_L2
+  as_is_applicability: SUPPORTED_BY_INTERVIEW
+  source_confidence: INTERVIEW_SUPPORTED
+sources:
+  source_refs: [SRC-HR-DIR-001, SRC-HR-MODEL-001]
+versions: {as_is_version: null, to_be_version: null}
+as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+issues: []
+changes: []
+to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+open_questions:
+  - "Какие каналы поиска используются помимо HeadHunter?"
+delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+metadata:
+  created_at: "2026-08-21"
+  updated_at: "2026-08-22"
+  notes: "Sibling L2 связи хранятся только внутри HR-RECRUIT-001. AS-IS не создан."

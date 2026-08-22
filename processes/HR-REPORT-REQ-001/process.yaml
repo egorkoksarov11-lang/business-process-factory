@@ -1,0 +1,70 @@
+schema_version: "1.0"
+
+process:
+  process_id: "HR-REPORT-REQ-001"
+  name: "Подготовка кадрового отчета по запросу"
+  domain: "HR"
+  level: "L1"
+  status: "ARCHITECTURE_READY"
+  parent_process: null
+  owner_role: UNKNOWN
+  participants:
+    - ROLE-HR-KDP-001
+  views:
+    - VIEW-HR-KDP-ROLE-001
+
+boundaries:
+  trigger: "Поступление запроса на кадровый отчет"
+  input:
+    - "Запрос на кадровые сведения/отчет"
+    - "Кадровые данные, необходимые для ответа на запрос"
+  previous_processes: []
+  business_result: "Запрошенный кадровый отчет сформирован и отправлен инициатору запроса"
+  consumer: "Инициатор запроса; конкретные роли/подразделения UNKNOWN"
+  next_processes: []
+
+sources:
+  source_refs:
+    - SRC-HR-KDP-001
+
+versions:
+  as_is_version: null
+  to_be_version: null
+
+as_is:
+  steps: []
+  flows: []
+  documents: []
+  systems: []
+  rules: []
+  exceptions: []
+  observations: []
+
+issues: []
+changes: []
+
+to_be:
+  steps: []
+  flows: []
+  documents: []
+  rules: []
+  exceptions: []
+  automation_options: []
+
+open_questions:
+  - "Какие роли/подразделения обычно инициируют запросы на кадровые отчеты?"
+  - "Какой канал используется для запроса и передачи результата?"
+  - "Есть ли типы запросов, которые требуют согласования или отличаются по границе/результату?"
+
+delivery:
+  diagrams: []
+  attachments: []
+  qa_status: null
+  client_package_status: null
+
+metadata:
+  created_at: "2026-08-21"
+  updated_at: "2026-08-21"
+  notes: |
+    Самостоятельный L1 создан, потому что источник дает независимый trigger — запрос — и самостоятельный business result — сформированный и отправленный отчет.
+    Источник перечисляет примеры содержания: даты рождения, образование, оклады, должности и периоды работы, но не раскрывает фактическую последовательность подготовки; Agent 02 не должен достраивать ее из общей практики.

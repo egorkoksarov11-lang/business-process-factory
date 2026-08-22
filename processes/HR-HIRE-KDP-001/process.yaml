@@ -1,0 +1,50 @@
+schema_version: "1.0"
+process:
+  process_id: "HR-HIRE-KDP-001"
+  name: "Оформление кадровых документов и данных приема"
+  domain: "HR"
+  level: "L2"
+  status: "ARCHITECTURE_READY"
+  parent_process: "HR-HIRE-001"
+  owner_role: UNKNOWN
+  participants: [ROLE-HR-KDP-001, ROLE-EMPLOYEE-001, ROLE-CEO-001]
+  views: []
+boundaries:
+  trigger: "Parent HR-HIRE-001 запущен передачей сведений о кандидате, согласившемся на оффер"
+  input: ["Сведения о кандидате/условиях", "Документы сотрудника"]
+  previous_processes: []
+  business_result: "Кадровые данные и основные документы приема оформлены/подписаны в пределах подтвержденного сценария"
+  consumer: "Parent HR-HIRE-001; sibling branches HR-HIRE-SFR-001 и, при применимости, HR-HIRE-MIL-001"
+  next_processes: [HR-HIRE-SFR-001]
+conditional_next_processes:
+  - process_ref: HR-HIRE-MIL-001
+    condition: "Воинская ветка применима к принимаемому сотруднику"
+    applicability: CONDITIONAL
+parent_handoffs:
+  entry_from_l1: HR-RECRUIT-001
+  via_parent: HR-HIRE-001
+  boundary_event_to_external_l1:
+    event: "Фактический выход сотрудника"
+    target_process: HR-ADAPT-001
+    routing: VIA_PARENT_BOUNDARY_ONLY
+    note: "Прямой HR-HIRE-KDP-001 → HR-ADAPT-001 удален; handoff хранится на HR-HIRE-001."
+internal_flow_semantics:
+  after_core: "SFR и условная MIL ветка являются sibling branches; exact execution timing UNKNOWN."
+architecture_applicability:
+  mode: CORE_L2
+  as_is_applicability: INTERVIEW_SUPPORTED
+  source_confidence: INTERVIEW_SUPPORTED
+sources:
+  source_refs: [SRC-HR-KDP-001, SRC-HR-MODEL-001, SRC-HR-DIR-001]
+versions: {as_is_version: null, to_be_version: null}
+as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+issues: []
+changes: []
+to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+open_questions:
+  - "Точная конечная точка core кадрового оформления относительно даты выхода и завершения подписей."
+delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+metadata:
+  created_at: "2026-08-21"
+  updated_at: "2026-08-22"
+  notes: "previous/next содержат только sibling L2 одного parent. Cross-level handoff в адаптацию хранится на parent HR-HIRE-001."

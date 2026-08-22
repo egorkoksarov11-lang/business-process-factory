@@ -1,0 +1,54 @@
+schema_version: "1.0"
+process:
+  process_id: "ACC-CONTRACT-REVIEW-001"
+  name: "Бухгалтерское и налоговое согласование договора"
+  domain: "ACC"
+  level: "L1"
+  status: "ARCHITECTURE_READY"
+  parent_process: null
+  owner_role: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+  participants:
+    - ROLE-FIN-CHIEF-ACCOUNTANT-001
+    - ROLE-FIN-DIRECTOR-001
+    - ROLE-CEO-001
+  views:
+    - VIEW-ACC-CHIEF-ROLE-001
+    - VIEW-ACC-FUNCTION-001
+boundaries:
+  trigger: "Договор поступил Главному бухгалтеру на бухгалтерское/налоговое согласование"
+  input:
+    - "Проект или версия договора"
+    - "Запрос на согласование из корпоративного мессенджера"
+  previous_processes: []
+  business_result: "Бухгалтерские/налоговые замечания и рекомендации сформированы и возвращены инициатору согласования либо отсутствие замечаний подтверждено"
+  consumer: "Финансовый директор, Генеральный директор или иной инициатор общего процесса согласования договора"
+  next_processes: []
+sources:
+  source_refs: [SRC-ACC-CHIEF-001]
+  evidence_refs: ["sources/evidence/SRC-ACC-CHIEF-001_architecture.yaml"]
+architecture_evidence:
+  - source_ref: SRC-ACC-CHIEF-001
+    evidence_class: EXPLICIT
+    statement: "Главный бухгалтер просматривает договор целиком, оценивает требования к документам и бухгалтерские/налоговые риски и возвращает замечания/рекомендации отправителю, чаще Финансовому или Генеральному директору."
+  - source_ref: SRC-ACC-CHIEF-001
+    evidence_class: EXPLICIT
+    statement: "Интервьюируемая называет согласование документов/договоров самым долгим участком, способным задерживать дальнейший документооборот."
+boundary_notes:
+  - "Это бухгалтерская часть более широкого корпоративного lifecycle договора; общий договорный процесс и его владелец не моделируются в ACC branch."
+  - "Источник указывает downstream зависимость первичных документов от договора, но между согласованием договора и ACC-PRIMARY-001 есть исполнение сделки; прямой next_process не устанавливается."
+  - "ROLE-CEO-001 сохранен здесь, поскольку Генеральный директор прямо назван источником как один из отправителей договоров на бухгалтерское согласование."
+versions: {as_is_version: null, to_be_version: null}
+as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+issues: []
+changes: []
+to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+open_questions:
+  - "Кто является владельцем общего процесса согласования договора и кто принимает финальное решение?"
+  - "Какие договоры обязательно проходят бухгалтерско-налоговое согласование?"
+  - "Как фиксируется согласование/отказ/замечания кроме ответа в мессенджере?"
+  - "Какие роли участвуют между бухгалтерским заключением и финальным заключением договора?"
+delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Agent 01 architecture only; broader contract process remains cross-domain/outside scope."

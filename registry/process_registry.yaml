@@ -1,19 +1,787 @@
 schema_version: "1.0"
-processes: []
+architecture_linkage_policy:
+  L1_previous_next: "Только канонические L1↔L1 связи."
+  L2_previous_next: "Только sibling L2 внутри одного parent."
+  cross_level: "Через parent_entry/parent_exit/boundary_handoff, не через previous_processes/next_processes."
 
-# Пример записи:
-# - process_id: HR-HIRE-001
-#   name: "Оформление приема сотрудника"
-#   domain: HR
-#   level: L1
-#   status: NEW
-#   owner_role: null
-#   trigger: null
-#   business_result: null
-#   previous_processes: []
-#   next_processes: []
-#   source_refs: []
-#   views: []
-#   as_is_version: null
-#   to_be_version: null
-#   blocking_questions: []
+processes:
+  - process_id: HR-STAFF-REQ-001
+    name: "Формирование и согласование заявки на подбор"
+    domain: HR
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Возникла потребность в сотруднике"
+    business_result: "Согласованная заявка направлена HR либо зафиксирован отказ в подборе"
+    previous_processes: []
+    next_processes: [HR-RECRUIT-001]
+    source_refs: [SRC-HR-MODEL-002, SRC-HR-MODEL-001, SRC-HR-DIR-001]
+    views: [VIEW-HR-FUNCTION-001, VIEW-HR-MODEL-ENTRY-E2E-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions:
+      - "UNKNOWN: lifecycle/approval status SRC-HR-MODEL-002."
+      - "UNKNOWN: обязательность согласования Генеральным директором в текущем AS-IS."
+
+  - process_id: HR-RECRUIT-001
+    name: "Подбор сотрудника на вакантную позицию"
+    domain: HR
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "HR получена согласованная заявка на подбор"
+    business_result: "Кандидат выбран и согласился на оффер; готов handoff в кадровое оформление"
+    previous_processes: [HR-STAFF-REQ-001]
+    next_processes: [HR-HIRE-001]
+    source_refs: [SRC-HR-DIR-001, SRC-HR-MODEL-001, SRC-HR-MODEL-002, SRC-HR-KDP-001]
+    views: [VIEW-HR-FUNCTION-001, VIEW-HR-DIRECTOR-ROLE-001, VIEW-HR-HIRE-E2E-001, VIEW-HR-MODEL-ENTRY-E2E-001]
+    internal_flow:
+      canonical_path: [HR-RECRUIT-SOURCE-001, HR-RECRUIT-SELECT-001, HR-RECRUIT-OFFER-001]
+      conditional_variant: [HR-RECRUIT-SOURCE-001, HR-RECRUIT-SELECT-001, HR-RECRUIT-SEC-001, HR-RECRUIT-OFFER-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions:
+      - "UNKNOWN: applicability HR-RECRUIT-SEC-001; reference-only source lifecycle UNKNOWN."
+      - "UNKNOWN: условное согласование оффера Генеральным директором."
+      - "UNKNOWN: точный состав handoff в HR-HIRE-001."
+
+  - process_id: HR-RECRUIT-SOURCE-001
+    name: "Поиск и привлечение кандидатов"
+    domain: HR
+    level: L2
+    parent_process: HR-RECRUIT-001
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Parent HR-RECRUIT-001 запущен и требования готовы к поиску"
+    business_result: "Получены кандидаты/отклики для отбора"
+    previous_processes: []
+    next_processes: [HR-RECRUIT-SELECT-001]
+    parent_entry_handoff:
+      from_l1: HR-STAFF-REQ-001
+      via_parent: HR-RECRUIT-001
+    architecture_applicability:
+      mode: CANONICAL_L2
+      as_is_applicability: SUPPORTED_BY_INTERVIEW
+      source_confidence: INTERVIEW_SUPPORTED
+    source_refs: [SRC-HR-DIR-001, SRC-HR-MODEL-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: полный набор каналов поиска."]
+
+  - process_id: HR-RECRUIT-SELECT-001
+    name: "Отбор, собеседования и выбор кандидата"
+    domain: HR
+    level: L2
+    parent_process: HR-RECRUIT-001
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Получены кандидаты для оценки"
+    business_result: "Выбран кандидат для оффера либо условной проверки СБ"
+    previous_processes: [HR-RECRUIT-SOURCE-001]
+    next_processes: [HR-RECRUIT-OFFER-001]
+    conditional_next_processes:
+      - process_ref: HR-RECRUIT-SEC-001
+        applicability: UNKNOWN
+        source_ref: SRC-HR-MODEL-001
+    architecture_applicability:
+      mode: CANONICAL_L2
+      as_is_applicability: SUPPORTED_BY_INTERVIEW
+      source_confidence: INTERVIEW_SUPPORTED
+    source_refs: [SRC-HR-DIR-001, SRC-HR-MODEL-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: критерии отбора/финального выбора.", "UNKNOWN: когда применима проверка СБ."]
+
+  - process_id: HR-RECRUIT-SEC-001
+    name: "Проверка кандидата службой безопасности"
+    domain: HR
+    level: L2
+    parent_process: HR-RECRUIT-001
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Если проверка СБ применима, выбранный кандидат передан на проверку"
+    business_result: "Получен результат проверки о наличии/отсутствии негативной информации"
+    previous_processes: [HR-RECRUIT-SELECT-001]
+    next_processes: [HR-RECRUIT-OFFER-001]
+    architecture_applicability:
+      mode: CONDITIONAL_REFERENCE_DERIVED
+      as_is_applicability: UNKNOWN
+      source_confidence: REFERENCE_ONLY
+      source_lifecycle_status: UNKNOWN
+    source_refs: [SRC-HR-MODEL-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: действует ли этот L2 в AS-IS и для каких случаев.", "UNKNOWN: артефакт результата проверки."]
+
+  - process_id: HR-RECRUIT-OFFER-001
+    name: "Формирование, согласование и принятие оффера"
+    domain: HR
+    level: L2
+    parent_process: HR-RECRUIT-001
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Кандидат выбран; результат проверки учитывается только при ее применимости"
+    business_result: "Оффер принят либо сформирован результат для возврата к поиску"
+    previous_processes: [HR-RECRUIT-SELECT-001]
+    next_processes: []
+    conditional_previous_processes:
+      - process_ref: HR-RECRUIT-SEC-001
+        applicability: UNKNOWN
+    parent_exit_handoff:
+      event: "Оффер принят"
+      target_l1: HR-HIRE-001
+    conditional_internal_returns:
+      - target_process: HR-RECRUIT-SOURCE-001
+        condition: "Кандидат отказался"
+        source_ref: SRC-HR-MODEL-001
+      - target_process: HR-RECRUIT-SOURCE-001
+        condition: "Условное согласование ГД не получено"
+        applicability: UNKNOWN
+        source_ref: SRC-HR-MODEL-001
+    conditional_reference_rule:
+      rule: "Согласование оффера ГД при негативной информации"
+      applicability: UNKNOWN
+      source_ref: SRC-HR-MODEL-001
+    architecture_applicability:
+      mode: CANONICAL_L2_WITH_REFERENCE_CONDITIONS
+      source_confidence: MIXED
+    source_refs: [SRC-HR-DIR-001, SRC-HR-MODEL-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: условное согласование ГД.", "UNKNOWN: фиксация принятия оффера."]
+
+  - process_id: HR-HIRE-001
+    name: "Кадровое оформление приема сотрудника"
+    domain: HR
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Кандидат согласился на оффер и сведения переданы в кадровое делопроизводство"
+    business_result: "Core кадровое оформление завершено; точная parent-close граница относительно MIL/SFR UNKNOWN"
+    previous_processes: [HR-RECRUIT-001]
+    next_processes: []
+    boundary_handoff:
+      event: "Фактический выход сотрудника и начало адаптации"
+      target_l1: HR-ADAPT-001
+      timing_relative_to_parent_close: UNKNOWN_MAY_OVERLAP
+    completion_boundary:
+      HR-HIRE-KDP-001: REQUIRED
+      HR-HIRE-MIL-001:
+        applicability: CONDITIONAL
+        required_before_parent_close: UNKNOWN
+      HR-HIRE-SFR-001:
+        applicability: SOURCE_SUPPORTED
+        required_before_parent_close: UNKNOWN
+    source_refs: [SRC-HR-KDP-001, SRC-HR-DIR-001, SRC-HR-MODEL-001]
+    views: [VIEW-HR-FUNCTION-001, VIEW-HR-KDP-ROLE-001, VIEW-HR-DIRECTOR-ROLE-001, VIEW-HR-HIRE-E2E-001, VIEW-HR-MODEL-ENTRY-E2E-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions:
+      - "UNKNOWN: обязателен ли completion HR-HIRE-MIL-001 до parent close."
+      - "UNKNOWN: обязателен ли completion HR-HIRE-SFR-001 до parent close."
+      - "CONFLICT: распределение ответственности за СФР."
+      - "CONFLICT: роль в boundary начала адаптации."
+
+  - process_id: HR-HIRE-KDP-001
+    name: "Оформление кадровых документов и данных приема"
+    domain: HR
+    level: L2
+    parent_process: HR-HIRE-001
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Parent HR-HIRE-001 запущен передачей сведений о кандидате"
+    business_result: "Основные кадровые данные и документы приема оформлены/подписаны"
+    previous_processes: []
+    next_processes: [HR-HIRE-SFR-001]
+    conditional_next_processes:
+      - process_ref: HR-HIRE-MIL-001
+        applicability: CONDITIONAL
+    parent_entry_handoff:
+      from_l1: HR-RECRUIT-001
+      via_parent: HR-HIRE-001
+    external_boundary_handoff:
+      event: "Фактический выход сотрудника"
+      target_l1: HR-ADAPT-001
+      routing: VIA_PARENT_ONLY
+    source_refs: [SRC-HR-KDP-001, SRC-HR-MODEL-001, SRC-HR-DIR-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: точная конечная точка core оформления относительно выхода/подписей."]
+
+  - process_id: HR-HIRE-MIL-001
+    name: "Воинский учет при приеме сотрудника"
+    domain: HR
+    level: L2
+    parent_process: HR-HIRE-001
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Сотрудник подпадает под применимую ветку воинского учета"
+    business_result: "Связанные с приемом действия воинского учета обработаны"
+    previous_processes: [HR-HIRE-KDP-001]
+    next_processes: []
+    architecture_applicability:
+      mode: CONDITIONAL_L2
+      as_is_applicability: CONDITIONAL
+      source_confidence: INTERVIEW_SUPPORTED
+      parent_completion_dependency: UNKNOWN
+    source_refs: [SRC-HR-KDP-001, SRC-HR-MODEL-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: identity ROLE-MIL-RESP-001.", "UNKNOWN: критерий применимости.", "UNKNOWN: dependency parent close."]
+
+  - process_id: HR-HIRE-SFR-001
+    name: "Подготовка и отправка сведений о приеме в СФР"
+    domain: HR
+    level: L2
+    parent_process: HR-HIRE-001
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Событие приема оформлено и доступны сведения для СФР"
+    business_result: "Сведения отправлены и подтверждение сдачи зафиксировано в пределах источников"
+    previous_processes: [HR-HIRE-KDP-001]
+    next_processes: []
+    architecture_applicability:
+      mode: CANONICAL_L2
+      source_confidence: INTERVIEW_AND_REFERENCE_WITH_ROLE_CONFLICT
+      parent_completion_dependency: UNKNOWN
+    source_refs: [SRC-HR-KDP-001, SRC-HR-MODEL-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["CONFLICT: кто готовит/отправляет.", "UNKNOWN: dependency parent close."]
+
+  - process_id: HR-ADAPT-001
+    name: "Сопровождение адаптации и испытательного срока сотрудника"
+    domain: HR
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Фактический выход сотрудника и начало периода адаптации/испытательного срока"
+    business_result: "Период проконтролирован, обратная связь получена, негативные моменты в зоне HR отработаны; формальный итог UNKNOWN"
+    previous_processes: []
+    next_processes: []
+    boundary_handoff_from:
+      source_l1: HR-HIRE-001
+      event: "Фактический выход сотрудника"
+      relation_to_source_completion: UNKNOWN_MAY_OVERLAP
+    source_refs: [SRC-HR-DIR-001, SRC-HR-MODEL-001]
+    views: [VIEW-HR-FUNCTION-001, VIEW-HR-DIRECTOR-ROLE-001, VIEW-HR-HIRE-E2E-001, VIEW-HR-MODEL-ENTRY-E2E-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["CONFLICT: role boundary КДП vs Директор.", "UNKNOWN: formal result/feedback source.", "UNKNOWN: timing relative to HR-HIRE-001 close."]
+
+  - process_id: HR-TERM-001
+    name: "Прекращение трудовых отношений с сотрудником"
+    domain: HR
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Возникновение подтвержденного основания прекращения трудовых отношений"
+    business_result: "Трудовые отношения прекращены и кадровое оформление завершено"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-HR-KDP-001, SRC-HR-DIR-001]
+    views: [VIEW-HR-FUNCTION-001, VIEW-HR-KDP-ROLE-001, VIEW-HR-DIRECTOR-ROLE-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: полный перечень сценариев и границы.", "UNKNOWN: граница полного расчета и передачи дел.", "UNKNOWN: подписант приказа из-за source issue."]
+
+  - process_id: HR-MIL-ORG-001
+    name: "Постановка организации на воинский учет"
+    domain: HR
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Необходимость первоначально поставить организацию на воинский учет"
+    business_result: "Организация поставлена на воинский учет; формальный подтверждающий артефакт UNKNOWN"
+    previous_processes: []
+    next_processes: [HR-MIL-CHANGE-001, HR-MIL-RECON-001]
+    source_refs: [SRC-HR-KDP-001]
+    views: [VIEW-HR-FUNCTION-001, VIEW-HR-KDP-ROLE-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: формальный result.", "UNKNOWN: фактический исполнитель."]
+
+  - process_id: HR-MIL-CHANGE-001
+    name: "Актуализация сведений воинского учета при изменениях данных сотрудника"
+    domain: HR
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Изменение личных данных, документов, образования или должности сотрудника на воинском учете"
+    business_result: "Сведения об изменениях зафиксированы и направлены в военный комиссариат"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-HR-KDP-001]
+    views: [VIEW-HR-FUNCTION-001, VIEW-HR-KDP-ROLE-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: входное подтверждение изменений.", "UNKNOWN: identity ROLE-MIL-RESP-001."]
+
+  - process_id: HR-MIL-RECON-001
+    name: "Ежегодная сверка воинского учета с военным комиссариатом"
+    domain: HR
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Ежегодный период сверки: начиная с 1 октября и до конца года"
+    business_result: "Ежегодная сверка выполнена в пределах описанного сценария"
+    previous_processes: [HR-MIL-ORG-001]
+    next_processes: []
+    source_refs: [SRC-HR-KDP-001]
+    views: [VIEW-HR-FUNCTION-001, VIEW-HR-KDP-ROLE-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: артефакт завершения.", "UNKNOWN: кто закрывает процесс."]
+
+  - process_id: HR-REPORT-REQ-001
+    name: "Подготовка кадрового отчета по запросу"
+    domain: HR
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Поступление запроса на кадровый отчет"
+    business_result: "Запрошенный отчет сформирован и отправлен инициатору"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-HR-KDP-001]
+    views: [VIEW-HR-FUNCTION-001, VIEW-HR-KDP-ROLE-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: инициаторы/потребители.", "UNKNOWN: каналы запроса/отправки."]
+
+  - process_id: IT-SUPPORT-001
+    name: "Техническая поддержка пользователей"
+    domain: IT
+    level: L1
+    status: ARCHITECTURE_READY
+    parent_process: null
+    owner_role: UNKNOWN
+    trigger: "Внутренний сотрудник направляет обращение о проблеме или IT-потребности"
+    business_result: "Обращение обработано; пользователь получил постоянное либо временное решение с последующей доработкой"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-IT-LEAD-001]
+    views: [VIEW-IT-LEAD-ROLE-001, VIEW-IT-FUNCTION-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: []
+
+  - process_id: IT-SUPPORT-INTAKE-001
+    name: "Прием и регистрация обращения в техническую поддержку"
+    domain: IT
+    level: L2
+    status: ARCHITECTURE_READY
+    parent_process: IT-SUPPORT-001
+    owner_role: UNKNOWN
+    trigger: "Получено обращение пользователя"
+    business_result: "Обращение зарегистрировано в HelpDesk и доступно для обработки"
+    previous_processes: []
+    next_processes: [IT-SUPPORT-RESOLVE-001]
+    source_refs: [SRC-IT-LEAD-001]
+    views: [VIEW-IT-LEAD-ROLE-001, VIEW-IT-FUNCTION-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: []
+
+  - process_id: IT-SUPPORT-RESOLVE-001
+    name: "Обработка обращения и восстановление возможности работы"
+    domain: IT
+    level: L2
+    status: ARCHITECTURE_READY
+    parent_process: IT-SUPPORT-001
+    owner_role: UNKNOWN
+    trigger: "Зарегистрированная заявка взята в работу"
+    business_result: "Пользователь получил постоянное либо временное решение, позволяющее продолжить работу"
+    previous_processes: [IT-SUPPORT-INTAKE-001]
+    next_processes: []
+    source_refs: [SRC-IT-LEAD-001]
+    views: [VIEW-IT-LEAD-ROLE-001, VIEW-IT-FUNCTION-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: []
+
+  - process_id: IT-SUPPORT-FINALIZE-001
+    name: "Доработка временного решения до постоянного"
+    domain: IT
+    level: L2
+    status: ARCHITECTURE_READY
+    parent_process: IT-SUPPORT-001
+    owner_role: UNKNOWN
+    trigger: "По заявке выдано временное решение"
+    business_result: "Временное решение доработано до более постоянного решения"
+    previous_processes: [IT-SUPPORT-RESOLVE-001]
+    next_processes: []
+    source_refs: [SRC-IT-LEAD-001]
+    views: [VIEW-IT-LEAD-ROLE-001, VIEW-IT-FUNCTION-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: []
+
+  - process_id: ACC-REG-REQ-001
+    name: "Подготовка бухгалтерского ответа по запросу контролирующего органа"
+    domain: ACC
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Поступил/переадресован запрос контролирующего органа, требующий бухгалтерских/налоговых данных"
+    business_result: "Бухгалтерская часть ответа/пакет документов подготовлены и переданы на согласование/дальнейшую отправку"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: [VIEW-ACC-CHIEF-ROLE-001, VIEW-ACC-FUNCTION-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: финальный отправитель/владелец полного ответа.", "UNKNOWN: маршрут согласования пакета."]
+
+  - process_id: ACC-MGMT-REQ-001
+    name: "Подготовка бухгалтерской информации по внутреннему запросу"
+    domain: ACC
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Поступил внутренний запрос на документ, справку, цифры или расчет"
+    business_result: "Запрошенная бухгалтерская информация/документ/расчет переданы инициатору"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: [VIEW-ACC-CHIEF-ROLE-001, VIEW-ACC-FUNCTION-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: типология маршрутов и инициаторов.", "UNKNOWN: формальные SLA/приоритеты."]
+
+  - process_id: ACC-PRIMARY-001
+    name: "Проверка и принятие первичных документов к бухгалтерскому учету"
+    domain: ACC
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Первичный документ контрагента поступил в работу Главному бухгалтеру"
+    business_result: "Получено решение о принятии; принятый документ отражен в 1С"
+    previous_processes: []
+    next_processes: [ACC-REPORTING-001]
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: [VIEW-ACC-CHIEF-ROLE-001, VIEW-ACC-FUNCTION-001, VIEW-ACC-ACCOUNT-TO-REPORT-E2E-001]
+    internal_flow: [ACC-PRIMARY-CHECK-001, ACC-PRIMARY-APPROVE-001, ACC-PRIMARY-POST-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: конкретный согласующий внутри ROLE-CONTRACT-OBLIGATION-RESP-001 по типам документов.", "UNKNOWN: является ли подтверждение инициатора сделки действующим правилом.", "UNKNOWN: reject/return path."]
+
+  - process_id: ACC-PRIMARY-CHECK-001
+    name: "Проверка первичного документа"
+    domain: ACC
+    level: L2
+    parent_process: ACC-PRIMARY-001
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Первичный документ поступил в parent"
+    business_result: "Документ проверен и готов к решению о принятии к учету"
+    previous_processes: []
+    next_processes: [ACC-PRIMARY-APPROVE-001]
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: полный перечень критериев/возвратов."]
+
+  - process_id: ACC-PRIMARY-APPROVE-001
+    name: "Согласование принятия первичного документа к учету"
+    domain: ACC
+    level: L2
+    parent_process: ACC-PRIMARY-001
+    status: ARCHITECTURE_READY
+    owner_role: UNKNOWN
+    trigger: "Проверенный документ готов к решению о принятии"
+    business_result: "Получено решение/резолюция о принятии либо документ остается в ожидании; артефакт решения UNKNOWN"
+    previous_processes: [ACC-PRIMARY-CHECK-001]
+    next_processes: [ACC-PRIMARY-POST-001]
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: конкретная роль внутри ROLE-CONTRACT-OBLIGATION-RESP-001 по сценарию.", "UNKNOWN: подтверждение инициатора договора как действующее правило.", "UNKNOWN: отсутствие ответа/эскалация."]
+
+  - process_id: ACC-PRIMARY-POST-001
+    name: "Принятие документа к учету и отражение в 1С"
+    domain: ACC
+    level: L2
+    parent_process: ACC-PRIMARY-001
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Получено положительное решение о принятии документа"
+    business_result: "Документ отражен в 1С"
+    previous_processes: [ACC-PRIMARY-APPROVE-001]
+    next_processes: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: дата/критерий завершения отражения."]
+
+  - process_id: ACC-REPORTING-001
+    name: "Подготовка, сдача и подтверждение бухгалтерской и налоговой отчетности"
+    domain: ACC
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Наступил отчетный период/государственный срок подготовки и сдачи отчетности"
+    business_result: "Отчетность направлена, принятие проконтролировано, подтверждающий электронный архив сформирован"
+    previous_processes: [ACC-PRIMARY-001]
+    next_processes: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: [VIEW-ACC-CHIEF-ROLE-001, VIEW-ACC-FUNCTION-001, VIEW-ACC-ACCOUNT-TO-REPORT-E2E-001]
+    internal_flow: [ACC-REPORTING-PRECHECK-001, ACC-REPORTING-PREPARE-001, ACC-REPORTING-ACCEPT-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: платформы и набор отчетов по юрлицам.", "UNKNOWN: критерий formal completion по видам отчетности."]
+
+  - process_id: ACC-REPORTING-PRECHECK-001
+    name: "Предотчетная проверка учета и взаиморасчетов"
+    domain: ACC
+    level: L2
+    parent_process: ACC-REPORTING-001
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Начался этап подготовки отчетности"
+    business_result: "Взаиморасчеты и корректность учета проверены для дальнейшего формирования отчетности"
+    previous_processes: []
+    next_processes: [ACC-REPORTING-PREPARE-001]
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: полный набор контрольных процедур и блокирующих расхождений."]
+
+  - process_id: ACC-REPORTING-PREPARE-001
+    name: "Формирование и направление бухгалтерской и налоговой отчетности"
+    domain: ACC
+    level: L2
+    parent_process: ACC-REPORTING-001
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Предотчетные проверки завершены и наступил срок сдачи применимой формы"
+    business_result: "Отчетность сформирована и направлена через электронную площадку"
+    previous_processes: [ACC-REPORTING-PRECHECK-001]
+    next_processes: [ACC-REPORTING-ACCEPT-001]
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: конкретная платформа по форме.", "UNKNOWN: согласования перед отправкой."]
+
+  - process_id: ACC-REPORTING-ACCEPT-001
+    name: "Контроль принятия отчетности и электронное архивирование"
+    domain: ACC
+    level: L2
+    parent_process: ACC-REPORTING-001
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Отчетность направлена в контролирующий орган"
+    business_result: "Принятие проконтролировано; отчетность и подтверждения размещены в электронном архиве"
+    previous_processes: [ACC-REPORTING-PREPARE-001]
+    next_processes: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: reject/resubmit path.", "UNKNOWN: каноническое место/владелец архива."]
+
+  - process_id: ACC-PAYROLL-001
+    name: "Расчет заработной платы, платежные ведомости и отчетность по персоналу"
+    domain: ACC
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Наступил цикл расчета/выплаты либо срок отчетности по начислениям/персоналу"
+    business_result: "Расчет выполнен; ведомости переданы HR/Финансовому директору; отчетность по начислениям/персоналу сформирована в подтвержденном объеме"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: [VIEW-ACC-CHIEF-ROLE-001, VIEW-ACC-FUNCTION-001]
+    internal_blocks: [ACC-PAYROLL-PAY-001, ACC-PAYROLL-REPORT-001]
+    internal_ordering: UNKNOWN
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: HR input boundary.", "UNKNOWN: формы, которые бухгалтерия отправляет/контролирует.", "UNKNOWN: связь циклов расчета и отчетности."]
+
+  - process_id: ACC-PAYROLL-PAY-001
+    name: "Расчет заработной платы и формирование ведомостей на выплату"
+    domain: ACC
+    level: L2
+    parent_process: ACC-PAYROLL-001
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Наступил цикл расчета/выплаты либо запрос на ведомость"
+    business_result: "Расчет выполнен; ведомость передана Директору по персоналу и Финансовому директору"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: входные данные/утверждение/фактический платеж.", "UNKNOWN: формальность практики подготовки за 5 дней."]
+
+  - process_id: ACC-PAYROLL-REPORT-001
+    name: "Формирование отчетности по персоналу, начислениям и налогам"
+    domain: ACC
+    level: L2
+    parent_process: ACC-PAYROLL-001
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Наступил применимый отчетный период по начислениям/персоналу"
+    business_result: "Отчетность сформирована в части оплаты труда, налогов и взносов; граница отправки по формам UNKNOWN"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: []
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: точные формы и ownership отправки.", "UNKNOWN: boundary с HR отчетностью."]
+
+  - process_id: ACC-TAX-ENS-001
+    name: "Контроль единого налогового счета и налоговых обязательств"
+    domain: ACC
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Необходима проверка ЕНС в связи с налоговым обязательством, сроком уплаты или потребностью в подтверждении исполнения"
+    business_result: "Состояние ЕНС и своевременность обязательств проконтролированы; риск отрицательного сальдо выявлен/не допущен в пределах ответственности бухгалтерии"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: [VIEW-ACC-CHIEF-ROLE-001, VIEW-ACC-FUNCTION-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: периодичность/точный trigger.", "UNKNOWN: кто выполняет платеж и как закрывается обязательство."]
+
+  - process_id: ACC-CONTRACT-REVIEW-001
+    name: "Бухгалтерское и налоговое согласование договора"
+    domain: ACC
+    level: L1
+    status: ARCHITECTURE_READY
+    owner_role: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    trigger: "Договор поступил Главному бухгалтеру на бухгалтерское/налоговое согласование"
+    business_result: "Замечания/рекомендации возвращены инициатору либо отсутствие замечаний подтверждено"
+    previous_processes: []
+    next_processes: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    views: [VIEW-ACC-CHIEF-ROLE-001, VIEW-ACC-FUNCTION-001]
+    as_is_version: null
+    to_be_version: null
+    blocking_questions: ["UNKNOWN: владелец общего contract lifecycle.", "UNKNOWN: applicability/финальное утверждение/артефакт согласования."]
+
+architecture_candidates:
+  - candidate_id: CAND-HR-MOVE-001
+    working_name: "Оформление перевода / кадрового перемещения"
+    domain: HR
+    proposed_level: L1
+    status: BOUNDARY_UNKNOWN
+    source_refs: [SRC-HR-KDP-001, SRC-HR-DIR-001]
+    evidence_note: "Оба интервью подтверждают область работы, но последовательность не раскрыта."
+    missing_for_canonicalization: ["trigger", "business result", "consumer", "границы и handoff", "различие видов перемещений"]
+
+  - candidate_id: CAND-HR-WORKFORCE-001
+    working_name: "Управление изменением штатной численности"
+    domain: HR
+    proposed_level: L1
+    status: BOUNDARY_UNKNOWN
+    source_refs: [SRC-HR-DIR-001, SRC-HR-MODEL-002]
+    evidence_note: "Более широкий контур численности остается кандидатом вне HR-STAFF-REQ-001."
+    missing_for_canonicalization: ["владелец решения", "result планирования", "граница относительно заявок/сокращений"]
+
+  - candidate_id: CAND-HR-LEAVE-SCHEDULE-001
+    working_name: "Формирование и утверждение графика отпусков"
+    domain: HR
+    proposed_level: L1
+    status: BOUNDARY_REVIEW_REQUIRED
+    source_refs: [SRC-HR-DIR-001]
+    evidence_note: "Ежегодный блок назван, требуется boundary-review."
+    missing_for_canonicalization: ["trigger", "входные данные/участники", "конечная точка"]
+
+  - candidate_id: CAND-HR-LNA-001
+    working_name: "Управление локальными нормативными актами"
+    domain: HR
+    proposed_level: L1
+    status: BOUNDARY_REVIEW_REQUIRED
+    source_refs: [SRC-HR-DIR-001]
+    evidence_note: "Создание/редактирование/согласование/ознакомление и применение смешаны."
+    missing_for_canonicalization: ["триггеры", "lifecycle boundary", "result"]
+
+  - candidate_id: CAND-HR-CONFLICT-001
+    working_name: "Урегулирование конфликтных и дисциплинарных ситуаций"
+    domain: HR
+    proposed_level: L1
+    status: BOUNDARY_REVIEW_REQUIRED
+    source_refs: [SRC-HR-DIR-001]
+    evidence_note: "Досудебный и судебный контуры смешаны."
+    missing_for_canonicalization: ["единая/раздельная граница", "result судебной поддержки", "handoff к юристам"]
+
+  - candidate_id: CAND-HR-INSPECTION-001
+    working_name: "Подготовка кадровых документов по запросу государственного органа"
+    domain: HR
+    proposed_level: L1
+    status: BOUNDARY_REVIEW_REQUIRED
+    source_refs: [SRC-HR-DIR-001]
+    evidence_note: "Пакет документов подтвержден, start/end и передача не раскрыты."
+    missing_for_canonicalization: ["получатель запроса", "проверяющий/отправляющий", "точка завершения"]
+
+  - candidate_id: CAND-HR-FOT-001
+    working_name: "Ежемесячный контроль фонда оплаты труда"
+    domain: HR
+    proposed_level: L1
+    status: BOUNDARY_REVIEW_REQUIRED
+    source_refs: [SRC-HR-DIR-001]
+    evidence_note: "Таблица ФОТ передается на согласование, потребитель/граница UNKNOWN."
+    missing_for_canonicalization: ["календарный trigger", "согласующий", "граница"]
+
+  - candidate_id: CAND-HR-CORP-EVENT-001
+    working_name: "Организация корпоративного мероприятия"
+    domain: HR
+    proposed_level: L1
+    status: BOUNDARY_REVIEW_REQUIRED
+    source_refs: [SRC-HR-DIR-001]
+    evidence_note: "Программа/место/бюджет/проведение/отчет названы; trigger/consumer UNKNOWN."
+    missing_for_canonicalization: ["trigger", "согласующий бюджет", "точка закрытия"]
+
+  - candidate_id: CAND-HR-TIME-LEAVE-001
+    working_name: "Табелирование и учет отпусков/больничного времени"
+    domain: HR
+    proposed_level: L1
+    status: INSUFFICIENTLY_DESCRIBED
+    source_refs: [SRC-HR-DIR-001]
+    evidence_note: "Темы перечислены внутри контроля КДП; отдельные process_id не создаются."
+    missing_for_canonicalization: ["границы", "триггеры", "результаты", "участники/handoff"]
+
+  - candidate_id: CAND-ACC-BANK-001
+    working_name: "Получение банковских выписок и загрузка данных в 1С"
+    domain: ACC
+    proposed_level: "L2_OR_OPERATION"
+    status: BUSINESS_RESULT_INSUFFICIENT_FOR_L1
+    source_refs: [SRC-ACC-CHIEF-001]
+    evidence_note: "Источник прямо подтверждает только передачу электронных выписок операционистом, скачивание и загрузку в учетную 1С. Формулировка самостоятельного результата 'движение по расчетным счетам отражено в бухгалтерском учете' требует дополнительного вывода, поэтому бывший ACC-BANK-001 снят с canonical L1."
+    possible_future_classification: ["OPERATION", "L2_UNDER_UNKNOWN_PARENT"]
+    missing_for_canonicalization: ["самостоятельный бизнес-результат", "consumer результата", "подтверждение, что загрузка является завершенным отражением в учете", "parent boundary при классификации как L2"]
+
+  - candidate_id: CAND-ACC-INBOX-001
+    working_name: "Прием, классификация и маршрутизация входящих документов/запросов"
+    domain: CROSS_DOMAIN_DOCUMENT_MANAGEMENT
+    proposed_level: L1
+    status: BOUNDARY_OWNER_UNKNOWN
+    source_refs: [SRC-ACC-CHIEF-001]
+    evidence_note: "Деятельность подтверждена, но смешивает разные типы входящих объектов; интервьюируемая прямо не знает, должна ли функция оставаться в бухгалтерии."
+    missing_for_canonicalization: ["owner", "domain boundary", "единый business result", "правила регистрации/каналов"]
+
+  - candidate_id: CAND-ACC-FOUNDING-ARCHIVE-001
+    working_name: "Управление электронным архивом учредительных документов"
+    domain: CROSS_DOMAIN_RECORDS_MANAGEMENT
+    proposed_level: L1
+    status: BOUNDARY_UNKNOWN
+    source_refs: [SRC-ACC-CHIEF-001]
+    evidence_note: "Отсутствуют некоторые электронные сканы; владелец между бухгалтерией/договорным/юридическим/иной службой не установлен."
+    missing_for_canonicalization: ["owner", "trigger/lifecycle", "состав архива", "consumer/result"]

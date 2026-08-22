@@ -1,0 +1,65 @@
+schema_version: "1.0"
+process:
+  process_id: "ACC-PRIMARY-001"
+  name: "Проверка и принятие первичных документов к бухгалтерскому учету"
+  domain: "ACC"
+  level: "L1"
+  status: "ARCHITECTURE_READY"
+  parent_process: null
+  owner_role: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+  participants:
+    - ROLE-FIN-CHIEF-ACCOUNTANT-001
+    - ROLE-FIN-DIRECTOR-001
+    - ROLE-CONTRACT-OBLIGATION-RESP-001
+  views:
+    - VIEW-ACC-CHIEF-ROLE-001
+    - VIEW-ACC-FUNCTION-001
+    - VIEW-ACC-ACCOUNT-TO-REPORT-E2E-001
+boundaries:
+  trigger: "Первичный документ контрагента поступил в работу Главному бухгалтеру"
+  input:
+    - "Счета, счета-фактуры, УПД/ОПД, накладные, акты и иные первичные документы"
+    - "Связанный договор/реквизиты сделки при наличии"
+  previous_processes: []
+  business_result: "По документу получено решение о принятии к учету; принятый документ отражен в 1С"
+  consumer: "Бухгалтерский и налоговый учет организации; ACC-REPORTING-001 использует своевременно отраженные учетные данные"
+  next_processes: [ACC-REPORTING-001]
+architecture_subprocesses:
+  - ACC-PRIMARY-CHECK-001
+  - ACC-PRIMARY-APPROVE-001
+  - ACC-PRIMARY-POST-001
+internal_flow:
+  canonical_path: [ACC-PRIMARY-CHECK-001, ACC-PRIMARY-APPROVE-001, ACC-PRIMARY-POST-001]
+  evidence_class: EXPLICIT
+sources:
+  source_refs: [SRC-ACC-CHIEF-001]
+  evidence_refs: ["sources/evidence/SRC-ACC-CHIEF-001_architecture.yaml"]
+architecture_evidence:
+  - source_ref: SRC-ACC-CHIEF-001
+    evidence_class: EXPLICIT
+    statement: "Главный бухгалтер проверяет оформление/реквизиты/суммы, направляет документ руководителю либо Финансовому директору на решение о принятии и после решения отражает его в 1С для формирования отчетности."
+  - source_ref: SRC-ACC-CHIEF-001
+    evidence_class: EXPLICIT
+    statement: "В описании ожидания согласования источник отдельно называет руководителя, руководителя проекта или иное лицо, отвечающее за исполнение обязательств по договору; это нормализовано функционально как ROLE-CONTRACT-OBLIGATION-RESP-001, без приравнивания слова 'руководитель' к Генеральному директору."
+  - source_ref: SRC-ACC-CHIEF-001
+    evidence_class: EXPLICIT
+    statement: "Интервьюируемая называет своевременное принятие документов к учету одним из самых важных результатов своей работы."
+boundary_notes:
+  - "Общий прием и маршрутизация входящих документов не включены как отдельный ACC L1 из-за смешения типов документов и неясного владельца функции."
+  - "ROLE-CEO-001 не используется как участник принятия первички: источник не подтверждает, что слово 'руководитель' в этом действии означает Генерального директора."
+  - "Позиция интервьюируемой, что инициатор договора должен подтверждать факт исполнения, сохранена как мнение/кандидат правила, а не как утвержденный текущий AS-IS и не как подтвержденная текущая роль."
+versions: {as_is_version: null, to_be_version: null}
+as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+issues: []
+changes: []
+to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+open_questions:
+  - "Кто фактически принимает решение о принятии документа к учету по разным типам сделок внутри функциональной категории ROLE-CONTRACT-OBLIGATION-RESP-001?"
+  - "Когда требуется подтверждение инициатора договора/сделки и является ли оно действующим правилом?"
+  - "Как обрабатывается отказ/возврат документа и кто уведомляет контрагента?"
+  - "Какой документ/резолюция подтверждает согласование?"
+delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Agent 01 architecture only; bounded role cleanup completed; detailed AS-IS deferred to Agent 02."

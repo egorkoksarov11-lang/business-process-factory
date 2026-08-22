@@ -1,0 +1,18 @@
+schema_version: "1.0"
+view:
+  view_id: "VIEW-HR-DIRECTOR-ROLE-001"
+  name: "Landscape роли — Директор по персоналу"
+  view_type: "ROLE_LANDSCAPE"
+  subject_role: "ROLE-HR-DIRECTOR-001"
+  subject_department: null
+  purpose: "Показать канонические L1-процессы с подтвержденным участием Директора по персоналу без автоматического присвоения generic lane HR reference-модели."
+  level: "L0"
+  process_refs: [HR-RECRUIT-001, HR-HIRE-001, HR-ADAPT-001, HR-TERM-001]
+  related_views: [VIEW-HR-FUNCTION-001]
+  entry_point: null
+  exit_point: null
+  notes: |
+    Официальное подразделение Директора по персоналу UNKNOWN.
+    HR-STAFF-REQ-001 показывает Руководителя подразделения и Генерального директора; Директор по персоналу — downstream consumer, не участник по текущим данным.
+    SRC-HR-DIR-001 подтверждает полноценный контроль адаптации; MODEL-001#7 у КДП остается source conflict.
+    Остальные обязанности интервью остаются architecture candidates/cross-process responsibilities и отражены в VIEW-HR-FUNCTION-001.
