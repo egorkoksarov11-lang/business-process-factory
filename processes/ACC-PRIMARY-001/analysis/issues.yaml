@@ -57,7 +57,7 @@ issues:
     category: "INFORMATION_OBJECT"
     as_is_steps: ["A005-FIN", "A005-RESP", "A006"]
     flow_refs: ["F005-FIN", "F005-RESP"]
-    handoff_refs: ["HO-ACC-PRIMARY-003", "HO-ACC-PRIMARY-004", "HO-ACC-PRIMARY-005"]
+    handoff_refs: ["HO-ACC-PRIMARY-003", "HO-ACC-PRIMARY-004"]
     information_object_refs: ["IO-ACC-PRIMARY-005"]
     description: "Форма, канал и место фиксации итоговой резолюции 'принять/не принять' документ не установлены."
     evidence_refs: ["FACT-ACC-PRIMARY-ASIS-007"]
