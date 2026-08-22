@@ -1,0 +1,119 @@
+schema_version: "1.0"
+cross_domain_mapping:
+  mapping_id: "IT-HR-CROSS-DOMAIN-001"
+  name: "HR ↔ IT handoffs при приеме и увольнении"
+  status: "ARCHITECTURE_CANDIDATE"
+  source_refs: [SRC-IT-LEAD-001]
+  domains: [HR, IT]
+  related_external_process_refs:
+    - HR-HIRE-001
+    - HR-TERM-001
+  ownership_note: "HR process packages не изменяются в IT-ветке. Ссылки нужны только для последующего общего synthesis."
+
+handoffs:
+  - handoff_id: XDOM-HR-IT-HIRE-NOTIFY-001
+    direction: "HR/coordination → IT"
+    related_process_ref: HR-HIRE-001
+    trigger: "Будущий сотрудник должен выйти на работу"
+    expected_input: "Своевременное уведомление IT о выходе и необходимости подготовить доступ"
+    receiver: "ROLE-IT-LEAD-EXT-001 / IT support — точная исполнительская роль UNKNOWN"
+    sender_role: UNKNOWN
+    sender_candidates:
+      - ROLE-HR-UNKNOWN-001
+      - ROLE-SECRETARY-UNKNOWN-001
+    current_evidence_status: "UNSTABLE_CURRENT_PRACTICE"
+    evidence_refs: [FACT-IT-LEAD-015, FACT-IT-LEAD-016]
+    note: "Источник подтверждает пропуски уведомления и решение вопроса уже в момент выхода; не подтверждает устойчивый действующий маршрут."
+
+  - handoff_id: XDOM-HR-IT-HIRE-ACCESS-001
+    direction: "IT → new employee/business"
+    related_process_ref: HR-HIRE-001
+    trigger: "IT получил информацию о необходимости подготовить доступ либо обнаружил потребность при выходе сотрудника"
+    expected_result: "Необходимый доступ подготовлен для начала работы"
+    current_evidence_status: "EXPECTED_BUT_EXECUTION_UNSTABLE"
+    evidence_refs: [FACT-IT-LEAD-016]
+    note: "Конкретный перечень доступов, согласования и системы не раскрыты."
+
+  - handoff_id: XDOM-HR-IT-HIRE-EQUIPMENT-001
+    direction: "IT/company ↔ employee"
+    related_process_ref: HR-HIRE-001
+    trigger: "Передача корпоративной техники сотруднику"
+    expected_result: "Техника закреплена электронным актом с фиксацией состояния"
+    current_evidence_status: "ADOPTED_WORKING_REPORTED"
+    evidence_refs: [FACT-IT-LEAD-014]
+    note: "Электронные акты по технике отделены от не прижившегося общего процесса приема/увольнения."
+
+  - handoff_id: XDOM-HR-IT-TERM-NOTIFY-001
+    direction: "HR/coordination → IT"
+    related_process_ref: HR-TERM-001
+    trigger: "Сотрудник увольняется/уволен"
+    expected_input: "Своевременное уведомление IT о прекращении работы сотрудника"
+    receiver: "ROLE-IT-LEAD-EXT-001 / IT support — точная исполнительская роль UNKNOWN"
+    sender_role: UNKNOWN
+    sender_candidates:
+      - ROLE-HR-UNKNOWN-001
+      - ROLE-SECRETARY-UNKNOWN-001
+    current_evidence_status: "UNSTABLE_CURRENT_PRACTICE"
+    evidence_refs: [FACT-IT-LEAD-015, FACT-IT-LEAD-017]
+    note: "Источник подтверждает случаи отсутствия уведомления."
+
+  - handoff_id: XDOM-HR-IT-TERM-ACCESS-001
+    direction: "IT → company/security state"
+    related_process_ref: HR-TERM-001
+    trigger: "IT получило уведомление об увольнении либо самостоятельно обнаружило отсутствие сотрудника"
+    expected_result: "Доступы бывшего сотрудника отозваны"
+    current_evidence_status: "CONTROL_OBJECT_CONFIRMED_PROCESS_BOUNDARY_UNKNOWN"
+    evidence_refs: [FACT-IT-LEAD-017]
+    note: "Источник явно подтверждает риск сохранения доступов, но не раскрывает перечень систем, ответственного исполнителя и критерий полного отзыва."
+
+  - handoff_id: XDOM-HR-IT-TERM-EQUIPMENT-001
+    direction: "employee ↔ IT/company"
+    related_process_ref: HR-TERM-001
+    trigger: "Возврат корпоративной техники"
+    expected_result: "Техника откреплена/принята электронным актом с фиксацией состояния"
+    current_evidence_status: "ADOPTED_WORKING_REPORTED"
+    evidence_refs: [FACT-IT-LEAD-014]
+
+implementation_history:
+  - history_id: XDOM-HR-IT-HIST-001
+    object: "Электронные акты закрепления/открепления техники"
+    status: "ADOPTED_WORKING_REPORTED"
+    source_refs: [SRC-IT-LEAD-001]
+  - history_id: XDOM-HR-IT-HIST-002
+    object: "Общий описанный процесс трудоустройства/увольнения"
+    status: "ATTEMPTED_NOT_ADOPTED"
+    source_refs: [SRC-IT-LEAD-001]
+  - history_id: XDOM-HR-IT-HIST-003
+    object: "Фактическое уведомление IT о приеме/увольнении"
+    status: "CURRENT_PRACTICE_UNSTABLE"
+    source_refs: [SRC-IT-LEAD-001]
+
+cross_domain_issues:
+  - issue_id: XISS-HR-IT-001
+    category: HANDOFF_FAILURE
+    description: "IT не всегда своевременно уведомляется о выходе нового сотрудника."
+    consequence: "Доступы приходится готовить непосредственно в момент выхода; старт работы может зависеть от срочного вмешательства IT."
+    evidence_refs: [FACT-IT-LEAD-016]
+    severity: HIGH
+    status: OPEN
+  - issue_id: XISS-HR-IT-002
+    category: ACCESS_CONTROL
+    description: "IT не всегда своевременно уведомляется об увольнении сотрудника."
+    consequence: "Доступы бывшего сотрудника могут оставаться активными до обнаружения ситуации IT lead."
+    evidence_refs: [FACT-IT-LEAD-017]
+    severity: HIGH
+    status: OPEN
+  - issue_id: XISS-HR-IT-003
+    category: RESPONSIBILITY_AMBIGUITY
+    description: "Не установлена устойчивая ответственная роль за междоменное уведомление/координацию; в источнике колебание между секретарем и отделом кадров."
+    consequence: "Handoff зависит от памяти конкретных людей и может пропускаться."
+    evidence_refs: [FACT-IT-LEAD-015]
+    severity: HIGH
+    status: OPEN
+
+open_questions:
+  - "Кто фактически и кто нормативно должен уведомлять IT о приеме, дате выхода и увольнении?"
+  - "За сколько времени до выхода IT должно получать данные и какой минимальный состав данных нужен?"
+  - "Какие доступы создаются и отзываются, кто подтверждает полноту?"
+  - "Кто выдает/принимает технику и где хранятся электронные акты?"
+  - "Связаны ли электронные акты с HR-HIRE/HR-TERM системно или работают как самостоятельный механизм учета техники?"
