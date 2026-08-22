@@ -6,7 +6,7 @@ process:
   level: "L2"
   status: "ARCHITECTURE_READY"
   parent_process: "IT-SUPPORT-001"
-  owner_role: "ROLE-IT-SUPPORT-EXT-001"
+  owner_role: UNKNOWN
   participants:
     - ROLE-IT-SUPPORT-EXT-001
     - ROLE-INTERNAL-USER-001
@@ -41,6 +41,7 @@ architecture_scope:
     - "Root-cause analysis как формальный метод"
     - "Problem management как отдельный процесс"
     - "Формальный срок завершения"
+  owner_note: "Источник подтверждает выполнение доработки технической поддержкой, но не называет формального владельца подпроцесса."
 
 sources:
   source_refs: [SRC-IT-LEAD-001]
@@ -56,6 +57,7 @@ issues: []
 changes: []
 to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
 open_questions:
+  - "Кто является формальным владельцем L2 доработки временного решения?"
   - "Является ли эта доработка той же HelpDesk-заявкой или отдельной связанной задачей?"
   - "Каким событием считается окончательное завершение обращения после временного решения?"
 delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
