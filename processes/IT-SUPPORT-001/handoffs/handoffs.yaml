@@ -1,0 +1,189 @@
+schema_version: "1.1"
+process_id: "IT-SUPPORT-001"
+
+handoffs:
+  - handoff_id: HO-IT-SUPPORT-USER-TO-SUPPORT-001
+    handoff_type: ROLE_TO_ROLE
+    from_process_ref: IT-SUPPORT-001
+    from_subprocess_ref: IT-SUPPORT-INTAKE-001
+    from_role_ref: ROLE-INTERNAL-USER-001
+    to_process_ref: IT-SUPPORT-001
+    to_subprocess_ref: IT-SUPPORT-INTAKE-001
+    to_role_ref: ROLE-IT-SUPPORT-EXT-001
+    trigger_or_condition: "У пользователя возникла IT-проблема или потребность и он направил обращение"
+    payload_refs:
+      - IO-IT-SUPPORT-REQUEST-001
+      - IO-IT-SUPPORT-DESCRIPTION-001
+    communication_refs:
+      - COM-IT-SUPPORT-EMAIL-INTAKE-001
+      - COM-IT-SUPPORT-PHONE-INTAKE-001
+      - COM-IT-SUPPORT-CABINET-INTAKE-001
+    system_refs: [SYS-IT-HELPDESK-001]
+    channel_refs:
+      - EMAIL
+      - PHONE
+      - PERSONAL_CABINET
+    acceptance_or_result: "Обращение поступило в support; в общей логике источник подтверждает появление заявки в HelpDesk"
+    acknowledgement_required: UNKNOWN
+    timing:
+      deadline: null
+      expected_wait: null
+      sla: null
+    applicability: CONFIRMED_CURRENT
+    evidence_refs:
+      - FACT-IT-LEAD-005
+      - FACT-IT-LEAD-007
+    evidence_class: EXPLICIT
+    ambiguity: "Для телефона не установлено, как именно обращение переносится/регистрируется в HelpDesk; подтверждение приема доказано только для email."
+    notes: null
+
+  - handoff_id: HO-IT-SUPPORT-INTAKE-TO-RESOLVE-001
+    handoff_type: PROCESS_TO_PROCESS
+    from_process_ref: IT-SUPPORT-001
+    from_subprocess_ref: IT-SUPPORT-INTAKE-001
+    from_role_ref: UNKNOWN
+    to_process_ref: IT-SUPPORT-001
+    to_subprocess_ref: IT-SUPPORT-RESOLVE-001
+    to_role_ref: ROLE-IT-SUPPORT-EXT-001
+    trigger_or_condition: "Заявка зарегистрирована, имеет номер и доступна сотрудникам технической поддержки"
+    payload_refs:
+      - IO-IT-SUPPORT-TICKET-001
+      - IO-IT-SUPPORT-TICKET-NUMBER-001
+      - IO-IT-SUPPORT-DESCRIPTION-001
+    communication_refs: []
+    system_refs: [SYS-IT-HELPDESK-001]
+    channel_refs: []
+    acceptance_or_result: "Сотрудник технической поддержки видит заявку и берет ее в работу"
+    acknowledgement_required: NO
+    timing:
+      deadline: null
+      expected_wait: null
+      sla: null
+    applicability: CONFIRMED_CURRENT
+    evidence_refs:
+      - FACT-IT-LEAD-007
+      - FACT-IT-LEAD-008
+    evidence_class: EXPLICIT
+    ambiguity: "Формальный механизм назначения/принятия заявки и приоритизация не раскрыты."
+    notes: null
+
+  - handoff_id: HO-IT-SUPPORT-TEMP-TO-USER-001
+    handoff_type: ROLE_TO_ROLE
+    from_process_ref: IT-SUPPORT-001
+    from_subprocess_ref: IT-SUPPORT-RESOLVE-001
+    from_role_ref: ROLE-IT-SUPPORT-EXT-001
+    to_process_ref: IT-SUPPORT-001
+    to_subprocess_ref: IT-SUPPORT-RESOLVE-001
+    to_role_ref: ROLE-INTERNAL-USER-001
+    trigger_or_condition: "По обращению пока возможно временное решение"
+    payload_refs: [IO-IT-SUPPORT-TEMP-SOLUTION-001]
+    communication_refs: [COM-IT-SUPPORT-TEMP-SOLUTION-001]
+    system_refs: []
+    channel_refs: []
+    acceptance_or_result: "Пользователь получает возможность продолжить работу"
+    acknowledgement_required: UNKNOWN
+    timing:
+      deadline: null
+      expected_wait: null
+      sla: null
+    applicability: CONDITIONAL
+    evidence_refs: [FACT-IT-LEAD-010]
+    evidence_class: EXPLICIT
+    ambiguity: "Канал, подтверждение пользователем и HelpDesk-статус после временного восстановления UNKNOWN."
+    notes: null
+
+  - handoff_id: HO-IT-SUPPORT-RESOLVE-TO-FINALIZE-001
+    handoff_type: PROCESS_TO_PROCESS
+    from_process_ref: IT-SUPPORT-001
+    from_subprocess_ref: IT-SUPPORT-RESOLVE-001
+    from_role_ref: ROLE-IT-SUPPORT-EXT-001
+    to_process_ref: IT-SUPPORT-001
+    to_subprocess_ref: IT-SUPPORT-FINALIZE-001
+    to_role_ref: ROLE-IT-SUPPORT-EXT-001
+    trigger_or_condition: "Сначала выдано только временное решение"
+    payload_refs:
+      - IO-IT-SUPPORT-TICKET-001
+      - IO-IT-SUPPORT-TEMP-SOLUTION-001
+    communication_refs: []
+    system_refs: [SYS-IT-HELPDESK-001]
+    channel_refs: []
+    acceptance_or_result: "Временное решение становится основанием для последующей доработки до постоянного"
+    acknowledgement_required: NO
+    timing:
+      deadline: null
+      expected_wait: "В ближайшее время, когда это возможно; числовой срок UNKNOWN"
+      sla: null
+    applicability: CONDITIONAL
+    evidence_refs: [FACT-IT-LEAD-010]
+    evidence_class: EXPLICIT
+    ambiguity: "Не установлено, остается ли исходная HelpDesk-заявка открытой и каким событием считается окончательное закрытие."
+    notes: "FINALIZE не применяется, если постоянное решение выдано сразу."
+
+  - handoff_id: HO-IT-SUPPORT-PERM-TO-USER-001
+    handoff_type: ROLE_TO_ROLE
+    from_process_ref: IT-SUPPORT-001
+    from_subprocess_ref: IT-SUPPORT-RESOLVE-001
+    from_role_ref: ROLE-IT-SUPPORT-EXT-001
+    to_process_ref: IT-SUPPORT-001
+    to_subprocess_ref: IT-SUPPORT-RESOLVE-001
+    to_role_ref: ROLE-INTERNAL-USER-001
+    trigger_or_condition: "По обращению сформировано постоянное решение"
+    payload_refs: [IO-IT-SUPPORT-PERM-SOLUTION-001]
+    communication_refs: [COM-IT-SUPPORT-PERM-SOLUTION-001]
+    system_refs: []
+    channel_refs: []
+    acceptance_or_result: "Пользователь получил постоянное решение"
+    acknowledgement_required: UNKNOWN
+    timing:
+      deadline: null
+      expected_wait: null
+      sla: null
+    applicability: CONDITIONAL
+    evidence_refs: [FACT-IT-LEAD-010]
+    evidence_class: INFERRED
+    ambiguity: "Точный канал, подтверждение результата и closure event в HelpDesk UNKNOWN."
+    notes: "Для сценария после временного решения постоянный результат формируется в IT-SUPPORT-FINALIZE-001; формат передачи пользователю не раскрыт."
+
+  - handoff_id: HO-IT-SUPPORT-TO-IT-LEAD-001
+    handoff_type: ROLE_TO_ROLE
+    from_process_ref: IT-SUPPORT-001
+    from_subprocess_ref: IT-SUPPORT-RESOLVE-001
+    from_role_ref: ROLE-IT-SUPPORT-EXT-001
+    to_process_ref: IT-SUPPORT-001
+    to_subprocess_ref: IT-SUPPORT-RESOLVE-001
+    to_role_ref: ROLE-IT-LEAD-EXT-001
+    trigger_or_condition: UNKNOWN
+    payload_refs:
+      - IO-IT-SUPPORT-TICKET-001
+      - IO-IT-SUPPORT-DESCRIPTION-001
+    communication_refs: []
+    system_refs: []
+    channel_refs: []
+    acceptance_or_result: UNKNOWN
+    acknowledgement_required: UNKNOWN
+    timing:
+      deadline: null
+      expected_wait: null
+      sla: null
+    applicability: UNKNOWN_CURRENT
+    evidence_refs: [FACT-IT-LEAD-018]
+    evidence_class: UNKNOWN
+    ambiguity: "Источник подтверждает личное подключение IT lead к архитектурным/безопасностным вопросам при прямом обращении к нему, но не раскрывает критерий и маршрут передачи заявки от support к IT lead."
+    notes: "Не моделируется как подтвержденный обязательный flow."
+
+cross_domain_refs:
+  - mapping_ref: mappings/IT-HR-CROSS-DOMAIN-001.yaml
+    related_process_refs:
+      - HR-HIRE-001
+      - HR-TERM-001
+    evidence_refs:
+      - FACT-IT-LEAD-015
+      - FACT-IT-LEAD-016
+      - FACT-IT-LEAD-017
+    treatment: "REFERENCE_ONLY"
+    note: "HR-HIRE/HR-TERM AS-IS в этом пакете не реконструируется. Сохраняется только ссылка на ранее подтвержденные cross-domain observations/handoffs."
+
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Handoffs описывают передачу request/ticket/solution и условный переход RESOLVE → FINALIZE. Неизвестная эскалация к IT lead сохранена как UNKNOWN_CURRENT."
