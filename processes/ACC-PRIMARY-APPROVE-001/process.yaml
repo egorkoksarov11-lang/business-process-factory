@@ -10,7 +10,7 @@ process:
   participants:
     - ROLE-FIN-CHIEF-ACCOUNTANT-001
     - ROLE-FIN-DIRECTOR-001
-    - ROLE-CEO-001
+    - ROLE-CONTRACT-OBLIGATION-RESP-001
   views: []
 boundaries:
   trigger: "Проверенный документ готов к решению о принятии к учету"
@@ -22,13 +22,20 @@ boundaries:
   next_processes: [ACC-PRIMARY-POST-001]
 current_role_evidence:
   evidence_class: EXPLICIT
-  confirmed_decision_roles:
-    - "Руководитель"
+  confirmed_role_refs:
+    - ROLE-FIN-DIRECTOR-001
+    - ROLE-CONTRACT-OBLIGATION-RESP-001
+  source_role_phrasing:
     - "Финансовый директор"
+    - "руководитель"
+    - "руководитель проекта"
+    - "иное лицо, отвечающее за исполнение обязательств по договору"
+  normalization_note: "Последние три формулировки объединены только на функциональном уровне как ROLE-CONTRACT-OBLIGATION-RESP-001; они не приравниваются к Генеральному директору."
 interviewee_position_not_current_rule:
   evidence_class: EXPLICIT
   statement: "Интервьюируемая считает, что инициатор договора/сделки должен подтверждать фактическое исполнение (поставка/услуга) до принятия документов к учету."
   as_is_status: NOT_CONFIRMED
+  role_status: NOT_CONFIRMED_CURRENT_ROLE
 sources:
   source_refs: [SRC-ACC-CHIEF-001]
   evidence_refs: ["sources/evidence/SRC-ACC-CHIEF-001_architecture.yaml"]
@@ -38,6 +45,9 @@ architecture_evidence:
     statement: "После проверки документы направляются руководителю либо Финансовому директору; после их решения Главный бухгалтер принимает документ к учету."
   - source_ref: SRC-ACC-CHIEF-001
     evidence_class: EXPLICIT
+    statement: "В дополнительном описании ожидания резолюции названы руководитель, руководитель проекта или другое лицо, отвечающее за исполнение обязательств по договору."
+  - source_ref: SRC-ACC-CHIEF-001
+    evidence_class: EXPLICIT
     statement: "Ожидание резолюции по документам может задерживать своевременное отражение в учете."
 versions: {as_is_version: null, to_be_version: null}
 as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
@@ -45,7 +55,7 @@ issues: []
 changes: []
 to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
 open_questions:
-  - "Кто именно является согласующим для каждого типа документа/договора?"
+  - "Какая конкретная должность/роль внутри ROLE-CONTRACT-OBLIGATION-RESP-001 является согласующим для каждого типа документа/договора?"
   - "Обязательно ли подтверждение инициатора договора и действует ли оно сейчас?"
   - "Как обрабатывается отсутствие ответа и кто вправе принять решение самостоятельно?"
   - "Как фиксируется отказ или возврат документа?"
@@ -53,4 +63,4 @@ delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status
 metadata:
   created_at: "2026-08-22"
   updated_at: "2026-08-22"
-  notes: "Agent 01 L2 boundary; interviewee recommendation preserved separately from current-role evidence."
+  notes: "Agent 01 L2 boundary cleanup; generic approval role normalized from explicit source wording, interviewee recommendation preserved separately."
