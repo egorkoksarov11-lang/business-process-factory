@@ -1,65 +1,126 @@
-schema_version: "1.0"
+schema_version: "1.1"
 process:
   process_id: "ACC-PRIMARY-001"
   name: "Проверка и принятие первичных документов к бухгалтерскому учету"
   domain: "ACC"
   level: "L1"
-  status: "ARCHITECTURE_READY"
+  status: "CLARIFICATION_REQUIRED"
   parent_process: null
   owner_role: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
   participants:
-    - ROLE-FIN-CHIEF-ACCOUNTANT-001
-    - ROLE-FIN-DIRECTOR-001
-    - ROLE-CONTRACT-OBLIGATION-RESP-001
+    - "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    - "ROLE-FIN-DIRECTOR-001"
+    - "ROLE-CONTRACT-OBLIGATION-RESP-001"
   views:
-    - VIEW-ACC-CHIEF-ROLE-001
-    - VIEW-ACC-FUNCTION-001
-    - VIEW-ACC-ACCOUNT-TO-REPORT-E2E-001
+    - "VIEW-ACC-CHIEF-ROLE-001"
+    - "VIEW-ACC-FUNCTION-001"
+    - "VIEW-ACC-ACCOUNT-TO-REPORT-E2E-001"
+
+applicability:
+  current_state: "CONFIRMED_CURRENT"
+  condition: null
+  notes: "Текущий процесс и последовательность CHECK → APPROVE → POST подтверждены SRC-ACC-CHIEF-001; отдельные approval/reject/no-response правила остаются UNKNOWN."
+
 boundaries:
   trigger: "Первичный документ контрагента поступил в работу Главному бухгалтеру"
   input:
-    - "Счета, счета-фактуры, УПД/ОПД, накладные, акты и иные первичные документы"
+    - "Счета, счета-фактуры, ОПД, накладные, акты и иные упомянутые документы контрагента"
     - "Связанный договор/реквизиты сделки при наличии"
   previous_processes: []
-  business_result: "По документу получено решение о принятии к учету; принятый документ отражен в 1С"
+  business_result: "По документу получено решение о принятии к учету; при положительном решении принятый документ отражен в 1С"
   consumer: "Бухгалтерский и налоговый учет организации; ACC-REPORTING-001 использует своевременно отраженные учетные данные"
-  next_processes: [ACC-REPORTING-001]
-architecture_subprocesses:
-  - ACC-PRIMARY-CHECK-001
-  - ACC-PRIMARY-APPROVE-001
-  - ACC-PRIMARY-POST-001
-internal_flow:
-  canonical_path: [ACC-PRIMARY-CHECK-001, ACC-PRIMARY-APPROVE-001, ACC-PRIMARY-POST-001]
-  evidence_class: EXPLICIT
+  next_processes: ["ACC-REPORTING-001"]
+  parent_entry: null
+  parent_exit: null
+
+architecture:
+  subprocess_refs:
+    - "ACC-PRIMARY-CHECK-001"
+    - "ACC-PRIMARY-APPROVE-001"
+    - "ACC-PRIMARY-POST-001"
+  boundary_handoff_refs: []
+  cross_domain_refs: []
+  canonical_internal_flow:
+    sequence: ["ACC-PRIMARY-CHECK-001", "ACC-PRIMARY-APPROVE-001", "ACC-PRIMARY-POST-001"]
+    evidence_class: "EXPLICIT"
+
 sources:
-  source_refs: [SRC-ACC-CHIEF-001]
-  evidence_refs: ["sources/evidence/SRC-ACC-CHIEF-001_architecture.yaml"]
+  source_refs: ["SRC-ACC-CHIEF-001"]
+  evidence_refs:
+    - "sources/evidence/SRC-ACC-CHIEF-001_architecture.yaml"
+    - "processes/ACC-PRIMARY-001/evidence/evidence.yaml"
+
 architecture_evidence:
-  - source_ref: SRC-ACC-CHIEF-001
-    evidence_class: EXPLICIT
-    statement: "Главный бухгалтер проверяет оформление/реквизиты/суммы, направляет документ руководителю либо Финансовому директору на решение о принятии и после решения отражает его в 1С для формирования отчетности."
-  - source_ref: SRC-ACC-CHIEF-001
-    evidence_class: EXPLICIT
-    statement: "В описании ожидания согласования источник отдельно называет руководителя, руководителя проекта или иное лицо, отвечающее за исполнение обязательств по договору; это нормализовано функционально как ROLE-CONTRACT-OBLIGATION-RESP-001, без приравнивания слова 'руководитель' к Генеральному директору."
-  - source_ref: SRC-ACC-CHIEF-001
-    evidence_class: EXPLICIT
+  - source_ref: "SRC-ACC-CHIEF-001"
+    evidence_class: "EXPLICIT"
+    statement: "Главный бухгалтер проверяет оформление/реквизиты/суммы, направляет документ руководителю либо Финансовому директору на решение о принятии и после положительного решения отражает его в 1С для формирования отчетности."
+  - source_ref: "SRC-ACC-CHIEF-001"
+    evidence_class: "EXPLICIT"
+    statement: "В ожидании согласования источник называет руководителя, руководителя проекта или иное лицо, отвечающее за исполнение обязательств по договору; это нормализовано как ROLE-CONTRACT-OBLIGATION-RESP-001, без приравнивания к Генеральному директору."
+  - source_ref: "SRC-ACC-CHIEF-001"
+    evidence_class: "EXPLICIT"
     statement: "Интервьюируемая называет своевременное принятие документов к учету одним из самых важных результатов своей работы."
+
 boundary_notes:
-  - "Общий прием и маршрутизация входящих документов не включены как отдельный ACC L1 из-за смешения типов документов и неясного владельца функции."
+  - "Общий прием и маршрутизация входящих документов не включены как отдельный ACC L1."
   - "ROLE-CEO-001 не используется как участник принятия первички: источник не подтверждает, что слово 'руководитель' в этом действии означает Генерального директора."
-  - "Позиция интервьюируемой, что инициатор договора должен подтверждать факт исполнения, сохранена как мнение/кандидат правила, а не как утвержденный текущий AS-IS и не как подтвержденная текущая роль."
-versions: {as_is_version: null, to_be_version: null}
-as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
-issues: []
+  - "Позиция интервьюируемой, что инициатор договора должен подтверждать факт исполнения, сохранена как NOT_CONFIRMED current rule и не включена в обязательную AS-IS роль/decision."
+  - "CAND-ACC-BANK-001 и межсерверный перенос файлов не превращаются в отдельный AS-IS L1."
+
+versions:
+  as_is_version: "0.1"
+  to_be_version: null
+
+as_is:
+  steps: []
+  flows: []
+  documents: []
+  systems: []
+  rules: []
+  exceptions: []
+  observations: []
+
+issues:
+  - "ISS-ACC-PRIMARY-001-001"
+  - "ISS-ACC-PRIMARY-001-002"
+  - "ISS-ACC-PRIMARY-001-003"
+  - "ISS-ACC-PRIMARY-001-004"
+  - "ISS-ACC-PRIMARY-001-005"
 changes: []
-to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+
+to_be:
+  steps: []
+  flows: []
+  documents: []
+  rules: []
+  exceptions: []
+  automation_options: []
+
+model_refs:
+  as_is_model: "processes/ACC-PRIMARY-001/as-is/model.yaml"
+  information_objects: "processes/ACC-PRIMARY-001/information/information_objects.yaml"
+  handoff_register: "processes/ACC-PRIMARY-001/handoffs/handoffs.yaml"
+  clarification_register: "processes/ACC-PRIMARY-001/analysis/clarifications.yaml"
+  issues: "processes/ACC-PRIMARY-001/analysis/issues.yaml"
+  change_log: null
+  to_be_model: null
+
 open_questions:
-  - "Кто фактически принимает решение о принятии документа к учету по разным типам сделок внутри функциональной категории ROLE-CONTRACT-OBLIGATION-RESP-001?"
-  - "Когда требуется подтверждение инициатора договора/сделки и является ли оно действующим правилом?"
-  - "Как обрабатывается отказ/возврат документа и кто уведомляет контрагента?"
-  - "Какой документ/резолюция подтверждает согласование?"
-delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+  - "Какая конкретная роль внутри ROLE-CONTRACT-OBLIGATION-RESP-001 согласует первичку по типам сделок и кто определяет маршрут?"
+  - "Через какой канал/систему документ передается на согласование и как подтверждается получение?"
+  - "Что происходит при отсутствии ответа: самостоятельное решение, ожидание, срок и эскалация?"
+  - "Как обрабатывается отрицательное решение/возврат документа и кто уведомляется?"
+  - "Где и в какой форме фиксируется резолюция о принятии/непринятии?"
+  - "Является ли подтверждение инициатора договора действующим правилом или только позицией интервьюируемой?"
+  - "Каковы фактические SLA согласования и полный перечень критериев проверки?"
+
+delivery:
+  diagrams: []
+  attachments: []
+  qa_status: null
+  client_package_status: null
+
 metadata:
   created_at: "2026-08-22"
   updated_at: "2026-08-22"
-  notes: "Agent 01 architecture only; bounded role cleanup completed; detailed AS-IS deferred to Agent 02."
+  notes: "Agent 02 detailed AS-IS v0.1. Status CLARIFICATION_REQUIRED due critical UNKNOWN in approval routing, no-response and reject/return branches. Shared registry/dictionaries intentionally unchanged."
