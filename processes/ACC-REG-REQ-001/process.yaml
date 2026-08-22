@@ -1,10 +1,10 @@
-schema_version: "1.0"
+schema_version: "1.1"
 process:
   process_id: "ACC-REG-REQ-001"
   name: "Подготовка бухгалтерского ответа по запросу контролирующего органа"
   domain: "ACC"
   level: "L1"
-  status: "ARCHITECTURE_READY"
+  status: "CLARIFICATION_REQUIRED"
   parent_process: null
   owner_role: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
   participants:
@@ -14,6 +14,7 @@ process:
   views:
     - VIEW-ACC-CHIEF-ROLE-001
     - VIEW-ACC-FUNCTION-001
+
 boundaries:
   trigger: "В бухгалтерию поступил или был переадресован запрос контролирующего органа, требующий бухгалтерских/налоговых документов или данных"
   input:
@@ -23,27 +24,106 @@ boundaries:
   business_result: "Бухгалтерская часть ответа или пакет подтверждающих документов подготовлены и переданы на согласование/дальнейшую отправку"
   consumer: "Финансовый директор, служба безопасности или иной координатор ответа; конечный отправитель ответа UNKNOWN"
   next_processes: []
+
+architecture_boundary:
+  inbound_candidate_ref: "CAND-ACC-INBOX-001"
+  inbound_candidate_treatment: "BOUNDARY_INTERFACE_ONLY"
+  intake_owner: "UNKNOWN"
+  entry_note: "Detailed AS-IS начинается только после того, как релевантный запрос оказался в бухгалтерской границе. Общий прием/классификация/маршрутизация входящих объектов не поглощается в ACC-REG-REQ-001."
+  security_interface:
+    role_ref: "ROLE-SECURITY-001"
+    applicability: "CONDITIONAL"
+    stated_frequency: "примерно 90% входящих налоговых запросов направляются в группу Финансового директора и службы безопасности"
+    routing_criterion: "UNKNOWN"
+    note: "Не трактовать службу безопасности как обязательного участника каждого запроса."
+  financial_director_interface:
+    role_ref: "ROLE-FIN-DIRECTOR-001"
+    applicability: "CONDITIONAL"
+    routing_criterion: "UNKNOWN"
+  detailed_evidence_result_note: "Источник прямо подтверждает подготовку Главным бухгалтером документов/пакета для согласования и дальнейшего направления ответным письмом. Кто согласует, кто финально отправляет и как подтверждается отправка/получение — UNKNOWN."
+  outbound_sender: "UNKNOWN"
+  outbound_channel: "UNKNOWN"
+  outbound_acknowledgement: "UNKNOWN"
+
+participant_applicability:
+  - role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    applicability: "CONFIRMED_CURRENT"
+    note: "Исполнитель подтвержден в подготовке бухгалтерской/налоговой части ответа."
+  - role_ref: "ROLE-FIN-DIRECTOR-001"
+    applicability: "CONDITIONAL_BOUNDARY_ROUTING"
+    note: "Подтвержден как участник группы, куда направляется большая часть входящих налоговых запросов; внутренняя роль в подготовке пакета не установлена."
+  - role_ref: "ROLE-SECURITY-001"
+    applicability: "CONDITIONAL_BOUNDARY_ROUTING"
+    note: "Подтвержден только для части маршрутов; критерий подключения UNKNOWN."
+
 sources:
   source_refs: [SRC-ACC-CHIEF-001]
-  evidence_refs: ["sources/evidence/SRC-ACC-CHIEF-001_architecture.yaml"]
+  evidence_refs:
+    - "sources/evidence/SRC-ACC-CHIEF-001_architecture.yaml"
+
 architecture_evidence:
   - source_ref: SRC-ACC-CHIEF-001
     evidence_class: EXPLICIT
     statement: "При запросах налоговых и иных органов Главный бухгалтер собирает документы из сетевых папок и 1С и готовит их в папку для согласования и дальнейшего ответа."
+  - source_ref: SRC-ACC-CHIEF-001
+    evidence_class: EXPLICIT
+    statement: "Большая часть (около 90%) входящих налоговых запросов направляется в группу Финансового директора и службы безопасности; критерий такого маршрута источник не задает."
+
 architecture_notes:
-  - "Получение/первичная маршрутизация входящего запроса не выделены отдельным ACC L1: общий входящий поток смешивает документы разных типов и имеет неясного владельца."
-  - "Граница процесса заканчивается передачей бухгалтерской части ответа; факт самостоятельной финальной отправки Главным бухгалтером источником не подтвержден."
-versions: {as_is_version: null, to_be_version: null}
-as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+  - "Получение/первичная маршрутизация входящего запроса остаются за границей detailed AS-IS как интерфейс с CAND-ACC-INBOX-001."
+  - "Подтвержденные типы органов: налоговый орган, фонд социального страхования и другие контролирующие службы — без законодательного расширения/нормализации перечня."
+  - "Факт самостоятельной финальной отправки ответа Главным бухгалтером источником не подтвержден."
+
+versions:
+  as_is_version: "0.1"
+  to_be_version: null
+
+as_is:
+  steps: []
+  flows: []
+  documents: []
+  systems: []
+  rules: []
+  exceptions: []
+  observations: []
+
 issues: []
 changes: []
-to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+
+to_be:
+  steps: []
+  flows: []
+  documents: []
+  rules: []
+  exceptions: []
+  automation_options: []
+
+model_refs:
+  as_is_model: "processes/ACC-REG-REQ-001/as-is/model.yaml"
+  information_objects: "processes/ACC-REG-REQ-001/information/information_objects.yaml"
+  handoff_register: "processes/ACC-REG-REQ-001/handoffs/handoffs.yaml"
+  clarification_register: "processes/ACC-REG-REQ-001/analysis/clarifications.yaml"
+  issues: "processes/ACC-REG-REQ-001/analysis/issues.yaml"
+  change_log: null
+  to_be_model: null
+
 open_questions:
-  - "Кто является владельцем и финальным отправителем ответа контролирующему органу?"
-  - "Как устроено обязательное согласование подготовленного бухгалтерией пакета?"
-  - "Какие типы запросов полностью закрывает бухгалтерия, а какие только частично?"
-delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+  - "Где именно проходит handoff из общего входящего потока CAND-ACC-INBOX-001 в ACC-REG-REQ-001 и кто принимает решение о маршруте?"
+  - "По какому критерию подключается служба безопасности и что происходит с оставшейся частью запросов?"
+  - "Кто согласует подготовленный бухгалтерский пакет и что означает состояние «ответ готов»?"
+  - "Кто финально отправляет ответ контролирующему органу и через какой канал/систему?"
+  - "Фиксируется ли подтверждение отправки/получения ответа и где оно хранится?"
+
+delivery:
+  diagrams: []
+  attachments: []
+  qa_status: null
+  client_package_status: null
+
 metadata:
   created_at: "2026-08-22"
   updated_at: "2026-08-22"
-  notes: "Agent 01 architecture only; AS-IS/TO-BE/BPMN intentionally not created."
+  notes: |
+    Agent 01 architecture preserved. Agent 02 detailed AS-IS подключен через canonical Schema v1.1 model_refs.
+    Общий intake/routing не включен в L1; CAND-ACC-INBOX-001 сохранен только как boundary interface.
+    TO-BE, BPMN/Visio, automation и shared registries/dictionaries не изменялись.
