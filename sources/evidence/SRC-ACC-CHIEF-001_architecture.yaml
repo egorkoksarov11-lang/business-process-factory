@@ -1,0 +1,418 @@
+schema_version: "1.0"
+source:
+  source_id: "SRC-ACC-CHIEF-001"
+  title: "Интервью Главного бухгалтера — архитектурные факты"
+  source_type: "INTERVIEW"
+  interviewee_role: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+  interviewee_name: null
+  date: null
+  file_ref: "sources/raw/accounting/SRC-ACC-CHIEF-001_chief_accountant_interview.txt"
+
+facts:
+  - fact_id: FACT-ACC-001
+    process_refs: []
+    statement: "Главный бухгалтер работает без подчиненных, ведет три юридических лица, размещенных на разных серверах."
+    evidence_class: EXPLICIT
+    source_locator: "lines 3-4"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: [XISS-ACC-TECH-001]
+    conflicts_with: []
+    notes: "Три юрлица/сервера — контекст и техническое ограничение, не отдельный L1."
+
+  - fact_id: FACT-ACC-002
+    process_refs: []
+    statement: "Входящие документы/запросы поступают через ЭДО, email, корпоративные/иные мессенджеры, телефон и WhatsApp."
+    evidence_class: EXPLICIT
+    source_locator: "lines 5-12"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: [CAND-ACC-INBOX-001, SYS-DIADOC-001, SYS-SBIS-001]
+    conflicts_with: []
+    notes: "Email, телефон, WhatsApp и корпоративный мессенджер классифицируются как channels, не accounting systems."
+
+  - fact_id: FACT-ACC-003
+    process_refs: []
+    statement: "В Диадоке/СБИС проверяются как документы контрагентов, так и запросы налогового органа/ФСС/иных контролирующих служб."
+    evidence_class: EXPLICIT
+    source_locator: "lines 9-12"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: [CAND-ACC-INBOX-001, SYS-DIADOC-001, SYS-SBIS-001]
+    conflicts_with: []
+    notes: "Один входящий канал обслуживает несколько downstream процессов."
+
+  - fact_id: FACT-ACC-004
+    process_refs: []
+    statement: "Входящие документы обычно направляются Финансовому директору; запросы контролирующих органов примерно в 90% случаев направляются в группу Финансового директора и службы безопасности."
+    evidence_class: EXPLICIT
+    source_locator: "lines 13-16"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: [CAND-ACC-INBOX-001, HDO-ACC-FIN-001, HDO-ACC-SEC-001]
+    conflicts_with: []
+    notes: "Маршрутизация подтверждена, но владелец общего incoming/front-door процесса UNKNOWN."
+
+  - fact_id: FACT-ACC-005
+    process_refs: [ACC-BANK-001]
+    statement: "Операционисты по расчетным счетам утром направляют электронные выписки, которые Главный бухгалтер скачивает и загружает в 1С."
+    evidence_class: EXPLICIT
+    source_locator: "lines 15-18"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: [ROLE-FIN-BANK-OPERATOR-001, SYS-1C-ACCOUNTING-001]
+    conflicts_with: []
+    notes: null
+
+  - fact_id: FACT-ACC-006
+    process_refs: [ACC-REG-REQ-001]
+    statement: "По запросу контролирующего органа Главный бухгалтер собирает документы из сетевых папок и 1С и готовит пакет/папку для согласования и дальнейшего ответа."
+    evidence_class: EXPLICIT
+    source_locator: "lines 19-22"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: [SYS-1C-ACCOUNTING-001]
+    conflicts_with: []
+    notes: "Финальный отправитель ответа не установлен."
+
+  - fact_id: FACT-ACC-007
+    process_refs: [ACC-MGMT-REQ-001]
+    statement: "Внутренние запросы на документы, справки, цифры и расчеты поступают преимущественно от Финансового директора и обычно исполняются день в день."
+    evidence_class: EXPLICIT
+    source_locator: "lines 21-24; lines 31-33"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: [ROLE-FIN-DIRECTOR-001]
+    conflicts_with: []
+    notes: "При отсутствии заданного срока Главный бухгалтер сама определяет срок; формальный SLA не подтвержден."
+
+  - fact_id: FACT-ACC-008
+    process_refs: [ACC-PRIMARY-001, ACC-PRIMARY-CHECK-001]
+    statement: "Первичные документы проверяются на правильность оформления, соответствие реквизитов договорам и суммам."
+    evidence_class: EXPLICIT
+    source_locator: "line 29"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: []
+    conflicts_with: []
+    notes: null
+
+  - fact_id: FACT-ACC-009
+    process_refs: [ACC-PRIMARY-001, ACC-PRIMARY-APPROVE-001, ACC-PRIMARY-POST-001]
+    statement: "После проверки документы направляются руководителю либо Финансовому директору; после решения о принятии они отражаются Главным бухгалтером в 1С для формирования отчетности."
+    evidence_class: EXPLICIT
+    source_locator: "line 29"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: [ROLE-FIN-DIRECTOR-001, SYS-1C-ACCOUNTING-001]
+    conflicts_with: []
+    notes: "Точная матрица согласующих UNKNOWN."
+
+  - fact_id: FACT-ACC-010
+    process_refs: [ACC-REPORTING-001, ACC-REPORTING-PRECHECK-001]
+    statement: "До формирования отчетности проверяются взаиморасчеты с контрагентами и правильность отражения хозяйственных операций на счетах бухгалтерского и налогового учета."
+    evidence_class: EXPLICIT
+    source_locator: "line 29"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: []
+    conflicts_with: []
+    notes: null
+
+  - fact_id: FACT-ACC-011
+    process_refs: [ACC-REPORTING-001, ACC-REPORTING-PREPARE-001]
+    statement: "Главный бухгалтер формирует бухгалтерскую/налоговую отчетность; названы декларации по налогу на прибыль, НДС и имущественным налогам при наличии соответствующих активов."
+    evidence_class: EXPLICIT
+    source_locator: "line 29"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: []
+    conflicts_with: []
+    notes: "Перечень не считается исчерпывающим."
+
+  - fact_id: FACT-ACC-012
+    process_refs: [ACC-REPORTING-001, ACC-REPORTING-PREPARE-001]
+    statement: "Сроки сдачи отчетности определяются государственным регулированием и отчетность должна направляться своевременно."
+    evidence_class: EXPLICIT
+    source_locator: "lines 31-36"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: []
+    conflicts_with: []
+    notes: "Конкретные календарные сроки не нормализованы на Agent 01."
+
+  - fact_id: FACT-ACC-013
+    process_refs: [ACC-REPORTING-001, ACC-REPORTING-ACCEPT-001]
+    statement: "После отправки отчетности контролируется ее принятие; после ответа органа отчетность и квитанции/подтверждения выгружаются, при необходимости объединяются и размещаются в общей папке."
+    evidence_class: EXPLICIT
+    source_locator: "lines 37-43"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: [XISS-ACC-FOLDERS-001]
+    conflicts_with: []
+    notes: "Объединение файлов — операция внутри L2, не отдельный процесс."
+
+  - fact_id: FACT-ACC-014
+    process_refs: [ACC-PAYROLL-001, ACC-PAYROLL-PAY-001]
+    statement: "В связи с отсутствием расчетчиков Главный бухгалтер рассчитывает заработную плату и два раза в месяц формирует ведомости на аванс/зарплату."
+    evidence_class: EXPLICIT
+    source_locator: "line 29"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: []
+    conflicts_with: []
+    notes: null
+
+  - fact_id: FACT-ACC-015
+    process_refs: [ACC-PAYROLL-001, ACC-PAYROLL-PAY-001]
+    statement: "Ведомости на выплату передаются Директору по персоналу и Финансовому директору; документы обычно готовятся примерно за пять дней для аккумуляции средств."
+    evidence_class: EXPLICIT
+    source_locator: "line 29"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: [ROLE-HR-DIRECTOR-001, ROLE-FIN-DIRECTOR-001, HDO-ACC-HR-001]
+    conflicts_with: []
+    notes: "Пять дней — текущая практика, не подтвержденный SLA."
+
+  - fact_id: FACT-ACC-016
+    process_refs: [ACC-PAYROLL-001, ACC-PAYROLL-REPORT-001]
+    statement: "Главный бухгалтер формирует отчетность по персоналу в части оплаты труда, налогов и взносов; названы ФСС, расчет по страховым взносам и расчеты НДФЛ."
+    evidence_class: EXPLICIT
+    source_locator: "line 29"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: [HDO-ACC-HR-002]
+    conflicts_with: []
+    notes: "Факт отправки/контроля принятия каждой формы отдельно UNKNOWN."
+
+  - fact_id: FACT-ACC-017
+    process_refs: [ACC-TAX-ENS-001]
+    statement: "Главный бухгалтер проверяет взаиморасчеты с налоговой на ЕНС, контролирует сроки налоговых обязательств и стремится не допускать отрицательного сальдо."
+    evidence_class: EXPLICIT
+    source_locator: "line 29"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: []
+    conflicts_with: []
+    notes: "Роль фактического плательщика и точный календарный цикл UNKNOWN."
+
+  - fact_id: FACT-ACC-018
+    process_refs: [ACC-TAX-ENS-001]
+    statement: "Положительное состояние расчетов позволяет при необходимости получить справку об исполнении обязанности для заказчиков/других внешних организаций."
+    evidence_class: EXPLICIT
+    source_locator: "line 29"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: []
+    conflicts_with: []
+    notes: null
+
+  - fact_id: FACT-ACC-019
+    process_refs: [ACC-CONTRACT-REVIEW-001]
+    statement: "На согласовании договора Главный бухгалтер анализирует договор целиком, включая требования к документам, сроки и бухгалтерские/налоговые риски, и отвечает замечаниями/рекомендациями."
+    evidence_class: EXPLICIT
+    source_locator: "line 29"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: [ROLE-FIN-DIRECTOR-001, ROLE-CEO-001]
+    conflicts_with: []
+    notes: null
+
+  - fact_id: FACT-ACC-020
+    process_refs: [ACC-CONTRACT-REVIEW-001, ACC-PRIMARY-001]
+    statement: "Интервьюируемая называет согласование документов/договоров самым долгим участком и говорит, что задержка согласования тормозит дальнейший документооборот и своевременное отражение документов."
+    evidence_class: EXPLICIT
+    source_locator: "lines 161-168; lines 185-240"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: [XISS-ACC-WAIT-001, XISS-ACC-PRIMARY-TIMING-001]
+    conflicts_with: []
+    notes: null
+
+  - fact_id: FACT-ACC-021
+    process_refs: [ACC-PRIMARY-APPROVE-001]
+    statement: "Интервьюируемая считает, что инициатор договора/сделки должен подтверждать фактическое исполнение (поставка/услуга) до принятия соответствующих документов к учету."
+    evidence_class: EXPLICIT
+    source_locator: "lines 185-240"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: []
+    conflicts_with: []
+    notes: "Это позиция/предлагаемый принцип интервьюируемой, а не подтвержденное действующее правило AS-IS."
+
+  - fact_id: FACT-ACC-022
+    process_refs: []
+    statement: "Главный бухгалтер не понимает полностью границы функций смежных подразделений; одинаковые вопросы/задачи/документы иногда направляются нескольким адресатам."
+    evidence_class: EXPLICIT
+    source_locator: "lines 44-52; lines 101-118"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: [XISS-ACC-RESP-001, XISS-ACC-DUPLICATE-001]
+    conflicts_with: []
+    notes: null
+
+  - fact_id: FACT-ACC-023
+    process_refs: []
+    statement: "Структура общих сетевых папок и ответственность за ее формирование/контроль не унифицированы; у сотрудников разное видение иерархии и хранения."
+    evidence_class: EXPLICIT
+    source_locator: "lines 50-55"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: [XISS-ACC-FOLDERS-001]
+    conflicts_with: []
+    notes: "Не канонизировано как бизнес-процесс."
+
+  - fact_id: FACT-ACC-024
+    process_refs: []
+    statement: "Наибольшую трудоемкость занимает скачивание/перенос файлов между серверами и последующее удаление рабочих файлов по правилам IT/службы безопасности."
+    evidence_class: EXPLICIT
+    source_locator: "line 29; lines 74-95"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: [XISS-ACC-TECH-001, HDO-ACC-IT-001]
+    conflicts_with: []
+    notes: "Boundary-test не дает самостоятельного business result/consumer; отдельный L1 не создается."
+
+  - fact_id: FACT-ACC-025
+    process_refs: []
+    statement: "Неясно, должна ли бухгалтерия ежедневно обрабатывать входящие документы/формировать договорные папки и кто отвечает за электронный архив учредительных документов."
+    evidence_class: EXPLICIT
+    source_locator: "line 29"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: [CAND-ACC-INBOX-001, CAND-ACC-FOUNDING-ARCHIVE-001]
+    conflicts_with: []
+    notes: "Обе темы требуют cross-domain boundary review."
+
+  - fact_id: FACT-ACC-026
+    process_refs: []
+    statement: "При технических сбоях приложений/мессенджеров IT support принимает запрос по email и, по оценке интервьюируемой, оперативно решает проблему."
+    evidence_class: EXPLICIT
+    source_locator: "lines 56-73"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: [HDO-ACC-IT-SUPPORT-001]
+    conflicts_with: []
+    notes: "Это cross-domain support handoff, не бухгалтерский L1."
+
+  - fact_id: FACT-ACC-027
+    process_refs: []
+    statement: "Интервьюируемая знает о возможности автоматической загрузки входящих ЭДО-документов в 1С, но не считает ее актуально необходимой при текущем объеме документооборота."
+    evidence_class: EXPLICIT
+    source_locator: "lines 120-145"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: []
+    conflicts_with: []
+    notes: "Сохранено только как automation observation; Agent 01 не формирует TO-BE recommendation."
+
+architecture_candidates:
+  - candidate_id: CAND-ACC-INBOX-001
+    working_name: "Прием, классификация и маршрутизация входящих документов/запросов"
+    domain: CROSS_DOMAIN_DOCUMENT_MANAGEMENT
+    proposed_level: L1
+    status: BOUNDARY_OWNER_UNKNOWN
+    source_refs: [SRC-ACC-CHIEF-001]
+    evidence_note: "Триггер и маршрут частично подтверждены, но поток смешивает контрагентские документы, запросы органов и иные сообщения; сама интервьюируемая не знает, должна ли эта функция оставаться в бухгалтерии."
+    missing_for_canonicalization:
+      - "канонический владелец функции"
+      - "граница относительно секретариата/договорного/юридического/финансового контуров"
+      - "единый business result по типам входящих объектов"
+      - "правила каналов и регистрации"
+
+  - candidate_id: CAND-ACC-FOUNDING-ARCHIVE-001
+    working_name: "Управление электронным архивом учредительных документов"
+    domain: CROSS_DOMAIN_RECORDS_MANAGEMENT
+    proposed_level: L1
+    status: BOUNDARY_UNKNOWN
+    source_refs: [SRC-ACC-CHIEF-001]
+    evidence_note: "Выявлено отсутствие части электронных сканов и неясность, кто отвечает: бухгалтерия, договорной, юридический или иной отдел."
+    missing_for_canonicalization:
+      - "владелец архива"
+      - "trigger/lifecycle документов"
+      - "обязательный состав и критерий полноты"
+      - "consumer и правила выдачи"
+
+cross_process_problems:
+  - issue_id: XISS-ACC-RESP-001
+    name: "Неясные границы ответственности смежных подразделений"
+    evidence_class: EXPLICIT
+    affected_process_refs: [ACC-REG-REQ-001, ACC-MGMT-REQ-001, ACC-PRIMARY-001, ACC-CONTRACT-REVIEW-001, ACC-PAYROLL-001]
+    statement: "Не всегда понятно, какой специалист за что отвечает и у кого запрашивать информацию."
+
+  - issue_id: XISS-ACC-DUPLICATE-001
+    name: "Повторная отправка вопросов/документов разным адресатам"
+    evidence_class: EXPLICIT
+    affected_process_refs: [ACC-REG-REQ-001, ACC-MGMT-REQ-001, ACC-PRIMARY-001]
+    statement: "Из-за неясной ответственности одинаковые запросы/документы могут направляться нескольким адресатам."
+
+  - issue_id: XISS-ACC-FOLDERS-001
+    name: "Неунифицированная структура сетевых папок и ответственность за хранение"
+    evidence_class: EXPLICIT
+    affected_process_refs: [ACC-REG-REQ-001, ACC-REPORTING-001]
+    statement: "Нет единого подтвержденного владельца/правил иерархии общих папок."
+
+  - issue_id: XISS-ACC-WAIT-001
+    name: "Ожидание ответов и согласований"
+    evidence_class: EXPLICIT
+    affected_process_refs: [ACC-MGMT-REQ-001, ACC-PRIMARY-001, ACC-CONTRACT-REVIEW-001, ACC-REG-REQ-001]
+    statement: "Задержки возникают при несвоевременном ответе адресата или согласовании; общего SLA нет."
+
+  - issue_id: XISS-ACC-TECH-001
+    name: "Высокая трудоемкость файлового обмена между тремя серверами"
+    evidence_class: EXPLICIT
+    affected_process_refs: [ACC-BANK-001, ACC-REG-REQ-001, ACC-PRIMARY-001, ACC-REPORTING-001, ACC-CONTRACT-REVIEW-001]
+    statement: "Скачивание, перенос и удаление файлов между серверами занимает больше всего рабочего времени."
+    classification: CROSS_PROCESS_TECHNICAL_CONSTRAINT
+
+  - issue_id: XISS-ACC-PRIMARY-TIMING-001
+    name: "Риск несвоевременного принятия первичных документов к учету"
+    evidence_class: EXPLICIT
+    affected_process_refs: [ACC-PRIMARY-001, ACC-CONTRACT-REVIEW-001]
+    statement: "Ожидание согласования/резолюции может задерживать отражение документов в учете; интервьюируемая считает своевременность критически важной."
+
+  - issue_id: XISS-ACC-FOUNDING-DOC-001
+    name: "Отсутствие части электронных копий учредительных документов"
+    evidence_class: EXPLICIT
+    affected_process_refs: []
+    statement: "При запросе заказчика обнаружилось, что нужных сканов нет в электронном виде; владелец функции архива не определен."
+
+cross_domain_handoffs:
+  - handoff_id: HDO-ACC-HR-001
+    target_domain: HR
+    statement: "Ведомости на аванс/зарплату передаются Директору по персоналу; HR также обращается за данными в части начислений, налогов и связанной отчетности."
+    process_refs: [ACC-PAYROLL-001, ACC-PAYROLL-PAY-001, ACC-PAYROLL-REPORT-001]
+    evidence_class: EXPLICIT
+
+  - handoff_id: HDO-ACC-IT-001
+    target_domain: IT
+    statement: "IT/служба безопасности задают правила работы с серверами, переноса и удаления файлов и рекомендовали унифицировать мессенджер."
+    process_refs: []
+    evidence_class: EXPLICIT
+
+  - handoff_id: HDO-ACC-IT-SUPPORT-001
+    target_domain: IT
+    statement: "При технических сбоях Главный бухгалтер передает запрос в IT support по email."
+    process_refs: []
+    evidence_class: EXPLICIT
+
+  - handoff_id: HDO-ACC-FIN-001
+    target_domain: FINANCIAL_MANAGEMENT
+    statement: "Финансовый директор является основным инициатором внутренних запросов, адресатом входящих документов, участником согласования первички/договоров и получателем зарплатных ведомостей."
+    process_refs: [ACC-MGMT-REQ-001, ACC-PRIMARY-001, ACC-CONTRACT-REVIEW-001, ACC-PAYROLL-001]
+    evidence_class: EXPLICIT
+
+  - handoff_id: HDO-ACC-SEC-001
+    target_domain: SECURITY
+    statement: "Запросы контролирующих органов часто маршрутизируются в группу Финансового директора и службы безопасности; служба безопасности также может направлять внутренние запросы."
+    process_refs: [ACC-REG-REQ-001, ACC-MGMT-REQ-001]
+    evidence_class: EXPLICIT
+
+classification_decisions:
+  - object: "Перенос файлов между серверами"
+    decision: CROSS_PROCESS_TECHNICAL_CONSTRAINT
+    rationale: "Нет самостоятельного бизнес-результата и отдельного потребителя; операция повторяется внутри нескольких процессов."
+  - object: "Удаление временных файлов на серверах"
+    decision: TECHNICAL_OPERATION_RULE
+    rationale: "Это правило эксплуатации ресурсов, а не L1/L2."
+  - object: "Структура сетевых папок"
+    decision: CROSS_PROCESS_PROBLEM
+    rationale: "Проблема governance/records management; самостоятельная граница процесса не подтверждена."
+  - object: "Прием входящих документов/ЭДО"
+    decision: ARCHITECTURE_CANDIDATE
+    rationale: "Триггер и маршрутизация есть, но поток смешивает разные бизнес-объекты и владелец функции прямо назван неясным."
+  - object: "Электронный архив отчетности"
+    decision: L2_WITHIN_ACC_REPORTING
+    rationale: "Архив создается после подтверждения сдачи и завершает отчетный цикл."
+  - object: "Электронный архив учредительных документов"
+    decision: CROSS_DOMAIN_ARCHITECTURE_CANDIDATE
+    rationale: "Есть потребность и проблема отсутствия сканов, но нет установленного владельца/lifecycle."
+
+systems_and_channels:
+  systems_confirmed:
+    - SYS-1C-ACCOUNTING-001
+    - SYS-DIADOC-001
+    - SYS-SBIS-001
+    - SYS-REMOTE-DESKTOP-001
+  channels_not_systems:
+    - "Электронная почта"
+    - "Телефон"
+    - "WhatsApp"
+    - "Корпоративный мессенджер"
+  external_organizations_not_systems:
+    - "Налоговый орган"
+    - "ФСС/социальный фонд (название в транскрипте не нормализуется)"
+    - "Иные контролирующие органы"
