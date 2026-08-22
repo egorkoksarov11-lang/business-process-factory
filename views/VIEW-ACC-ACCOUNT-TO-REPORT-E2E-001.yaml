@@ -1,0 +1,31 @@
+schema_version: "1.0"
+view:
+  view_id: "VIEW-ACC-ACCOUNT-TO-REPORT-E2E-001"
+  name: "От отражения учетных операций к бухгалтерской и налоговой отчетности"
+  view_type: "END_TO_END"
+  subject_role: null
+  subject_department: null
+  purpose: "Показать обоснованный multi-process контур: своевременное принятие первички и загрузка банковских выписок формируют учетную базу, используемую при подготовке отчетности."
+  level: "L0"
+  process_refs:
+    - ACC-PRIMARY-001
+    - ACC-BANK-001
+    - ACC-REPORTING-001
+  entry_point: "Поступили хозяйственные документы/банковские выписки, требующие отражения в учете"
+  exit_point: "Бухгалтерская/налоговая отчетность направлена, принятие проконтролировано, подтверждающий архив сформирован"
+  notes: |
+    Это multi-process E2E architecture view, а не утверждение, что три L1 выполняются один раз строго последовательно.
+    ACC-PRIMARY-001 → ACC-REPORTING-001 подтверждено прямо: принятые документы отражаются в 1С для формирования отчетности.
+    ACC-BANK-001 → ACC-REPORTING-001 является INFERRED feeder relation: источник подтверждает загрузку банковских выписок в учетную 1С и отдельный отчетный контур, но не проговаривает прямой handoff как отдельное событие.
+    Payroll и ЕНС не включены: источник не дает достаточного основания объявлять их обязательными участками этой E2E-цепочки.
+relationships:
+  - from_process: ACC-PRIMARY-001
+    to_process: ACC-REPORTING-001
+    relation: "UPSTREAM_ACCOUNTING_INPUT"
+    evidence_class: EXPLICIT
+    source_ref: SRC-ACC-CHIEF-001
+  - from_process: ACC-BANK-001
+    to_process: ACC-REPORTING-001
+    relation: "ACCOUNTING_DATA_FEEDER"
+    evidence_class: INFERRED
+    source_ref: SRC-ACC-CHIEF-001
