@@ -19,10 +19,11 @@ handoffs:
       - COM-IT-SUPPORT-PHONE-INTAKE-001
       - COM-IT-SUPPORT-CABINET-INTAKE-001
     system_refs: [SYS-IT-HELPDESK-001]
-    channel_refs:
-      - EMAIL
-      - PHONE
-      - PERSONAL_CABINET
+    channel_refs: []
+    observed_channel_names:
+      - "Электронная почта"
+      - "Телефон"
+      - "Личный кабинет"
     acceptance_or_result: "Обращение поступило в support; в общей логике источник подтверждает появление заявки в HelpDesk"
     acknowledgement_required: UNKNOWN
     timing:
@@ -34,8 +35,8 @@ handoffs:
       - FACT-IT-LEAD-005
       - FACT-IT-LEAD-007
     evidence_class: EXPLICIT
-    ambiguity: "Для телефона не установлено, как именно обращение переносится/регистрируется в HelpDesk; подтверждение приема доказано только для email."
-    notes: null
+    ambiguity: "Для телефона не установлено, как именно обращение переносится/регистрируется в HelpDesk. Email acknowledgement подтвержден; acknowledgement для телефона и личного кабинета UNKNOWN_CURRENT."
+    notes: "Canonical channel IDs пока не назначены Coordinator."
 
   - handoff_id: HO-IT-SUPPORT-INTAKE-TO-RESOLVE-001
     handoff_type: PROCESS_TO_PROCESS
@@ -53,6 +54,7 @@ handoffs:
     communication_refs: []
     system_refs: [SYS-IT-HELPDESK-001]
     channel_refs: []
+    observed_channel_names: []
     acceptance_or_result: "Сотрудник технической поддержки видит заявку и берет ее в работу"
     acknowledgement_required: NO
     timing:
@@ -65,7 +67,7 @@ handoffs:
       - FACT-IT-LEAD-008
     evidence_class: EXPLICIT
     ambiguity: "Формальный механизм назначения/принятия заявки и приоритизация не раскрыты."
-    notes: null
+    notes: "INTAKE → RESOLVE не зависит от того, известен ли механизм acknowledgement по входному каналу."
 
   - handoff_id: HO-IT-SUPPORT-TEMP-TO-USER-001
     handoff_type: ROLE_TO_ROLE
@@ -80,6 +82,7 @@ handoffs:
     communication_refs: [COM-IT-SUPPORT-TEMP-SOLUTION-001]
     system_refs: []
     channel_refs: []
+    observed_channel_names: []
     acceptance_or_result: "Пользователь получает возможность продолжить работу"
     acknowledgement_required: UNKNOWN
     timing:
@@ -107,6 +110,7 @@ handoffs:
     communication_refs: []
     system_refs: [SYS-IT-HELPDESK-001]
     channel_refs: []
+    observed_channel_names: []
     acceptance_or_result: "Временное решение становится основанием для последующей доработки до постоянного"
     acknowledgement_required: NO
     timing:
@@ -132,6 +136,7 @@ handoffs:
     communication_refs: [COM-IT-SUPPORT-PERM-SOLUTION-001]
     system_refs: []
     channel_refs: []
+    observed_channel_names: []
     acceptance_or_result: "Пользователь получил постоянное решение"
     acknowledgement_required: UNKNOWN
     timing:
@@ -159,6 +164,7 @@ handoffs:
     communication_refs: []
     system_refs: []
     channel_refs: []
+    observed_channel_names: []
     acceptance_or_result: UNKNOWN
     acknowledgement_required: UNKNOWN
     timing:
@@ -186,4 +192,4 @@ cross_domain_refs:
 metadata:
   created_at: "2026-08-22"
   updated_at: "2026-08-22"
-  notes: "Handoffs описывают передачу request/ticket/solution и условный переход RESOLVE → FINALIZE. Неизвестная эскалация к IT lead сохранена как UNKNOWN_CURRENT."
+  notes: "Handoffs описывают передачу request/ticket/solution и условный переход RESOLVE → FINALIZE. Неизвестная эскалация к IT lead сохранена как UNKNOWN_CURRENT. Canonical channel IDs не создавались Agent 02."
