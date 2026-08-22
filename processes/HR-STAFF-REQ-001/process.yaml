@@ -6,104 +6,39 @@ process:
   domain: "HR"
   level: "L1"
   status: "CLARIFICATION_REQUIRED"
-  parent_process: null
   owner_role: UNKNOWN
   participants:
     - ROLE-HIRING-MANAGER-001
     - ROLE-HR-DIRECTOR-001
-    - ROLE-CEO-001
-  views:
-    - VIEW-HR-FUNCTION-001
-    - VIEW-HR-MODEL-ENTRY-E2E-001
 
 applicability:
-  current_state: "PARTIAL_CURRENT"
-  condition: null
-  notes: "Interview-supported current evidence confirms receipt by ROLE-HR-DIRECTOR-001 of a request from an immediate manager. The upstream approval/rework/rejection lifecycle from SRC-HR-MODEL-002 remains REFERENCE_ONLY because source lifecycle/approval status is UNKNOWN."
+  current_state: "UNKNOWN_CURRENT"
+  notes: "SRC-HR-DIR-001 confirms only receipt of a vacancy request by HR Director before recruitment. A standalone current STAFF-REQ lifecycle is not confirmed. SRC-HR-MODEL-002 remains reference-only."
 
 boundaries:
-  trigger: "Возникла потребность в сотруднике"
+  trigger: "UNKNOWN_CURRENT: current source does not confirm whether need, manager decision or another fact starts a standalone STAFF-REQ process."
   input:
-    - "Потребность в сотруднике"
-    - "Данные об оценке загрузки/потребности, функциях и задачах согласно SRC-HR-MODEL-002"
+    - "Заявка на вакантную позицию от непосредственного руководителя"
   previous_processes: []
-  business_result: "Согласованная заявка на подбор направлена HR либо получен конечный результат 'подбор сотрудника не согласован'"
-  consumer: "HR/контур HR-RECRUIT-001 при согласовании; руководитель подразделения/организация при отказе"
+  business_result: "UNKNOWN_CURRENT: current evidence confirms request receipt before recruitment, not an approved staffing request result."
+  consumer: "HR recruitment activity after request receipt"
   next_processes:
     - HR-RECRUIT-001
-  parent_entry: null
-  parent_exit: null
 
 architecture:
   subprocess_refs: []
   boundary_handoff_refs:
     - HO-HR-STAFF-MGR-TO-HR-CUR-001
     - HO-HR-STAFF-TO-RECRUIT-REF-001
-  cross_domain_refs: []
 
 sources:
   source_refs:
-    - SRC-HR-MODEL-002
-    - SRC-HR-MODEL-001
     - SRC-HR-DIR-001
-  evidence_refs:
-    - "sources/evidence/SRC-HR-MODEL-002_architecture.yaml"
-    - "sources/evidence/SRC-HR-DIR-001_architecture.yaml"
-
-architecture_evidence:
-  - source_ref: SRC-HR-MODEL-002
-    evidence_class: EXPLICIT
-    statement: "Схема начинается с возникновения потребности, содержит оценку загрузки, решение о позиции, определение функций, формирование заявки, рассмотрение Генеральным директором, доработку/отказ и отправку согласованной заявки HR."
-  - source_ref: SRC-HR-MODEL-001
-    evidence_class: EXPLICIT
-    statement: "Шаг 1 'Сформировать и направить HR заявку на подбор' показан как свернутый подпроцесс до подбора кандидатов."
-  - source_ref: SRC-HR-DIR-001
-    evidence_class: EXPLICIT
-    statement: "Директор по персоналу сообщает, что принимает заявки от непосредственных руководителей; интервью не раскрывает upstream-согласование заявки."
-  - source_ref: "SRC-HR-MODEL-002 + SRC-HR-DIR-001"
-    evidence_class: UNKNOWN
-    statement: "Не установлено, является ли показанное в модели согласование Генеральным директором обязательным текущим AS-IS либо интервью просто опустило upstream-этап."
-
-architecture_documents:
-  - document_id: DOC-HR-STAFF-LOAD-001
-    name: "Таблица оценки загрузки (расчёт потребности)"
-    classification: EXISTING_INTERNAL
-    source_ref: SRC-HR-MODEL-002
-    status: REFERENCE_ONLY
-  - document_id: DOC-HR-STAFF-AUTHORITY-001
-    name: "Приказ / распоряжение / распределение функций / должностная инструкция"
-    classification: EXISTING_INTERNAL
-    source_ref: SRC-HR-MODEL-002
-    status: REFERENCE_ONLY
-  - document_id: DOC-HR-STAFF-REQUEST-001
-    name: "Заявка на подбор (с обоснованием потребности и перечнем функций)"
-    classification: EXISTING_INTERNAL
-    source_ref: SRC-HR-MODEL-002
-    status: REFERENCE_ONLY
+    - SRC-HR-MODEL-002
 
 versions:
   as_is_version: "0.1"
   to_be_version: null
-
-as_is:
-  steps: []
-  flows: []
-  documents: []
-  systems: []
-  rules: []
-  exceptions: []
-  observations: []
-
-issues: []
-changes: []
-
-to_be:
-  steps: []
-  flows: []
-  documents: []
-  rules: []
-  exceptions: []
-  automation_options: []
 
 model_refs:
   as_is_model: "processes/HR-STAFF-REQ-001/as-is/model.yaml"
@@ -111,33 +46,12 @@ model_refs:
   handoff_register: "processes/HR-STAFF-REQ-001/handoffs/handoffs.yaml"
   clarification_register: "processes/HR-STAFF-REQ-001/analysis/clarifications.yaml"
   issues: "processes/HR-STAFF-REQ-001/analysis/issues.yaml"
-  change_log: null
-  to_be_model: null
 
 open_questions:
-  - "Что именно является фактическим trigger текущего HR-STAFF-REQ-001: возникновение потребности, решение руководителя или иной факт?"
-  - "Является ли согласование Генеральным директором обязательным текущим этапом и для каких случаев?"
-  - "Кто фактически формирует текущую заявку и какие сведения/документы обязательны до передачи HR?"
-  - "Существует ли current revision loop и куда именно возвращается заявка на доработку?"
-  - "Существует ли current rejection/stop path и как инициатор узнает об отказе?"
-  - "Какая заявка фактически запускает HR-RECRUIT-001: любая заявка непосредственного руководителя или только отдельно согласованная?"
-  - "Какие каналы/системы используются для передачи заявки, решения и замечаний?"
-  - "Используются ли сейчас reference documents: таблица оценки загрузки и составной документ-основание?"
-  - "Кто является владельцем HR-STAFF-REQ-001?"
-
-delivery:
-  diagrams: []
-  attachments: []
-  qa_status: null
-  client_package_status: null
+  - "Подтверждается ли отдельный текущий STAFF-REQ lifecycle?"
+  - "Является ли CEO approval текущим обязательным правилом?"
+  - "Какой результат фактически передается в HR-RECRUIT-001?"
 
 metadata:
-  created_at: "2026-08-21"
   updated_at: "2026-08-22"
-  notes: |
-    Agent 01 architecture boundary is preserved; detailed Agent 02 AS-IS artifacts are connected through canonical Schema v1.1 model_refs.
-    Current interview-supported evidence confirms that an immediate manager's request for a vacant position is received by ROLE-HR-DIRECTOR-001 before recruitment work. It does not confirm CEO approval, revision, rejection, the upstream trigger, request contents or channel.
-    SRC-HR-MODEL-002 is retained as REFERENCE_ONLY in detailed AS-IS because lifecycle_status and approval_status remain UNKNOWN.
-    The architecture business result remains unchanged, but detailed AS-IS records ESC-HR-STAFF-REQ-001 for Coordinator review because current evidence does not prove the request has status 'согласована' before recruitment.
-    Status is CLARIFICATION_REQUIRED because trigger, approval applicability and exact positive boundary handoff materially affect the L1 model.
-    No TO-BE, BPMN, request template, registry/dictionary change or HR-RECRUIT-001 detailed business-logic change is introduced.
+  notes: "Architecture boundary was not expanded. Reference model elements were not promoted to current AS-IS."
