@@ -24,14 +24,12 @@ issues:
     process_id: IT-SUPPORT-001
     category: ACKNOWLEDGEMENT_GAP
     as_is_steps: [ITSUP-A003]
-    flow_refs:
-      - ITSUP-F002
-      - ITSUP-F003
+    flow_refs: [ITSUP-F002]
     handoff_refs: [HO-IT-SUPPORT-USER-TO-SUPPORT-001]
     information_object_refs: [IO-IT-SUPPORT-ACK-001]
-    description: "Подтверждение приема явно подтверждено только для email; поведение телефона и личного кабинета неизвестно."
+    description: "Acknowledgement приема подтвержден только для электронной почты; для телефона и личного кабинета наличие acknowledgement остается UNKNOWN_CURRENT, а не подтвержденно отсутствующим."
     evidence_refs: [FACT-IT-LEAD-007]
-    consequence: "Для части каналов нельзя установить, как пользователь понимает, что обращение принято."
+    consequence: "Для части каналов нельзя установить, как пользователь понимает, что обращение принято. Это не блокирует подтвержденный переход зарегистрированной заявки из INTAKE в RESOLVE."
     severity: LOW
     status: OPEN
 
