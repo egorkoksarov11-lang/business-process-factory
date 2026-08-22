@@ -1,0 +1,194 @@
+schema_version: "1.1"
+process_id: "HR-HIRE-001"
+evidence_scope:
+  source_refs: [SRC-HR-KDP-001, SRC-HR-DIR-001, SRC-HR-MODEL-001]
+  note: "Detailed AS-IS evidence for HR-HIRE-001 and child L2. Reference model lifecycle/approval status remains UNKNOWN and is not treated as automatically current AS-IS."
+
+facts:
+  - fact_id: FACT-HIRE-001
+    source_ref: SRC-HR-KDP-001
+    process_refs: [HR-HIRE-001]
+    subprocess_refs: [HR-HIRE-KDP-001]
+    statement: "Ведущий специалист по кадровому делопроизводству получает от Директора по персоналу данные для приема посредством электронного сообщения; названы Telegram, корпоративный мессенджер и электронная почта."
+    evidence_class: EXPLICIT
+    source_locator: "Фрагмент приема: 'данные поступают от директора по персоналу посредством электронного сообщения. Это может быть Telegram, это может быть корпоративный мессенджер, почта'."
+    role_ref: ROLE-HR-KDP-001
+    object_refs: [ROLE-HR-DIRECTOR-001]
+    conflicts_with: []
+    notes: "Точный payload сообщения и требование подтверждения получения не раскрыты."
+
+  - fact_id: FACT-HIRE-002
+    source_ref: SRC-HR-KDP-001
+    process_refs: [HR-HIRE-001]
+    subprocess_refs: [HR-HIRE-KDP-001]
+    statement: "КДП проверяет наличие документов по определенному списку. При отсутствии документов запрашивает их у сотрудника и ждет полного пакета."
+    evidence_class: EXPLICIT
+    source_locator: "Фрагмент приема: 'Проверяется наличие... сверяю, чтобы все документы по списку были в наличии. Если каких-то документов нет... запрашиваем документы у сотрудника и ждём полного пакета документов'."
+    role_ref: ROLE-HR-KDP-001
+    object_refs: [ROLE-EMPLOYEE-001]
+    conflicts_with: []
+    notes: "Сам список необходимых документов в источнике не приведен как полный перечень."
+
+  - fact_id: FACT-HIRE-003
+    source_ref: SRC-HR-KDP-001
+    process_refs: [HR-HIRE-001]
+    subprocess_refs: [HR-HIRE-KDP-001]
+    statement: "После получения полного пакета КДП в 1С: Зарплата и управление персоналом заводит физическое лицо и вводит ФИО, дату рождения, ИНН, СНИЛС, пол, место рождения, гражданство, реквизиты удостоверяющего документа, адреса, телефоны и email при наличии."
+    evidence_class: EXPLICIT
+    source_locator: "Фрагмент после 'Когда весь пакет документов... собран' до 'завели как физлицо сотрудника'."
+    role_ref: ROLE-HR-KDP-001
+    object_refs: [SYS-1C-HR-001]
+    conflicts_with: []
+    notes: null
+
+  - fact_id: FACT-HIRE-004
+    source_ref: SRC-HR-KDP-001
+    process_refs: [HR-HIRE-001]
+    subprocess_refs: [HR-HIRE-KDP-001]
+    statement: "КДП создает сотрудника в 1С и оформляет прием текущей датой, вводя образование, специальность, периоды трудовой деятельности, состав семьи, подразделение, вид занятости, оклад, график работы и банковские реквизиты для выплаты зарплаты."
+    evidence_class: EXPLICIT
+    source_locator: "Фрагмент: 'переходим во вкладку сотрудники. И принимаем сотрудника на работу... ставим дату приёма текущую' и последующий перечень данных."
+    role_ref: ROLE-HR-KDP-001
+    object_refs: [SYS-1C-HR-001]
+    conflicts_with: []
+    notes: "Отдельно источник говорит о внесении данных по воинской обязанности для сотрудника мужского пола; этот факт вынесен в FACT-HIRE-009."
+
+  - fact_id: FACT-HIRE-005
+    source_ref: SRC-HR-KDP-001
+    process_refs: [HR-HIRE-001]
+    subprocess_refs: [HR-HIRE-KDP-001]
+    statement: "До подписания трудового договора сотруднику дают для ознакомления и подписания локальные нормативные акты: ПВТР, положения об оплате труда, премировании, работе с персональными данными и защите персональных данных; отдельно дают должностную инструкцию для ознакомления."
+    evidence_class: EXPLICIT
+    source_locator: "Фрагмент: 'до подписания трудового договора с сотрудником ему даются для ознакомления и подписания локальные нормативные акты' до 'должностная инструкция'."
+    role_ref: ROLE-HR-KDP-001
+    object_refs: [ROLE-EMPLOYEE-001]
+    conflicts_with: []
+    notes: "Источник не подтверждает полный корпоративный набор ЛНА за пределами перечисленного фрагмента."
+
+  - fact_id: FACT-HIRE-006
+    source_ref: SRC-HR-KDP-001
+    process_refs: [HR-HIRE-001]
+    subprocess_refs: [HR-HIRE-KDP-001]
+    statement: "Сотруднику выдают трудовой договор в двух экземплярах. Если замечаний нет, сотрудник подписывает оба экземпляра, затем договор подписывает Генеральный директор; один экземпляр остается в отделе кадров, второй передается сотруднику."
+    evidence_class: EXPLICIT
+    source_locator: "Фрагмент от 'Сотруднику выдаётся в двух экземплярах: трудовой договор' до 'второй экземпляр отдаётся на руки сотруднику'."
+    role_ref: ROLE-EMPLOYEE-001
+    object_refs: [ROLE-CEO-001, ROLE-HR-KDP-001]
+    conflicts_with: []
+    notes: "Поведение при наличии замечаний к трудовому договору не раскрыто."
+
+  - fact_id: FACT-HIRE-007
+    source_ref: SRC-HR-KDP-001
+    process_refs: [HR-HIRE-001]
+    subprocess_refs: [HR-HIRE-KDP-001]
+    statement: "При приеме сотруднику выдают на подпись приказ о приеме; в 1С формируется карточка Т-2; у сотрудника берут согласие на обработку персональных данных и заявление о перечислении зарплаты по предоставленным реквизитам. Также упомянут подписываемый документ, связанный с конфиденциальностью/коммерческой тайной."
+    evidence_class: EXPLICIT
+    source_locator: "Фрагмент после подписания трудового договора: 'на подпись ему выдаётся приказ о приёме. Карточка Т2...' до 'Положение о коммерческой тайне'."
+    role_ref: ROLE-HR-KDP-001
+    object_refs: [ROLE-EMPLOYEE-001, SYS-1C-HR-001]
+    conflicts_with: []
+    notes: "Точное название и вид документа о конфиденциальности/коммерческой тайне из транскрипта однозначно не устанавливаются."
+
+  - fact_id: FACT-HIRE-008
+    source_ref: SRC-HR-KDP-001
+    process_refs: [HR-HIRE-001]
+    subprocess_refs: [HR-HIRE-SFR-001]
+    statement: "После завершения создания сотрудника КДП в 1С формирует отчетность для отправки в СФР о приеме; отчет должен быть отправлен не позднее следующего дня от даты приема. КДП лично или через корпоративный мессенджер сообщает Главному бухгалтеру, что отчет сформирован и его нужно отправить; Главный бухгалтер затем лично или через корпоративный мессенджер сообщает, что отчет сдан."
+    evidence_class: EXPLICIT
+    source_locator: "Фрагмент от 'Когда весь процесс создания сотрудника завершён' до 'главный бухгалтер пишет, что отчёт сдан'."
+    role_ref: ROLE-HR-KDP-001
+    object_refs: [ROLE-FIN-CHIEF-ACCOUNTANT-001, SYS-1C-HR-001]
+    conflicts_with: [FACT-HIRE-REF-002]
+    notes: "Интервью разделяет формирование сведений КДП и последующую отправку/подтверждение Главным бухгалтером."
+
+  - fact_id: FACT-HIRE-009
+    source_ref: SRC-HR-KDP-001
+    process_refs: [HR-HIRE-001]
+    subprocess_refs: [HR-HIRE-MIL-001]
+    statement: "При вводе сотрудника источник отдельно говорит: если сотрудник мужского пола, в 1С вводятся данные по воинской обязанности и военному билету."
+    evidence_class: EXPLICIT
+    source_locator: "Фрагмент: 'Если это сотрудник мужского пола, вводятся данные по воинской обязанности, воинский билет...'."
+    role_ref: ROLE-HR-KDP-001
+    object_refs: [SYS-1C-HR-001]
+    conflicts_with: []
+    notes: "Этот критерий не отождествляется автоматически с полной применимостью ветки воинского учета."
+
+  - fact_id: FACT-HIRE-010
+    source_ref: SRC-HR-KDP-001
+    process_refs: [HR-HIRE-001]
+    subprocess_refs: [HR-HIRE-MIL-001]
+    statement: "Если сотрудник военнообязанный, в программе формируется карточка гражданина, подлежащего воинскому учету, по форме 10. В нее включаются личные и воинские сведения, а также сведения о приеме/увольнении, номер и дата приказа и военный комиссариат. Карточку подписывает ответственный за воинский учет, требуется подпись военнообязанного; карточка сверяется с документами воинского учета."
+    evidence_class: EXPLICIT
+    source_locator: "Фрагмент от 'если сотрудник военнообязанный' до 'ставится дата и подпись ответственного за воинский учёт'."
+    role_ref: ROLE-MIL-RESP-001
+    object_refs: [ROLE-EMPLOYEE-001, SYS-1C-HR-001]
+    conflicts_with: []
+    notes: "Источник подтверждает функциональную роль ответственного, но не устанавливает, совпадает ли она с ROLE-HR-KDP-001."
+
+  - fact_id: FACT-HIRE-011
+    source_ref: SRC-HR-KDP-001
+    process_refs: [HR-HIRE-001]
+    subprocess_refs: [HR-HIRE-MIL-001]
+    statement: "Для военнообязанного в течение пяти дней от даты приема формируются сведения для военного комиссариата о приеме/переводе/увольнении и отправляются почтовым отправлением в военкомат по месту жительства/воинского учета."
+    evidence_class: EXPLICIT
+    source_locator: "Фрагмент: 'в течение пяти дней от даты приёма или увольнения формируются сведения... и отправляются посредством почтового отправления в военкомат'."
+    role_ref: null
+    object_refs: []
+    conflicts_with: []
+    notes: "Конкретный исполнитель формирования и отправки в этом фрагменте назван неявно."
+
+  - fact_id: FACT-HIRE-DIR-001
+    source_ref: SRC-HR-DIR-001
+    process_refs: [HR-HIRE-001, HR-ADAPT-001]
+    subprocess_refs: []
+    statement: "После выбора сотрудники выходят в назначенное время на определенных условиях; Директор по персоналу контролирует период адаптации и испытательный срок."
+    evidence_class: EXPLICIT
+    source_locator: "Абзацы 3-4: 'Сотрудники выбранные выходят в назначенное время...' и последующий блок про контроль адаптации."
+    role_ref: ROLE-HR-DIRECTOR-001
+    object_refs: [ROLE-EMPLOYEE-001]
+    conflicts_with: [FACT-HIRE-REF-001]
+    notes: "Точный момент полного закрытия HR-HIRE-001 относительно начала адаптации не указан."
+
+  - fact_id: FACT-HIRE-REF-001
+    source_ref: SRC-HR-MODEL-001
+    process_refs: [HR-HIRE-001, HR-ADAPT-001]
+    subprocess_refs: [HR-HIRE-KDP-001]
+    statement: "Reference-модель после core оформления показывает элемент 'Контроль выхода сотрудника и начало адаптации' в lane Кадровика."
+    evidence_class: CONFLICT
+    applicability: REFERENCE_ONLY
+    source_locator: "MODEL-001#7"
+    role_ref: ROLE-HR-KDP-001
+    object_refs: []
+    conflicts_with: [FACT-HIRE-DIR-001]
+    notes: "Lifecycle/approval status reference-модели UNKNOWN; элемент не считается автоматически current AS-IS."
+
+  - fact_id: FACT-HIRE-REF-002
+    source_ref: SRC-HR-MODEL-001
+    process_refs: [HR-HIRE-001]
+    subprocess_refs: [HR-HIRE-SFR-001]
+    statement: "Reference-модель размещает весь collapsed subprocess 'Подготовка и отправка отчета в СФР' в lane Главного бухгалтера."
+    evidence_class: CONFLICT
+    applicability: REFERENCE_ONLY
+    source_locator: "MODEL-001#9"
+    role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    object_refs: []
+    conflicts_with: [FACT-HIRE-008]
+    notes: "Конфликтует с интервью КДП в части подготовки сведений."
+
+  - fact_id: FACT-HIRE-REF-003
+    source_ref: SRC-HR-MODEL-001
+    process_refs: [HR-HIRE-001, HR-ADAPT-001]
+    subprocess_refs: [HR-HIRE-MIL-001, HR-HIRE-SFR-001]
+    statement: "Reference-модель показывает после core оформления параллельные ветки начала адаптации, воинского учета и СФР, сходящиеся перед End 'Кадровое оформление завершено'."
+    evidence_class: EXPLICIT
+    applicability: REFERENCE_ONLY
+    source_locator: "MODEL-001#PAR → #7/#8/#9 → End"
+    role_ref: null
+    object_refs: []
+    conflicts_with: []
+    notes: "Из-за UNKNOWN lifecycle параллельность и требование завершения веток до parent close не переносятся в current AS-IS как факт."
+
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Evidence authored by Agent 02. Raw sources are unchanged."
