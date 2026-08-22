@@ -1,0 +1,97 @@
+schema_version: "1.1"
+issues:
+  - issue_id: ISS-HR-HIRE-001-001
+    process_id: HR-HIRE-001
+    category: WAIT
+    as_is_steps: [A002, A003, A004]
+    flow_refs: [F002, F003, F004]
+    handoff_refs: [HO-HIRE-002]
+    information_object_refs: [IO-HIRE-002, IO-HIRE-003, IO-HIRE-004]
+    description: "При неполном комплекте КДП запрашивает недостающие документы и ожидает полный пакет; срок ожидания источником не установлен."
+    evidence_refs: [FACT-HIRE-002]
+    consequence: "Продолжение оформления зависит от внешнего предоставления документов; фактическая продолжительность ожидания не определена."
+    severity: MEDIUM
+    status: OPEN
+
+  - issue_id: ISS-HR-HIRE-001-002
+    process_id: HR-HIRE-001
+    category: MULTI_CHANNEL
+    as_is_steps: [A001]
+    flow_refs: []
+    handoff_refs: [HO-HIRE-001]
+    information_object_refs: [IO-HIRE-001]
+    description: "Данные для приема могут поступать через Telegram, корпоративный мессенджер или электронную почту; источник не называет единый канал и не раскрывает обязательность подтверждения получения."
+    evidence_refs: [FACT-HIRE-001]
+    consequence: "По источникам нельзя однозначно определить устойчивую точку фиксации recruitment→hire handoff и подтверждение его приема."
+    severity: MEDIUM
+    status: OPEN
+
+  - issue_id: ISS-HR-HIRE-001-003
+    process_id: HR-HIRE-001
+    category: ROLE_CONFLICT
+    as_is_steps: [A018, A019, A020, A021]
+    flow_refs: [F017, F018, F019]
+    handoff_refs: [HO-HIRE-SFR-001]
+    information_object_refs: [IO-SFR-001, IO-SFR-002, IO-SFR-003]
+    description: "Интервью КДП описывает формирование сведений СФР КДП с передачей Главному бухгалтеру на отправку/подтверждение, тогда как reference-модель UNKNOWN lifecycle размещает весь блок подготовки и отправки у Главного бухгалтера."
+    evidence_refs: [FACT-HIRE-008, FACT-HIRE-REF-002]
+    consequence: "Owner и точная граница ответственности HR-HIRE-SFR-001 не могут быть зафиксированы без уточнения."
+    severity: HIGH
+    status: OPEN
+
+  - issue_id: ISS-HR-HIRE-001-004
+    process_id: HR-HIRE-001
+    category: ROLE_AMBIGUITY
+    as_is_steps: [A023, A024, A025, A026, A027]
+    flow_refs: [F020, F021, F022, F023]
+    handoff_refs: [HO-HIRE-MIL-001]
+    information_object_refs: [IO-MIL-001, IO-MIL-003, IO-MIL-004]
+    description: "Источник подтверждает роль/функцию Ответственного за воинский учет, но не устанавливает, является ли она отдельным сотрудником или функцией КДП; исполнитель формирования/отправки сведений в военкомат также назван неявно."
+    evidence_refs: [FACT-HIRE-010, FACT-HIRE-011]
+    consequence: "Нельзя надежно назначить исполнителей части HR-HIRE-MIL-001 и acceptance внешнего handoff."
+    severity: HIGH
+    status: OPEN
+
+  - issue_id: ISS-HR-HIRE-001-005
+    process_id: HR-HIRE-001
+    category: BOUNDARY_CONFLICT
+    as_is_steps: []
+    flow_refs: []
+    handoff_refs: [HO-HIRE-ADAPT-001]
+    information_object_refs: []
+    description: "SRC-HR-DIR-001 подтверждает контроль адаптации Директором по персоналу, а MODEL-001#7 размещает 'контроль выхода сотрудника и начало адаптации' в lane Кадровика; точная роль boundary не установлена."
+    evidence_refs: [FACT-HIRE-DIR-001, FACT-HIRE-REF-001]
+    consequence: "Нельзя без источника назначить role owner перехода Hire→Adaptation или трактовать lane reference-модели как current AS-IS."
+    severity: HIGH
+    status: OPEN
+
+  - issue_id: ISS-HR-HIRE-001-006
+    process_id: HR-HIRE-001
+    category: COMPLETION_BOUNDARY_UNKNOWN
+    as_is_steps: [A018, A019, A020, A021, A023, A024, A025, A026, A027]
+    flow_refs: [F016, F017, F018, F019, F020, F021, F022, F023]
+    handoff_refs: [HO-HIRE-SFR-001, HO-HIRE-MIL-001, HO-HIRE-ADAPT-001]
+    information_object_refs: [IO-SFR-001, IO-SFR-003, IO-MIL-003, IO-MIL-004]
+    description: "Неизвестно, должны ли SFR и применимый MIL L2 завершиться до закрытия HR-HIRE-001 и должен ли parent полностью закрыться до начала HR-ADAPT-001."
+    evidence_refs: [FACT-HIRE-008, FACT-HIRE-010, FACT-HIRE-011, FACT-HIRE-DIR-001, FACT-HIRE-REF-003]
+    consequence: "Parent end-state и синхронизация sibling branches/boundary event не могут быть достоверно смоделированы как единая current sequence/parallel join."
+    severity: HIGH
+    status: OPEN
+
+  - issue_id: ISS-HR-HIRE-001-007
+    process_id: HR-HIRE-001
+    category: CONFIRMATION_GAP
+    as_is_steps: [A021]
+    flow_refs: [F019]
+    handoff_refs: [HO-HIRE-SFR-001]
+    information_object_refs: [IO-SFR-003]
+    description: "Источник подтверждает внутреннее сообщение Главного бухгалтера 'отчет сдан', но не раскрывает внешний документ/квитанцию СФР или иной артефакт подтверждения приема сведений."
+    evidence_refs: [FACT-HIRE-008]
+    consequence: "Из источников нельзя определить, какой артефакт является проверяемым доказательством успешной сдачи в СФР."
+    severity: MEDIUM
+    status: OPEN
+
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Issues describe observed AS-IS facts/gaps only; no TO-BE solutions included."
