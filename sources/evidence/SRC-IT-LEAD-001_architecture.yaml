@@ -155,9 +155,9 @@ facts:
     evidence_class: EXPLICIT
     source_locator: "строки 160–167"
     role_ref: null
-    object_refs: [ROLE-HR-UNKNOWN-001, ROLE-SECRETARY-UNKNOWN-001]
+    object_refs: []
     conflicts_with: []
-    notes: "ROLE_UNKNOWN; не назначать ответственность HR или секретарю без общего cross-domain synthesis."
+    notes: "ROLE_UNKNOWN. Упомянуты кандидатами 'секретарь' и 'отдел кадров', но ни одна конкретная роль не нормализуется как канонический sender до cross-domain synthesis."
 
   - fact_id: FACT-IT-LEAD-016
     process_refs: [XDOM-HR-IT-001]
