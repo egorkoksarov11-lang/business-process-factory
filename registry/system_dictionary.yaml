@@ -27,3 +27,46 @@ systems:
     category: "IT_SUPPORT_TICKETING"
     source_refs: [SRC-IT-LEAD-001]
     notes: "В сыром транскрипте встречается распознавание 'HelpDeck'; work order и metadata нормализуют сущность как HelpDesk. Личный кабинет рассматривается как интерфейс/канал к support до появления доказательств отдельной системы."
+
+  - system_id: SYS-1C-ACCOUNTING-001
+    canonical_name: "1С (учетная программа)"
+    aliases:
+      - "1С"
+      - "программа учета 1С"
+    category: "ACCOUNTING"
+    source_refs: [SRC-ACC-CHIEF-001]
+    notes: "Конкретная конфигурация 1С источником не названа и не угадывается."
+
+  - system_id: SYS-DIADOC-001
+    canonical_name: "Диадок"
+    aliases:
+      - "диадог"
+    category: "EDO"
+    source_refs: [SRC-ACC-CHIEF-001]
+    notes: "В транскрипте встречается распознанное 'диадог'; нормализация бренда выполнена только на уровне dictionary alias, сырой источник не исправлен."
+
+  - system_id: SYS-SBIS-001
+    canonical_name: "СБИС"
+    aliases: []
+    category: "EDO"
+    source_refs: [SRC-ACC-CHIEF-001]
+    notes: "Используется как одна из электронных платформ документооборота; связь с конкретными формами отчетности не предполагается без подтверждения."
+
+  - system_id: SYS-REMOTE-DESKTOP-001
+    canonical_name: "Удаленный рабочий стол"
+    aliases:
+      - "удаленный рабочий стол"
+    category: "REMOTE_ACCESS"
+    source_refs: [SRC-ACC-CHIEF-001]
+    notes: "Среда доступа к серверам юридических лиц; не бизнес-процесс."
+
+channels_not_registered_as_systems:
+  - "Электронная почта"
+  - "Телефон"
+  - "WhatsApp"
+  - "Корпоративный мессенджер"
+
+external_organizations_not_registered_as_systems:
+  - "Налоговый орган"
+  - "ФСС/социальный фонд — точное наименование по сырому транскрипту не нормализовано"
+  - "Иные контролирующие органы"

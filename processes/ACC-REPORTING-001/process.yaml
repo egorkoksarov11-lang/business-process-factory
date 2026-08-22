@@ -1,0 +1,56 @@
+schema_version: "1.0"
+process:
+  process_id: "ACC-REPORTING-001"
+  name: "Подготовка, сдача и подтверждение бухгалтерской и налоговой отчетности"
+  domain: "ACC"
+  level: "L1"
+  status: "ARCHITECTURE_READY"
+  parent_process: null
+  owner_role: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+  participants:
+    - ROLE-FIN-CHIEF-ACCOUNTANT-001
+  views:
+    - VIEW-ACC-CHIEF-ROLE-001
+    - VIEW-ACC-FUNCTION-001
+    - VIEW-ACC-ACCOUNT-TO-REPORT-E2E-001
+boundaries:
+  trigger: "Наступил отчетный период/государственный срок подготовки и сдачи бухгалтерской или налоговой отчетности"
+  input:
+    - "Данные бухгалтерского и налогового учета"
+    - "Результаты предотчетных проверок"
+  previous_processes: [ACC-PRIMARY-001]
+  business_result: "Отчетность направлена в соответствующий орган, получение/принятие проконтролировано, подтверждающие файлы собраны в электронный архив"
+  consumer: "Контролирующие органы и внутренние пользователи подтвержденной отчетности"
+  next_processes: []
+architecture_subprocesses:
+  - ACC-REPORTING-PRECHECK-001
+  - ACC-REPORTING-PREPARE-001
+  - ACC-REPORTING-ACCEPT-001
+internal_flow:
+  canonical_path: [ACC-REPORTING-PRECHECK-001, ACC-REPORTING-PREPARE-001, ACC-REPORTING-ACCEPT-001]
+  evidence_class: EXPLICIT
+sources:
+  source_refs: [SRC-ACC-CHIEF-001]
+  evidence_refs: ["sources/evidence/SRC-ACC-CHIEF-001_architecture.yaml"]
+architecture_evidence:
+  - source_ref: SRC-ACC-CHIEF-001
+    evidence_class: EXPLICIT
+    statement: "До отчетности Главный бухгалтер проверяет взаиморасчеты и корректность отражения операций; затем формирует декларации/отчетность, направляет их в органы, контролирует принятие и формирует электронный архив с квитанциями."
+boundary_notes:
+  - "Государственные сроки подтверждены как внешний регламентирующий trigger; конкретные календарные даты не нормализуются на Agent 01."
+  - "Электронное архивирование отчетности является частью завершения этого L1, а не отдельным процессом."
+versions: {as_is_version: null, to_be_version: null}
+as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+issues: []
+changes: []
+to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+open_questions:
+  - "Какие платформы фактически используются для каждого вида отчетности?"
+  - "Какие отчеты/декларации входят в устойчивый scope по каждому юридическому лицу?"
+  - "Как формально определяется завершение: отправка, квитанция о получении или подтверждение принятия?"
+  - "Кто является внутренним потребителем электронного архива отчетности?"
+delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Agent 01 architecture only; reporting AS-IS detail intentionally deferred."

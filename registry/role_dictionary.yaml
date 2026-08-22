@@ -14,8 +14,8 @@ roles:
     canonical_name: "Директор по персоналу"
     department: UNKNOWN
     aliases: []
-    source_refs: [SRC-HR-KDP-001, SRC-HR-DIR-001]
-    notes: "Интервьюируемая роль SRC-HR-DIR-001. Lane 'HR' в SRC-HR-MODEL-001 не приписывается этой роли автоматически; соответствие считается cross-source inference и требует проверки Agent 02."
+    source_refs: [SRC-HR-KDP-001, SRC-HR-DIR-001, SRC-ACC-CHIEF-001]
+    notes: "Интервьюируемая роль SRC-HR-DIR-001. Lane 'HR' в SRC-HR-MODEL-001 не приписывается этой роли автоматически; соответствие считается cross-source inference и требует проверки Agent 02. Accounting cross-domain evidence: Определение роли не создается/не изменяется в этой ветке; используется только как handoff target ACC-PAYROLL-001."
 
   - role_id: ROLE-HIRING-MANAGER-001
     canonical_name: "Непосредственный руководитель / руководитель подразделения"
@@ -40,24 +40,25 @@ roles:
     canonical_name: "Служба безопасности"
     department: UNKNOWN
     aliases: []
-    source_refs: [SRC-HR-MODEL-001]
-    notes: "Подтверждена только существующей reference-моделью как исполнитель проверки кандидата. Lifecycle/approval status модели UNKNOWN; фактическую роль в AS-IS необходимо подтвердить."
+    source_refs: [SRC-HR-MODEL-001, SRC-ACC-CHIEF-001]
+    notes: "Подтверждена только существующей reference-моделью как исполнитель проверки кандидата. Lifecycle/approval status модели UNKNOWN; фактическую роль в AS-IS необходимо подтвердить. Accounting cross-domain evidence: Cross-domain participant в маршруте части запросов; собственный package не создается."
 
   - role_id: ROLE-FIN-CHIEF-ACCOUNTANT-001
     canonical_name: "Главный бухгалтер"
     department: UNKNOWN
     aliases:
       - "бухгалтер, главный бухгалтер"
-    source_refs: [SRC-HR-KDP-001, SRC-HR-MODEL-001]
-    notes: "SRC-HR-KDP-001: получает от кадровика уведомление о сформированной отчетности и отправляет/подтверждает сдачу. SRC-HR-MODEL-001 размещает 'подготовку и отправку отчета в СФР' целиком в lane Главного бухгалтера; это source conflict по границе ответственности."
+      - "главбух"
+    source_refs: [SRC-HR-KDP-001, SRC-HR-MODEL-001, SRC-ACC-CHIEF-001]
+    notes: "SRC-HR-KDP-001: получает от кадровика уведомление о сформированной отчетности и отправляет/подтверждает сдачу. SRC-HR-MODEL-001 размещает 'подготовку и отправку отчета в СФР' целиком в lane Главного бухгалтера; это source conflict по границе ответственности. Accounting evidence: Интервьюируемая роль; работает без подчиненных и ведет три юридических лица. В открытой HR-архитектуре тот же role_id используется как cross-domain роль — при последующем merge source_refs должны объединяться, а не заменяться."
 
   - role_id: ROLE-CEO-001
     canonical_name: "Генеральный директор"
     department: UNKNOWN
     aliases:
       - "генеральный директор"
-    source_refs: [SRC-HR-KDP-001, SRC-HR-DIR-001, SRC-HR-MODEL-001, SRC-HR-MODEL-002]
-    notes: "Подписывает/согласует разные кадровые объекты по источникам. SRC-HR-MODEL-002 показывает рассмотрение заявки на подбор; SRC-HR-MODEL-001 — условное согласование оффера при негативной информации. Не считать эти reference-модели подтвержденным AS-IS до Agent 02."
+    source_refs: [SRC-HR-KDP-001, SRC-HR-DIR-001, SRC-HR-MODEL-001, SRC-HR-MODEL-002, SRC-ACC-CHIEF-001]
+    notes: "Подписывает/согласует разные кадровые объекты по источникам. SRC-HR-MODEL-002 показывает рассмотрение заявки на подбор; SRC-HR-MODEL-001 — условное согласование оффера при негативной информации. Не считать эти reference-модели подтвержденным AS-IS до Agent 02. Accounting cross-domain evidence: Источник прямо подтверждает Генерального директора в части договорного согласования и общих запросов/подчиненности. Не используется как автоматическая расшифровка слова 'руководитель' в ACC-PRIMARY-001."
 
   - role_id: ROLE-EMPLOYEE-001
     canonical_name: "Сотрудник"
@@ -105,3 +106,28 @@ roles:
       - "пользователь"
     source_refs: [SRC-IT-LEAD-001]
     notes: "Обобщенная роль потребителя IT support; конкретные должности зависят от бизнес-функции."
+
+  - role_id: ROLE-FIN-DIRECTOR-001
+    canonical_name: "Финансовый директор"
+    department: UNKNOWN
+    aliases: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    notes: "Основной инициатор внутренних запросов, адресат части входящих документов, участник согласования первички/договоров и получатель ведомостей."
+
+  - role_id: ROLE-FIN-BANK-OPERATOR-001
+    canonical_name: "Операционист по движению расчетных счетов"
+    department: UNKNOWN
+    aliases:
+      - "операционист"
+    source_refs: [SRC-ACC-CHIEF-001]
+    notes: "Направляет Главному бухгалтеру электронные банковские выписки и связанные банковские документы. Данная передача после boundary cleanup относится к CAND-ACC-BANK-001, а не к подтвержденному L1."
+
+  - role_id: ROLE-CONTRACT-OBLIGATION-RESP-001
+    canonical_name: "Ответственный за исполнение обязательств по договору/сделке"
+    department: UNKNOWN
+    aliases:
+      - "руководитель"
+      - "руководитель проекта"
+      - "лицо, отвечающее за исполнение обязательств по договору"
+    source_refs: [SRC-ACC-CHIEF-001]
+    notes: "Функциональная нормализация для ACC-PRIMARY-APPROVE-001. Источник отдельно называет руководителя, руководителя проекта и иное ответственное за исполнение лицо. Это не ROLE-CEO-001 и не подтвержденная текущая роль 'инициатора договора'; тезис про инициатора сохранен только как позиция интервьюируемой о желаемом принципе."

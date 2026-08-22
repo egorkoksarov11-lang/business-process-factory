@@ -1,0 +1,63 @@
+schema_version: "1.0"
+process:
+  process_id: "ACC-PAYROLL-001"
+  name: "Расчет заработной платы, платежные ведомости и отчетность по персоналу"
+  domain: "ACC"
+  level: "L1"
+  status: "ARCHITECTURE_READY"
+  parent_process: null
+  owner_role: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+  participants:
+    - ROLE-FIN-CHIEF-ACCOUNTANT-001
+    - ROLE-HR-DIRECTOR-001
+    - ROLE-FIN-DIRECTOR-001
+  views:
+    - VIEW-ACC-CHIEF-ROLE-001
+    - VIEW-ACC-FUNCTION-001
+boundaries:
+  trigger: "Наступил цикл расчета/выплаты заработной платы либо срок формирования отчетности по начислениям и персоналу"
+  input:
+    - "Данные, необходимые для расчета заработной платы и связанных налогов/взносов"
+    - "Запрос Финансового директора на ведомости аванса/зарплаты"
+    - "Применимый отчетный период"
+  previous_processes: []
+  business_result: "Расчет заработной платы выполнен; ведомости на выплату подготовлены и переданы HR/Финансовому директору; отчетность по начислениям/персоналу сформирована в подтвержденном источником объеме"
+  consumer: "Директор по персоналу, Финансовый директор и внешние органы по применимой отчетности"
+  next_processes: []
+architecture_subprocesses:
+  - ACC-PAYROLL-PAY-001
+  - ACC-PAYROLL-REPORT-001
+internal_flow:
+  relation: "Два циклических блока внутри payroll scope; строгая последовательность между ними источником не подтверждена"
+  evidence_class: UNKNOWN
+sources:
+  source_refs: [SRC-ACC-CHIEF-001]
+  evidence_refs: ["sources/evidence/SRC-ACC-CHIEF-001_architecture.yaml"]
+architecture_evidence:
+  - source_ref: SRC-ACC-CHIEF-001
+    evidence_class: EXPLICIT
+    statement: "Из-за отсутствия расчетчиков Главный бухгалтер рассчитывает зарплату, формирует отчетность по персоналу и дважды в месяц готовит ведомости на аванс/зарплату, передавая их Директору по персоналу и Финансовому директору."
+cross_domain_handoffs:
+  - handoff_id: HDO-ACC-HR-001
+    target_domain: HR
+    event: "Ведомости на выплату аванса/зарплаты переданы Директору по персоналу"
+    note: "Не изменяет HR process packages; фактическая дальнейшая HR-обработка UNKNOWN."
+  - handoff_id: HDO-ACC-FIN-001
+    target_domain: FINANCIAL_MANAGEMENT
+    event: "Ведомости и потребность в средствах/налогах переданы Финансовому директору для своевременной оплаты"
+    note: "Источник говорит о подготовке примерно за 5 дней; это наблюдаемая практика, не нормализованный SLA."
+versions: {as_is_version: null, to_be_version: null}
+as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+issues: []
+changes: []
+to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+open_questions:
+  - "Какие входные данные и от какой HR-роли передаются для расчета?"
+  - "Кто утверждает итоговый расчет и кто фактически инициирует платеж?"
+  - "Какие отчеты по персоналу Главный бухгалтер только формирует, а какие также отправляет/контролирует?"
+  - "Как связаны календарные циклы расчета, ведомостей и отчетности между собой?"
+delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Agent 01 architecture only; HR interface preserved as cross-domain handoff without HR edits."

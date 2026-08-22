@@ -1,0 +1,25 @@
+schema_version: "1.0"
+view:
+  view_id: "VIEW-ACC-ACCOUNT-TO-REPORT-E2E-001"
+  name: "От принятия первичных документов к бухгалтерской и налоговой отчетности"
+  view_type: "END_TO_END"
+  subject_role: null
+  subject_department: null
+  purpose: "Показать подтвержденный multi-process контур от своевременного принятия первичных документов к использованию отраженных учетных данных при подготовке отчетности."
+  level: "L0"
+  process_refs:
+    - ACC-PRIMARY-001
+    - ACC-REPORTING-001
+  entry_point: "Первичные документы контрагента поступили в работу и требуют решения о принятии к учету"
+  exit_point: "Бухгалтерская/налоговая отчетность направлена, принятие проконтролировано, подтверждающий архив сформирован"
+  notes: |
+    Это multi-process E2E architecture view, а не детальный AS-IS.
+    ACC-PRIMARY-001 → ACC-REPORTING-001 подтверждено прямо: после решения о принятии документы отражаются в 1С для формирования отчетности.
+    Банковский блок исключен из canonical process_refs после повторного boundary-test: источник подтверждает только получение выписки и загрузку в 1С, но не дает самостоятельного бизнес-результата уровня L1 без дополнительного бухгалтерского вывода. Он сохранен как CAND-ACC-BANK-001 вне E2E.
+    Payroll и ЕНС не включены: источник не дает достаточного основания объявлять их обязательными участками этой E2E-цепочки.
+relationships:
+  - from_process: ACC-PRIMARY-001
+    to_process: ACC-REPORTING-001
+    relation: "UPSTREAM_ACCOUNTING_INPUT"
+    evidence_class: EXPLICIT
+    source_ref: SRC-ACC-CHIEF-001

@@ -1,0 +1,49 @@
+schema_version: "1.0"
+process:
+  process_id: "ACC-REG-REQ-001"
+  name: "Подготовка бухгалтерского ответа по запросу контролирующего органа"
+  domain: "ACC"
+  level: "L1"
+  status: "ARCHITECTURE_READY"
+  parent_process: null
+  owner_role: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+  participants:
+    - ROLE-FIN-CHIEF-ACCOUNTANT-001
+    - ROLE-FIN-DIRECTOR-001
+    - ROLE-SECURITY-001
+  views:
+    - VIEW-ACC-CHIEF-ROLE-001
+    - VIEW-ACC-FUNCTION-001
+boundaries:
+  trigger: "В бухгалтерию поступил или был переадресован запрос контролирующего органа, требующий бухгалтерских/налоговых документов или данных"
+  input:
+    - "Запрос контролирующего органа"
+    - "Требования к составу ответа"
+  previous_processes: []
+  business_result: "Бухгалтерская часть ответа или пакет подтверждающих документов подготовлены и переданы на согласование/дальнейшую отправку"
+  consumer: "Финансовый директор, служба безопасности или иной координатор ответа; конечный отправитель ответа UNKNOWN"
+  next_processes: []
+sources:
+  source_refs: [SRC-ACC-CHIEF-001]
+  evidence_refs: ["sources/evidence/SRC-ACC-CHIEF-001_architecture.yaml"]
+architecture_evidence:
+  - source_ref: SRC-ACC-CHIEF-001
+    evidence_class: EXPLICIT
+    statement: "При запросах налоговых и иных органов Главный бухгалтер собирает документы из сетевых папок и 1С и готовит их в папку для согласования и дальнейшего ответа."
+architecture_notes:
+  - "Получение/первичная маршрутизация входящего запроса не выделены отдельным ACC L1: общий входящий поток смешивает документы разных типов и имеет неясного владельца."
+  - "Граница процесса заканчивается передачей бухгалтерской части ответа; факт самостоятельной финальной отправки Главным бухгалтером источником не подтвержден."
+versions: {as_is_version: null, to_be_version: null}
+as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+issues: []
+changes: []
+to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+open_questions:
+  - "Кто является владельцем и финальным отправителем ответа контролирующему органу?"
+  - "Как устроено обязательное согласование подготовленного бухгалтерией пакета?"
+  - "Какие типы запросов полностью закрывает бухгалтерия, а какие только частично?"
+delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Agent 01 architecture only; AS-IS/TO-BE/BPMN intentionally not created."

@@ -1,0 +1,89 @@
+schema_version: "1.0"
+view:
+  view_id: "VIEW-ACC-FUNCTION-001"
+  name: "Landscape функции — бухгалтерский и налоговый учет"
+  view_type: "FUNCTION_LANDSCAPE"
+  subject_role: null
+  subject_department: UNKNOWN
+  official_department_name: UNKNOWN
+  purpose: "Показать архитектуру бухгалтерской функции по данным SRC-ACC-CHIEF-001: канонические L1, их L2-декомпозицию, архитектурные кандидаты, сквозные ограничения и междоменные интерфейсы без построения искусственного последовательного E2E."
+  level: "L0"
+  process_refs:
+    - ACC-REG-REQ-001
+    - ACC-MGMT-REQ-001
+    - ACC-PRIMARY-001
+    - ACC-REPORTING-001
+    - ACC-PAYROLL-001
+    - ACC-TAX-ENS-001
+    - ACC-CONTRACT-REVIEW-001
+  entry_point: null
+  exit_point: null
+  notes: |
+    Это FUNCTION_LANDSCAPE, а не официальное название подразделения и не последовательная схема процесса.
+    Канонические L1 сгруппированы как независимые событийные/календарные контуры участия бухгалтерской функции.
+    L2 приведены только как decomposition refs своих parent L1 и не считаются самостоятельными L1.
+    Банковский блок после повторного boundary-test сохранен только как architecture candidate: source evidence подтверждает получение выписок и загрузку в 1С, но не самостоятельный бизнес-результат L1.
+
+canonical_l1:
+  - process_ref: ACC-REG-REQ-001
+    group: "Регуляторные запросы"
+  - process_ref: ACC-MGMT-REQ-001
+    group: "Внутренняя бухгалтерская информация"
+  - process_ref: ACC-PRIMARY-001
+    group: "Первичные документы и учет"
+  - process_ref: ACC-REPORTING-001
+    group: "Бухгалтерская и налоговая отчетность"
+  - process_ref: ACC-PAYROLL-001
+    group: "Расчет заработной платы и отчетность по персоналу"
+  - process_ref: ACC-TAX-ENS-001
+    group: "Налоговые обязательства / ЕНС"
+  - process_ref: ACC-CONTRACT-REVIEW-001
+    group: "Бухгалтерско-налоговое согласование договоров"
+
+decomposition_refs:
+  ACC-PRIMARY-001:
+    - ACC-PRIMARY-CHECK-001
+    - ACC-PRIMARY-APPROVE-001
+    - ACC-PRIMARY-POST-001
+  ACC-REPORTING-001:
+    - ACC-REPORTING-PRECHECK-001
+    - ACC-REPORTING-PREPARE-001
+    - ACC-REPORTING-ACCEPT-001
+  ACC-PAYROLL-001:
+    - ACC-PAYROLL-PAY-001
+    - ACC-PAYROLL-REPORT-001
+
+architecture_candidates:
+  - candidate_id: CAND-ACC-BANK-001
+    working_name: "Получение банковских выписок и загрузка данных в 1С"
+    status: BUSINESS_RESULT_INSUFFICIENT_FOR_L1
+    note: "Может оказаться операцией или будущим L2 после подтверждения parent/boundary; текущий источник не позволяет канонизировать самостоятельный L1 без достраивания."
+  - candidate_id: CAND-ACC-INBOX-001
+    working_name: "Прием, классификация и маршрутизация входящих документов/запросов"
+    status: BOUNDARY_OWNER_UNKNOWN
+  - candidate_id: CAND-ACC-FOUNDING-ARCHIVE-001
+    working_name: "Управление электронным архивом учредительных документов"
+    status: BOUNDARY_UNKNOWN
+
+cross_process_constraints_problems:
+  - XISS-ACC-RESP-001
+  - XISS-ACC-DUPLICATE-001
+  - XISS-ACC-FOLDERS-001
+  - XISS-ACC-WAIT-001
+  - XISS-ACC-TECH-001
+  - XISS-ACC-PRIMARY-TIMING-001
+  - XISS-ACC-FOUNDING-DOC-001
+
+cross_domain_interfaces:
+  HR:
+    handoff_refs: [HDO-ACC-HR-001, HDO-ACC-HR-002]
+    note: "Ведомости на аванс/зарплату и запросы по начислениям/налогам/отчетности; точная граница ownership остается UNKNOWN."
+  IT:
+    handoff_refs: [HDO-ACC-IT-001, HDO-ACC-IT-SUPPORT-001]
+    note: "Серверные правила, файловый обмен и техническая поддержка; IT packages в этой ветке не изменяются."
+  FINANCIAL_MANAGEMENT:
+    handoff_refs: [HDO-ACC-FIN-001]
+    note: "Финансовый директор — основной инициатор/потребитель ряда бухгалтерских действий и отдельный подтвержденный согласующий первички."
+  SECURITY:
+    handoff_refs: [HDO-ACC-SEC-001]
+    note: "Участие службы безопасности в маршруте части запросов контролирующих органов и внутренних запросах."
