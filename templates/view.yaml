@@ -1,16 +1,19 @@
-schema_version: "1.0"
+schema_version: "1.1"
 view:
   view_id: "VIEW-DOMAIN-001"
   name: ""
-  view_type: "END_TO_END" # ROLE_LANDSCAPE | DEPARTMENT_LANDSCAPE | END_TO_END
+  view_type: "END_TO_END" # ROLE_LANDSCAPE | DEPARTMENT_LANDSCAPE | FUNCTION_LANDSCAPE | END_TO_END | PROCESS_DETAIL
   subject_role: null
   subject_department: null
+  subject_function: null
   purpose: ""
   level: "L0"
   process_refs: []
+  candidate_refs: []
   entry_point: null
   exit_point: null
   notes: null
 
 # View не владеет копиями процессов. process_refs всегда указывают
 # на канонические process IDs из registry/process_registry.yaml.
+# candidate_refs используются только для явно неканонизированных architecture candidates.
