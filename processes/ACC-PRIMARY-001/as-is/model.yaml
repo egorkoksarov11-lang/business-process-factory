@@ -214,19 +214,7 @@ flows:
     evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003"]
     applicability: "CONDITIONAL"
 
-decisions:
-  - decision_id: "D001"
-    after_step_ref: "A002"
-    question: "Кому должен быть направлен конкретный документ для решения о принятии к учету?"
-    branches:
-      - outcome: "Финансовый директор"
-        next_ref: "A005-FIN"
-      - outcome: "Ответственный за исполнение обязательств по договору/сделке"
-        next_ref: "A005-RESP"
-    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003", "FACT-ACC-PRIMARY-ASIS-005"]
-    evidence_class: "EXPLICIT"
-    applicability: "CONFIRMED_CURRENT"
-    notes: "Существование альтернативных адресатов подтверждено; критерий маршрутизации и конкретная должность внутри функциональной категории UNKNOWN. Фактический flow включает A003/A004 передачу и ожидание до шага адресата."
+decisions: []
 
 exceptions:
   - exception_id: "EX-ACC-PRIMARY-001"
@@ -302,4 +290,4 @@ interviewee_position_not_current_rule:
 metadata:
   created_at: "2026-08-22"
   updated_at: "2026-08-22"
-  notes: "Единый detailed parent model для ACC-PRIMARY-001. Steps насыщены subprocess_id CHECK → APPROVE → POST. TO-BE/оптимизация/BPMN не выполнялись."
+  notes: "Единый detailed parent model для ACC-PRIMARY-001. Steps насыщены subprocess_id CHECK → APPROVE → POST. Противоречивый D001 удален: фактический маршрут остается A002 → A003 → A004 → A005-FIN/A005-RESP, а критерий выбора согласующего остается UNKNOWN. TO-BE/оптимизация/BPMN не выполнялись."
