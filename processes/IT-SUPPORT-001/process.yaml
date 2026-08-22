@@ -1,4 +1,4 @@
-schema_version: "1.0"
+schema_version: "1.1"
 process:
   process_id: "IT-SUPPORT-001"
   name: "Техническая поддержка пользователей"
@@ -26,10 +26,10 @@ boundaries:
   next_processes: []
 
 architecture_boundary:
-  current_channels:
-    - PERSONAL_CABINET
-    - PHONE
-    - EMAIL
+  observed_channel_names:
+    - "Электронная почта"
+    - "Телефон"
+    - "Личный кабинет"
   channels_are_processes: false
   planned_capabilities:
     - capability: "Бот корпоративного мессенджера для подачи обращений"
@@ -67,13 +67,11 @@ operational_indicators:
     formal_sla_status: UNKNOWN
     note: "В транскрипте термин перед '30 минут' распознан неясно. Не считать формальным SLA без уточнения."
 
-versions: {as_is_version: "0.1", to_be_version: null}
+versions:
+  as_is_version: "0.1"
+  to_be_version: null
+
 as_is:
-  model_ref: "processes/IT-SUPPORT-001/as-is/model.yaml"
-  information_objects_ref: "processes/IT-SUPPORT-001/information/information_objects.yaml"
-  handoffs_ref: "processes/IT-SUPPORT-001/handoffs/handoffs.yaml"
-  clarifications_ref: "processes/IT-SUPPORT-001/analysis/clarifications.yaml"
-  issues_ref: "processes/IT-SUPPORT-001/analysis/issues.yaml"
   steps: []
   flows: []
   documents: []
@@ -81,21 +79,45 @@ as_is:
   rules: []
   exceptions: []
   observations: []
+
 issues: []
 changes: []
-to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+
+to_be:
+  steps: []
+  flows: []
+  documents: []
+  rules: []
+  exceptions: []
+  automation_options: []
+
+model_refs:
+  as_is_model: "processes/IT-SUPPORT-001/as-is/model.yaml"
+  information_objects: "processes/IT-SUPPORT-001/information/information_objects.yaml"
+  handoff_register: "processes/IT-SUPPORT-001/handoffs/handoffs.yaml"
+  clarification_register: "processes/IT-SUPPORT-001/analysis/clarifications.yaml"
+  issues: "processes/IT-SUPPORT-001/analysis/issues.yaml"
+  change_log: null
+  to_be_model: null
+
 open_questions:
   - "Кто является формальным владельцем L1 технической поддержки?"
   - "Что именно означает названный ориентир 30 минут: формальный SLA, внутренний target или другое правило?"
   - "Когда заявка считается закрытой в HelpDesk, если сотруднику сначала выдано временное решение?"
   - "Какие типы обращений требуют участия IT lead вместо сотрудников технической поддержки, кроме общей формулировки про архитектуру/безопасность?"
   - "Как фактически регистрируются телефонные обращения в HelpDesk и кто выполняет регистрацию?"
-delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+
+delivery:
+  diagrams: []
+  attachments: []
+  qa_status: null
+  client_package_status: null
+
 metadata:
   created_at: "2026-08-22"
   updated_at: "2026-08-22"
   notes: |
-    Agent 01 architecture preserved. Agent 02 added a Schema v1.1 detailed AS-IS layer for IT-SUPPORT-001.
+    Agent 01 architecture preserved. Agent 02 detailed AS-IS is stored in canonical Schema v1.1 model_refs.
     Parent AS-IS contains the three architectural L2 through subprocess_id; L2 boundaries are not redesigned.
     Status is CLARIFICATION_REQUIRED because phone-to-HelpDesk registration, closure after a temporary solution, and support-to-IT-lead handoff criteria remain blocking UNKNOWN.
-    Shared registry/dictionaries were intentionally not changed.
+    Shared registry/dictionaries were intentionally not changed. Canonical channel IDs remain pending Coordinator decision.
