@@ -1,0 +1,65 @@
+schema_version: "1.0"
+process:
+  process_id: "IT-SUPPORT-FINALIZE-001"
+  name: "Доработка временного решения до постоянного"
+  domain: "IT"
+  level: "L2"
+  status: "ARCHITECTURE_READY"
+  parent_process: "IT-SUPPORT-001"
+  owner_role: "ROLE-IT-SUPPORT-EXT-001"
+  participants:
+    - ROLE-IT-SUPPORT-EXT-001
+    - ROLE-INTERNAL-USER-001
+    - ROLE-IT-LEAD-EXT-001
+  views:
+    - VIEW-IT-LEAD-ROLE-001
+    - VIEW-IT-FUNCTION-001
+
+boundaries:
+  trigger: "По обращению ранее выдано временное решение, позволяющее пользователю продолжить работу"
+  input:
+    - "Заявка с временным решением"
+    - "Информация о временном обходном варианте"
+  previous_processes: [IT-SUPPORT-RESOLVE-001]
+  business_result: "Временное решение доработано до более постоянного решения, чтобы исходный вопрос не требовал повторного временного обхода"
+  consumer: "Внутренний сотрудник/пользователь и IT support"
+  next_processes: []
+
+parent_exit:
+  parent_process: IT-SUPPORT-001
+  outcome: "Постоянное решение после временного обхода"
+  parent_completion_relation: UNKNOWN
+  note: "Источник не говорит, когда HelpDesk-заявка формально закрывается относительно временного решения и последующей доработки."
+
+architecture_scope:
+  applicability: CONDITIONAL
+  condition: "В основном L2 выдано только временное решение"
+  included:
+    - "Последующая доработка решения"
+    - "Поиск варианта, уменьшающего вероятность повторения того же вопроса"
+  not_asserted:
+    - "Root-cause analysis как формальный метод"
+    - "Problem management как отдельный процесс"
+    - "Формальный срок завершения"
+
+sources:
+  source_refs: [SRC-IT-LEAD-001]
+  evidence_refs: ["sources/evidence/SRC-IT-LEAD-001_architecture.yaml"]
+architecture_evidence:
+  - source_ref: SRC-IT-LEAD-001
+    evidence_class: EXPLICIT
+    statement: "Если решение временное, заявка в ближайшее возможное время доделывается вплоть до поиска решения, чтобы вопрос больше не возникал."
+
+versions: {as_is_version: null, to_be_version: null}
+as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+issues: []
+changes: []
+to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+open_questions:
+  - "Является ли эта доработка той же HelpDesk-заявкой или отдельной связанной задачей?"
+  - "Каким событием считается окончательное завершение обращения после временного решения?"
+delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Agent 01 architecture only; L2 выделен как условный самостоятельный хвост одного L1, а не новый L1."
