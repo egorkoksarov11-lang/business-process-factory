@@ -1,0 +1,190 @@
+schema_version: "1.0"
+source:
+  source_id: "SRC-IT-LEAD-001"
+  title: "Интервью IT lead — архитектурные факты"
+  source_type: "INTERVIEW"
+  interviewee_role: "ROLE-IT-LEAD-EXT-001"
+  interviewee_name: null
+  date: null
+  file_ref: "sources/raw/it/SRC-IT-LEAD-001_it_lead_interview.txt"
+
+facts:
+  - fact_id: FACT-IT-LEAD-001
+    process_refs: [IT-SUPPORT-001, CAND-IT-ARCH-001]
+    statement: "Интервьюируемый ранее был штатным IT-сотрудником, с 2021 года руководит собственной IT-компанией и продолжает участвовать как внешний специалист с высокой вовлеченностью; его сотрудники участвуют в технической поддержке компании."
+    evidence_class: EXPLICIT
+    source_locator: "начало интервью, строки 1–11"
+    role_ref: ROLE-IT-LEAD-EXT-001
+    object_refs: [ROLE-IT-SUPPORT-EXT-001]
+    conflicts_with: []
+    notes: "Официальное внутреннее подразделение и штатная должность не установлены."
+
+  - fact_id: FACT-IT-LEAD-002
+    process_refs: [IT-SUPPORT-001, CAND-IT-ARCH-001]
+    statement: "Интервьюируемый выделяет два крупных направления своей работы: архитектурные решения с уклоном на безопасность и техническую поддержку."
+    evidence_class: EXPLICIT
+    source_locator: "строки 22–27 и финальный блок интервью"
+    role_ref: ROLE-IT-LEAD-EXT-001
+    object_refs: []
+    conflicts_with: []
+    notes: "Это исходная классификация рассказчика; Agent 01 проверяет ее boundary-test, а не принимает автоматически как два канонических L1."
+
+  - fact_id: FACT-IT-LEAD-003
+    process_refs: [CAND-IT-ARCH-001]
+    statement: "Архитектурные/безопасностные изменения нередко инициируются самим IT lead на основе опыта, наблюдения за инфраструктурой и понимания потребностей других функций; на нем также лежит реализация найденных решений."
+    evidence_class: EXPLICIT
+    source_locator: "архитектурный блок, строки 28–58"
+    role_ref: ROLE-IT-LEAD-EXT-001
+    object_refs: []
+    conflicts_with: []
+    notes: "Источник не дает устойчивого единого trigger/result/consumer для всего контура."
+
+  - fact_id: FACT-IT-LEAD-004
+    process_refs: [CAND-IT-ARCH-001]
+    statement: "Архитектурное направление описано интервьюируемым как очень большое и абстрактное; для детального разбора требуется отдельное обсуждение."
+    evidence_class: EXPLICIT
+    source_locator: "финальный блок интервью"
+    role_ref: ROLE-IT-LEAD-EXT-001
+    object_refs: []
+    conflicts_with: []
+    notes: "BOUNDARY_UNKNOWN: не фиксировать весь контур как готовый L1 без дополнительного источника."
+
+  - fact_id: FACT-IT-LEAD-005
+    process_refs: [IT-SUPPORT-001, IT-SUPPORT-INTAKE-001]
+    statement: "Любой внутренний сотрудник может обратиться в техническую поддержку через три действующих канала: личный кабинет, телефон или электронную почту; email назван самым частым каналом."
+    evidence_class: EXPLICIT
+    source_locator: "техническая поддержка, строки 59–83"
+    role_ref: ROLE-INTERNAL-USER-001
+    object_refs: [SYS-IT-HELPDESK-001]
+    conflicts_with: []
+    notes: "Каналы не являются отдельными процессами. Личный кабинет классифицирован как интерфейс/канал к support, а не самостоятельная система без дополнительных доказательств."
+
+  - fact_id: FACT-IT-LEAD-006
+    process_refs: [IT-SUPPORT-001]
+    statement: "Бот для подачи обращений из корпоративного мессенджера находится в разработке и пока не является текущей практикой."
+    evidence_class: EXPLICIT
+    source_locator: "техническая поддержка, строки 75–82"
+    role_ref: ROLE-IT-LEAD-EXT-001
+    object_refs: []
+    conflicts_with: []
+    notes: "PLANNED_CAPABILITY; не включать в текущий AS-IS."
+
+  - fact_id: FACT-IT-LEAD-007
+    process_refs: [IT-SUPPORT-INTAKE-001]
+    statement: "Обращение поступает в централизованную систему HelpDesk, где его видят сотрудники технической поддержки; заявке присваивается порядковый номер, а при email-обращении отправляется подтверждение приема."
+    evidence_class: EXPLICIT
+    source_locator: "техническая поддержка, строки 84–94"
+    role_ref: ROLE-IT-SUPPORT-EXT-001
+    object_refs: [SYS-IT-HELPDESK-001]
+    conflicts_with: []
+    notes: null
+
+  - fact_id: FACT-IT-LEAD-008
+    process_refs: [IT-SUPPORT-RESOLVE-001]
+    statement: "После поступления заявки сотрудники технической поддержки берут ее в работу и обрабатывают."
+    evidence_class: EXPLICIT
+    source_locator: "строки 93–100 и 111–114"
+    role_ref: ROLE-IT-SUPPORT-EXT-001
+    object_refs: [SYS-IT-HELPDESK-001]
+    conflicts_with: []
+    notes: null
+
+  - fact_id: FACT-IT-LEAD-009
+    process_refs: [IT-SUPPORT-RESOLVE-001]
+    statement: "В интервью назван ориентир 30 минут и фактическое наблюдение по аналитике 10–15 минут для реакции/взятия обращения в работу, но формальный статус SLA однозначно не подтвержден."
+    evidence_class: EXPLICIT
+    source_locator: "строки 94–100"
+    role_ref: ROLE-IT-LEAD-EXT-001
+    object_refs: [SYS-IT-HELPDESK-001]
+    conflicts_with: []
+    notes: "Термин в транскрипте распознан неясно; 30 минут нельзя автоматически нормализовать как формальный SLA."
+
+  - fact_id: FACT-IT-LEAD-010
+    process_refs: [IT-SUPPORT-RESOLVE-001, IT-SUPPORT-FINALIZE-001]
+    statement: "Результатом обработки может быть временное решение, позволяющее сотруднику продолжить работу, либо постоянное решение; временное решение впоследствии дорабатывается, когда это возможно."
+    evidence_class: EXPLICIT
+    source_locator: "строки 111–119"
+    role_ref: ROLE-IT-SUPPORT-EXT-001
+    object_refs: []
+    conflicts_with: []
+    notes: "Условный L2 follow-up выделен только для случая временного решения."
+
+  - fact_id: FACT-IT-LEAD-011
+    process_refs: [IT-SUPPORT-001]
+    statement: "Повторяющиеся одинаковые проблемы встречаются часто; редкая дополнительная проблема — несколько сотрудников могут независимо создать дублирующие заявки по одной ситуации."
+    evidence_class: EXPLICIT
+    source_locator: "строки 120–128"
+    role_ref: ROLE-IT-LEAD-EXT-001
+    object_refs: [SYS-IT-HELPDESK-001]
+    conflicts_with: []
+    notes: "Это issue/problem evidence, а не отдельные процессы."
+
+  - fact_id: FACT-IT-LEAD-012
+    process_refs: [CAND-IT-GOV-001, IT-SUPPORT-001]
+    statement: "IT lead пытался создавать и внедрять регламенты по обращению в поддержку и безопасности, но сталкивался с тем, что сотрудники их не читают либо повторно задают те же вопросы."
+    evidence_class: EXPLICIT
+    source_locator: "строки 130–146"
+    role_ref: ROLE-IT-LEAD-EXT-001
+    object_refs: []
+    conflicts_with: []
+    notes: "Governance/problem evidence; отдельный L1 на каждый регламент или правило не создается."
+
+  - fact_id: FACT-IT-LEAD-013
+    process_refs: [XDOM-HR-IT-001]
+    statement: "IT описывал общий процесс трудоустройства и увольнения с точки зрения компании и пытался его внедрить, но общий процесс не прижился."
+    evidence_class: EXPLICIT
+    source_locator: "строки 147–164"
+    role_ref: ROLE-IT-LEAD-EXT-001
+    object_refs: []
+    conflicts_with: []
+    notes: "ATTEMPTED_NOT_ADOPTED; не трактовать как действующий AS-IS HR-HIRE/HR-TERM."
+
+  - fact_id: FACT-IT-LEAD-014
+    process_refs: [XDOM-HR-IT-001]
+    statement: "Электронное закрепление/открепление корпоративной техники актами было внедрено; интервьюируемый говорит, что электронные акты вроде бы прижились и работали, в том числе для приема/сдачи техники и фиксации ее состояния."
+    evidence_class: EXPLICIT
+    source_locator: "строки 151–159"
+    role_ref: ROLE-IT-LEAD-EXT-001
+    object_refs: []
+    conflicts_with: []
+    notes: "ADOPTED/WORKING с оговоркой формулировки рассказчика; статус не смешивать со статусом общего процесса приема/увольнения."
+
+  - fact_id: FACT-IT-LEAD-015
+    process_refs: [XDOM-HR-IT-001]
+    statement: "Ответственная за уведомления/координацию роль в общем процессе была неустойчива: интервьюируемый называет секретаря либо отдел кадров и прямо отмечает неясность такого распределения."
+    evidence_class: EXPLICIT
+    source_locator: "строки 160–167"
+    role_ref: null
+    object_refs: [ROLE-HR-UNKNOWN-001, ROLE-SECRETARY-UNKNOWN-001]
+    conflicts_with: []
+    notes: "ROLE_UNKNOWN; не назначать ответственность HR или секретарю без общего cross-domain synthesis."
+
+  - fact_id: FACT-IT-LEAD-016
+    process_refs: [XDOM-HR-IT-001]
+    statement: "При приеме IT могли не уведомить о необходимости подготовить доступ; сотрудник выходил, и вопрос решался непосредственно в момент выхода."
+    evidence_class: EXPLICIT
+    source_locator: "строки 168–171"
+    role_ref: ROLE-IT-LEAD-EXT-001
+    object_refs: []
+    conflicts_with: []
+    notes: "CURRENT_PRACTICE_UNSTABLE; cross-domain handoff issue."
+
+  - fact_id: FACT-IT-LEAD-017
+    process_refs: [XDOM-HR-IT-001]
+    statement: "При увольнении IT могли не уведомить, из-за чего доступы бывшего сотрудника оставались активными до момента, когда IT lead сам замечал отсутствие сотрудника."
+    evidence_class: EXPLICIT
+    source_locator: "строки 171–176"
+    role_ref: ROLE-IT-LEAD-EXT-001
+    object_refs: []
+    conflicts_with: []
+    notes: "CURRENT_PRACTICE_UNSTABLE; значимый cross-domain access-revocation risk."
+
+  - fact_id: FACT-IT-LEAD-018
+    process_refs: [IT-SUPPORT-001, CAND-IT-ARCH-001]
+    statement: "Сотрудники могут напрямую написать IT lead в корпоративном мессенджере; мелкие проблемы он перенаправляет в техническую поддержку, а по архитектуре/безопасности подключается сам."
+    evidence_class: EXPLICIT
+    source_locator: "строки 101–109"
+    role_ref: ROLE-IT-LEAD-EXT-001
+    object_refs: []
+    conflicts_with: []
+    notes: "Корпоративный мессенджер здесь — коммуникационный канал/точка маршрутизации, а не отдельный бизнес-процесс."
