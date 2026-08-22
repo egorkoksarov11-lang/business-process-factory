@@ -1,0 +1,56 @@
+schema_version: "1.0"
+process:
+  process_id: "ACC-PRIMARY-APPROVE-001"
+  name: "Согласование принятия первичного документа к учету"
+  domain: "ACC"
+  level: "L2"
+  status: "ARCHITECTURE_READY"
+  parent_process: "ACC-PRIMARY-001"
+  owner_role: UNKNOWN
+  participants:
+    - ROLE-FIN-CHIEF-ACCOUNTANT-001
+    - ROLE-FIN-DIRECTOR-001
+    - ROLE-CEO-001
+  views: []
+boundaries:
+  trigger: "Проверенный документ готов к решению о принятии к учету"
+  input:
+    - "Проверенный первичный документ"
+  previous_processes: [ACC-PRIMARY-CHECK-001]
+  business_result: "Получена резолюция/решение о принятии документа к учету либо документ остается в ожидании решения; точный артефакт решения UNKNOWN"
+  consumer: "ACC-PRIMARY-POST-001 при положительном решении"
+  next_processes: [ACC-PRIMARY-POST-001]
+current_role_evidence:
+  evidence_class: EXPLICIT
+  confirmed_decision_roles:
+    - "Руководитель"
+    - "Финансовый директор"
+interviewee_position_not_current_rule:
+  evidence_class: EXPLICIT
+  statement: "Интервьюируемая считает, что инициатор договора/сделки должен подтверждать фактическое исполнение (поставка/услуга) до принятия документов к учету."
+  as_is_status: NOT_CONFIRMED
+sources:
+  source_refs: [SRC-ACC-CHIEF-001]
+  evidence_refs: ["sources/evidence/SRC-ACC-CHIEF-001_architecture.yaml"]
+architecture_evidence:
+  - source_ref: SRC-ACC-CHIEF-001
+    evidence_class: EXPLICIT
+    statement: "После проверки документы направляются руководителю либо Финансовому директору; после их решения Главный бухгалтер принимает документ к учету."
+  - source_ref: SRC-ACC-CHIEF-001
+    evidence_class: EXPLICIT
+    statement: "Ожидание резолюции по документам может задерживать своевременное отражение в учете."
+versions: {as_is_version: null, to_be_version: null}
+as_is: {steps: [], flows: [], documents: [], systems: [], rules: [], exceptions: [], observations: []}
+issues: []
+changes: []
+to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
+open_questions:
+  - "Кто именно является согласующим для каждого типа документа/договора?"
+  - "Обязательно ли подтверждение инициатора договора и действует ли оно сейчас?"
+  - "Как обрабатывается отсутствие ответа и кто вправе принять решение самостоятельно?"
+  - "Как фиксируется отказ или возврат документа?"
+delivery: {diagrams: [], attachments: [], qa_status: null, client_package_status: null}
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Agent 01 L2 boundary; interviewee recommendation preserved separately from current-role evidence."
