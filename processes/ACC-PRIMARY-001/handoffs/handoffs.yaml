@@ -101,32 +101,7 @@ handoffs:
     ambiguity: "Конкретная должность, канал и форма резолюции UNKNOWN"
     notes: null
 
-  - handoff_id: "HO-ACC-PRIMARY-005"
-    handoff_type: "PROCESS_TO_PROCESS"
-    from_process_ref: "ACC-PRIMARY-001"
-    from_subprocess_ref: "ACC-PRIMARY-APPROVE-001"
-    from_role_ref: null
-    to_process_ref: "ACC-PRIMARY-001"
-    to_subprocess_ref: "ACC-PRIMARY-POST-001"
-    to_role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
-    trigger_or_condition: "Получено положительное решение о принятии документа к учету"
-    payload_refs: ["IO-ACC-PRIMARY-001", "IO-ACC-PRIMARY-005"]
-    communication_refs: []
-    system_refs: ["SYS-1C-ACCOUNTING-001"]
-    channel_refs: []
-    acceptance_or_result: "Главный бухгалтер принимает документ к учету и отражает его в 1С"
-    acknowledgement_required: "NO"
-    timing:
-      deadline: null
-      expected_wait: null
-      sla: null
-    applicability: "CONFIRMED_CURRENT"
-    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003"]
-    evidence_class: "EXPLICIT"
-    ambiguity: null
-    notes: "Negative/reject branch after a decision not to accept remains UNKNOWN and is not routed to POST."
-
 metadata:
   created_at: "2026-08-22"
   updated_at: "2026-08-22"
-  notes: "Handoffs model both outbound approval transfers and return of the decision. Waits are explicit; formal SLA is not invented."
+  notes: "Handoffs отражают только фактические role-to-role передачи документа на согласование и возврат решения. Отдельный synthetic L2 APPROVE → POST handoff удален как дублирующий; SYS-1C-ACCOUNTING-001 остается системой выполнения A006, а не участником handoff."
