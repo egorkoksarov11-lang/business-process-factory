@@ -1,11 +1,43 @@
 schema_version: "1.0"
-systems: []
+systems:
+  - system_id: SYS-1C-ACCOUNTING-001
+    canonical_name: "1С (учетная программа)"
+    aliases:
+      - "1С"
+      - "программа учета 1С"
+    category: "ACCOUNTING"
+    source_refs: [SRC-ACC-CHIEF-001]
+    notes: "Конкретная конфигурация 1С источником не названа и не угадывается."
 
-# Пример:
-# - system_id: SYS-1C-ZUP
-#   canonical_name: "1С: Зарплата и управление персоналом"
-#   aliases:
-#     - "1С ЗУП"
-#     - "1С зарплата"
-#   category: "HRIS"
-#   source_refs: []
+  - system_id: SYS-DIADOC-001
+    canonical_name: "Диадок"
+    aliases:
+      - "диадог"
+    category: "EDO"
+    source_refs: [SRC-ACC-CHIEF-001]
+    notes: "В транскрипте встречается распознанное 'диадог'; нормализация бренда выполнена только на уровне dictionary alias, сырой источник не исправлен."
+
+  - system_id: SYS-SBIS-001
+    canonical_name: "СБИС"
+    aliases: []
+    category: "EDO"
+    source_refs: [SRC-ACC-CHIEF-001]
+    notes: "Используется как одна из электронных платформ документооборота; связь с конкретными формами отчетности не предполагается без подтверждения."
+
+  - system_id: SYS-REMOTE-DESKTOP-001
+    canonical_name: "Удаленный рабочий стол"
+    aliases:
+      - "удаленный рабочий стол"
+    category: "REMOTE_ACCESS"
+    source_refs: [SRC-ACC-CHIEF-001]
+    notes: "Среда доступа к серверам юридических лиц; не бизнес-процесс."
+
+channels_not_registered_as_systems:
+  - "Электронная почта"
+  - "Телефон"
+  - "WhatsApp"
+  - "Корпоративный мессенджер"
+external_organizations_not_registered_as_systems:
+  - "Налоговый орган"
+  - "ФСС/социальный фонд — точное наименование по сырому транскрипту не нормализовано"
+  - "Иные контролирующие органы"
