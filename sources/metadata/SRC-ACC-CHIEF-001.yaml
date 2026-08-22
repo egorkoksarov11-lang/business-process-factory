@@ -36,8 +36,10 @@ provenance:
 notes:
   - "Источник хранится без смысловой корректировки распознавания."
   - "Перенос файлов между серверами не канонизирован как самостоятельный бизнес-процесс: boundary-test не выявил самостоятельного business result/consumer; сохранен как cross-process technical constraint XISS-ACC-TECH-001."
+  - "После bounded cleanup банковский блок также снят с canonical L1: source evidence подтверждает получение выписок и загрузку в 1С, но не независимый бизнес-результат L1 без дополнительного бухгалтерского вывода. Сохранен как CAND-ACC-BANK-001."
   - "Источник содержит междоменные связи с HR, IT, financial management и security. В этой ветке чужие HR/IT process packages, views и mappings не изменялись."
-  - "Позиция интервьюируемой о том, что инициатор договора/сделки должен подтверждать фактическое исполнение до принятия первички к учету, сохранена как мнение/кандидат правила, а не как подтвержденный текущий AS-IS."
+  - "Для ACC-PRIMARY-001 слово 'руководитель' не нормализуется как Генеральный директор. Функциональные формулировки руководитель/руководитель проекта/иное ответственное лицо нормализованы как ROLE-CONTRACT-OBLIGATION-RESP-001."
+  - "Позиция интервьюируемой о том, что инициатор договора/сделки должен подтверждать фактическое исполнение до принятия первички к учету, сохранена как мнение/кандидат правила, а не как подтвержденный текущий AS-IS или текущая роль."
 source_quality_issues:
   - issue_id: SQI-ACC-001
     fragment: "диадог"
@@ -52,7 +54,6 @@ architecture:
   evidence_ref: "sources/evidence/SRC-ACC-CHIEF-001_architecture.yaml"
   canonical_l1_refs:
     - ACC-REG-REQ-001
-    - ACC-BANK-001
     - ACC-MGMT-REQ-001
     - ACC-PRIMARY-001
     - ACC-REPORTING-001
@@ -69,6 +70,7 @@ architecture:
     - ACC-PAYROLL-PAY-001
     - ACC-PAYROLL-REPORT-001
   architecture_candidates:
+    - CAND-ACC-BANK-001
     - CAND-ACC-INBOX-001
     - CAND-ACC-FOUNDING-ARCHIVE-001
   cross_process_problems:
@@ -81,6 +83,8 @@ architecture:
     - XISS-ACC-FOUNDING-DOC-001
   role_landscape_views:
     - VIEW-ACC-CHIEF-ROLE-001
+  function_landscape_views:
+    - VIEW-ACC-FUNCTION-001
   end_to_end_views:
     - VIEW-ACC-ACCOUNT-TO-REPORT-E2E-001
   systems_observed:
