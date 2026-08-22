@@ -1,0 +1,641 @@
+schema_version: "1.1"
+process_id: "HR-HIRE-001"
+
+information_objects:
+  - information_id: IO-HIRE-001
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Электронное сообщение с данными для приема"
+    object_type: MESSAGE
+    document_class: null
+    lifecycle_role: HANDOFF_PAYLOAD
+    state_in: null
+    state_out: "received_by_kdp"
+    created_by_role_ref: ROLE-HR-DIRECTOR-001
+    consumed_by_role_refs: [ROLE-HR-KDP-001]
+    related_step_refs: [A001]
+    system_refs: []
+    channel_refs: []
+    observed_channel_names: ["Telegram", "Корпоративный мессенджер", "Электронная почта"]
+    storage_location: null
+    format: "Электронное сообщение"
+    required: YES
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-HIRE-001]
+    evidence_class: EXPLICIT
+    notes: "Точный payload сообщения не раскрыт; canonical channel IDs отсутствуют."
+
+  - information_id: IO-HIRE-002
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Комплект документов для приема"
+    object_type: DATASET
+    document_class: null
+    lifecycle_role: INPUT
+    state_in: "received_or_available"
+    state_out: "checked_complete_or_incomplete"
+    created_by_role_ref: null
+    consumed_by_role_refs: [ROLE-HR-KDP-001]
+    related_step_refs: [A002, A004, A005]
+    system_refs: []
+    channel_refs: []
+    storage_location: null
+    format: null
+    required: YES
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-HIRE-002]
+    evidence_class: EXPLICIT
+    notes: "Источник говорит об определенном списке необходимых документов, но не дает полного перечня. Не создавать отсутствующий шаблон/чек-лист."
+
+  - information_id: IO-HIRE-003
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Запрос недостающих документов"
+    object_type: REQUEST
+    document_class: null
+    lifecycle_role: OUTPUT
+    state_in: null
+    state_out: "sent"
+    created_by_role_ref: ROLE-HR-KDP-001
+    consumed_by_role_refs: [ROLE-EMPLOYEE-001]
+    related_step_refs: [A003, A004]
+    system_refs: []
+    channel_refs: []
+    storage_location: null
+    format: null
+    required: UNKNOWN
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-HIRE-002]
+    evidence_class: EXPLICIT
+    notes: "Условный объект: возникает только при неполном комплекте. Канал запроса и срок ответа не указаны."
+
+  - information_id: IO-HIRE-004
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Недостающие документы, предоставленные сотрудником"
+    object_type: DATASET
+    document_class: null
+    lifecycle_role: HANDOFF_PAYLOAD
+    state_in: "missing"
+    state_out: "received"
+    created_by_role_ref: ROLE-EMPLOYEE-001
+    consumed_by_role_refs: [ROLE-HR-KDP-001]
+    related_step_refs: [A004]
+    system_refs: []
+    channel_refs: []
+    storage_location: null
+    format: null
+    required: UNKNOWN
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-HIRE-002]
+    evidence_class: EXPLICIT
+    notes: "Условный объект: состав зависит от того, чего не хватало в первоначальном комплекте."
+
+  - information_id: IO-HIRE-005
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Персональные, идентификационные, кадровые и платежные данные сотрудника"
+    object_type: DATASET
+    document_class: null
+    lifecycle_role: INPUT
+    state_in: "available_from_documents_or_employee"
+    state_out: "entered_into_1c"
+    created_by_role_ref: null
+    consumed_by_role_refs: [ROLE-HR-KDP-001]
+    related_step_refs: [A005, A006]
+    system_refs: [SYS-1C-HR-001]
+    channel_refs: []
+    storage_location: null
+    format: null
+    required: YES
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-HIRE-003, FACT-HIRE-004]
+    evidence_class: EXPLICIT
+    components:
+      personal_identity: ["ФИО", "Дата рождения", "ИНН", "СНИЛС", "Пол", "Место рождения", "Гражданство", "Вид документа", "Серия/номер", "Кем выдан", "Дата выдачи", "Код подразделения", "Адреса", "Телефоны", "Email при наличии"]
+      employment: ["Образование", "Специальность", "Периоды трудовой деятельности", "Состав семьи", "Подразделение", "Вид занятости", "Оклад", "График работы"]
+      payment: ["Банковские реквизиты для перечисления заработной платы"]
+    notes: "Это нормализация явно перечисленных полей; не означает наличие отдельной анкеты/формы."
+
+  - information_id: IO-HIRE-006
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Запись физического лица в 1С"
+    object_type: RECORD
+    document_class: null
+    lifecycle_role: OUTPUT
+    state_in: null
+    state_out: "created"
+    created_by_role_ref: ROLE-HR-KDP-001
+    consumed_by_role_refs: [ROLE-HR-KDP-001]
+    related_step_refs: [A005, A006]
+    system_refs: [SYS-1C-HR-001]
+    channel_refs: []
+    storage_location: "1С: Зарплата и управление персоналом"
+    format: "Системная запись"
+    required: YES
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-HIRE-003]
+    evidence_class: EXPLICIT
+    notes: null
+
+  - information_id: IO-HIRE-007
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Запись сотрудника и событие приема в 1С"
+    object_type: RECORD
+    document_class: null
+    lifecycle_role: OUTPUT
+    state_in: null
+    state_out: "hire_registered"
+    created_by_role_ref: ROLE-HR-KDP-001
+    consumed_by_role_refs: [ROLE-HR-KDP-001]
+    related_step_refs: [A006, A015, A018, A023, A026]
+    system_refs: [SYS-1C-HR-001]
+    channel_refs: []
+    storage_location: "1С: Зарплата и управление персоналом"
+    format: "Системная запись"
+    required: YES
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-HIRE-004]
+    evidence_class: EXPLICIT
+    notes: "Дата приема по интервью ставится текущей датой."
+
+  - information_id: IO-HIRE-008
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Комплект локальных нормативных актов для ознакомления и подписания"
+    object_type: DATASET
+    document_class: null
+    lifecycle_role: SUPPORTING
+    state_in: "existing_internal"
+    state_out: "provided_for_acknowledgement"
+    created_by_role_ref: null
+    consumed_by_role_refs: [ROLE-EMPLOYEE-001]
+    related_step_refs: [A007]
+    system_refs: []
+    channel_refs: []
+    storage_location: null
+    format: null
+    required: YES
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-HIRE-005]
+    evidence_class: EXPLICIT
+    components:
+      - "Правила внутреннего трудового распорядка (ПВТР)"
+      - "Положение об оплате труда"
+      - "Положение о премировании"
+      - "Положение о работе с персональными данными"
+      - "Положение о защите персональных данных"
+    notes: "Агрегированный object set; отдельные шаблоны не создаются."
+
+  - information_id: IO-HIRE-009
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Должностная инструкция"
+    object_type: DOCUMENT
+    document_class: EXISTING_INTERNAL
+    lifecycle_role: SUPPORTING
+    state_in: "existing"
+    state_out: "provided_for_acknowledgement"
+    created_by_role_ref: null
+    consumed_by_role_refs: [ROLE-EMPLOYEE-001]
+    related_step_refs: [A008]
+    system_refs: []
+    channel_refs: []
+    storage_location: null
+    format: null
+    required: YES
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-HIRE-005]
+    evidence_class: EXPLICIT
+    notes: "Источник подтверждает ознакомление, но не описывает отдельную форму подтверждения ознакомления."
+
+  - information_id: IO-HIRE-010
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Трудовой договор в двух экземплярах"
+    object_type: DOCUMENT
+    document_class: TRANSACTIONAL
+    lifecycle_role: OUTPUT
+    state_in: "prepared_for_review"
+    state_out: "signed_by_employee_and_ceo; one_copy_hr_one_copy_employee"
+    created_by_role_ref: null
+    consumed_by_role_refs: [ROLE-EMPLOYEE-001, ROLE-CEO-001, ROLE-HR-KDP-001]
+    related_step_refs: [A009, A010, A011, A012, A013]
+    system_refs: []
+    channel_refs: []
+    storage_location: "Один экземпляр остается в отделе кадров; точное место хранения UNKNOWN"
+    format: "2 экземпляра"
+    required: YES
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-HIRE-006]
+    evidence_class: EXPLICIT
+    notes: "Поведение при замечаниях к договору не раскрыто."
+
+  - information_id: IO-HIRE-011
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Приказ о приеме"
+    object_type: DOCUMENT
+    document_class: TRANSACTIONAL
+    lifecycle_role: OUTPUT
+    state_in: "prepared"
+    state_out: "issued_to_employee_for_signature"
+    created_by_role_ref: null
+    consumed_by_role_refs: [ROLE-EMPLOYEE-001]
+    related_step_refs: [A014]
+    system_refs: []
+    channel_refs: []
+    storage_location: null
+    format: null
+    required: YES
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-HIRE-007]
+    evidence_class: EXPLICIT
+    notes: "Факт возврата подписанного экземпляра источником не описан отдельным утверждением."
+
+  - information_id: IO-HIRE-012
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Карточка Т-2"
+    object_type: DOCUMENT
+    document_class: TRANSACTIONAL
+    lifecycle_role: OUTPUT
+    state_in: null
+    state_out: "formed_in_1c"
+    created_by_role_ref: ROLE-HR-KDP-001
+    consumed_by_role_refs: [ROLE-HR-KDP-001]
+    related_step_refs: [A015]
+    system_refs: [SYS-1C-HR-001]
+    channel_refs: []
+    storage_location: "1С: Зарплата и управление персоналом"
+    format: null
+    required: UNKNOWN
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-HIRE-007]
+    evidence_class: EXPLICIT
+    notes: "Источник подтверждает формирование Т-2; не делает отдельного заявления о текущей обязательности формы."
+
+  - information_id: IO-HIRE-013
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Согласие на обработку персональных данных"
+    object_type: DOCUMENT
+    document_class: TRANSACTIONAL
+    lifecycle_role: OUTPUT
+    state_in: null
+    state_out: "obtained_from_employee"
+    created_by_role_ref: ROLE-EMPLOYEE-001
+    consumed_by_role_refs: [ROLE-HR-KDP-001]
+    related_step_refs: [A016]
+    system_refs: []
+    channel_refs: []
+    storage_location: null
+    format: null
+    required: YES
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-HIRE-007]
+    evidence_class: EXPLICIT
+    notes: null
+
+  - information_id: IO-HIRE-014
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Заявление о перечислении заработной платы по предоставленным банковским реквизитам"
+    object_type: DOCUMENT
+    document_class: TRANSACTIONAL
+    lifecycle_role: OUTPUT
+    state_in: null
+    state_out: "obtained_from_employee"
+    created_by_role_ref: ROLE-EMPLOYEE-001
+    consumed_by_role_refs: [ROLE-HR-KDP-001]
+    related_step_refs: [A016]
+    system_refs: []
+    channel_refs: []
+    storage_location: null
+    format: null
+    required: YES
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-HIRE-007]
+    evidence_class: EXPLICIT
+    notes: null
+
+  - information_id: IO-HIRE-015
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Документ о конфиденциальности/коммерческой тайне"
+    object_type: DOCUMENT
+    document_class: TRANSACTIONAL
+    lifecycle_role: OUTPUT
+    state_in: null
+    state_out: "signed"
+    created_by_role_ref: null
+    consumed_by_role_refs: []
+    related_step_refs: [A017]
+    system_refs: []
+    channel_refs: []
+    storage_location: null
+    format: null
+    required: UNKNOWN
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-HIRE-007]
+    evidence_class: EXPLICIT
+    notes: "Транскрипт не позволяет однозначно решить, идет ли речь о соглашении о конфиденциальности, положении о коммерческой тайне либо об обоих объектах. Не нормализовано молча."
+
+  - information_id: IO-SFR-001
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Сведения/отчетность о приеме для отправки в СФР"
+    object_type: REPORT
+    document_class: TRANSACTIONAL
+    lifecycle_role: HANDOFF_PAYLOAD
+    state_in: null
+    state_out: "formed_in_1c_then_sent"
+    created_by_role_ref: ROLE-HR-KDP-001
+    consumed_by_role_refs: [ROLE-FIN-CHIEF-ACCOUNTANT-001]
+    related_step_refs: [A018, A019, A020, A021]
+    system_refs: [SYS-1C-HR-001]
+    channel_refs: []
+    storage_location: "1С: Зарплата и управление персоналом до передачи на отправку"
+    format: null
+    required: YES
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-HIRE-008, FACT-HIRE-REF-002]
+    evidence_class: CONFLICT
+    notes: "CONFLICT только по границе подготовки: интервью КДП говорит, что формирует КДП; reference-модель UNKNOWN lifecycle размещает весь block у Главного бухгалтера."
+
+  - information_id: IO-SFR-002
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Сообщение Главному бухгалтеру о готовности отчета СФР и необходимости отправки"
+    object_type: MESSAGE
+    document_class: null
+    lifecycle_role: HANDOFF_PAYLOAD
+    state_in: null
+    state_out: "delivered_to_chief_accountant"
+    created_by_role_ref: ROLE-HR-KDP-001
+    consumed_by_role_refs: [ROLE-FIN-CHIEF-ACCOUNTANT-001]
+    related_step_refs: [A019, A020]
+    system_refs: []
+    channel_refs: []
+    observed_channel_names: ["Лично", "Корпоративный мессенджер"]
+    storage_location: null
+    format: "Сообщение/устное уведомление"
+    required: YES
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-HIRE-008]
+    evidence_class: EXPLICIT
+    notes: "Канал не является самим сообщением."
+
+  - information_id: IO-SFR-003
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Подтверждение Главного бухгалтера, что отчет СФР сдан"
+    object_type: MESSAGE
+    document_class: null
+    lifecycle_role: CONFIRMATION
+    state_in: null
+    state_out: "received_by_kdp"
+    created_by_role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    consumed_by_role_refs: [ROLE-HR-KDP-001]
+    related_step_refs: [A021]
+    system_refs: []
+    channel_refs: []
+    observed_channel_names: ["Лично", "Корпоративный мессенджер"]
+    storage_location: null
+    format: "Сообщение/уведомление"
+    required: YES
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-HIRE-008]
+    evidence_class: EXPLICIT
+    notes: "Это подтвержденный внутренний факт коммуникации. Внешняя квитанция/receipt СФР источником не названа."
+
+  - information_id: IO-MIL-001
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Документы и сведения воинского учета сотрудника"
+    object_type: DATASET
+    document_class: null
+    lifecycle_role: INPUT
+    state_in: "provided_or_available"
+    state_out: "used_for_1c_and_form10"
+    created_by_role_ref: ROLE-EMPLOYEE-001
+    consumed_by_role_refs: [ROLE-HR-KDP-001, ROLE-MIL-RESP-001]
+    related_step_refs: [A022, A023, A024, A026]
+    system_refs: [SYS-1C-HR-001]
+    channel_refs: []
+    storage_location: null
+    format: null
+    required: UNKNOWN
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-HIRE-009, FACT-HIRE-010]
+    evidence_class: EXPLICIT
+    notes: "Условный объект. В источнике отдельно назван военный билет и документы воинского учета."
+
+  - information_id: IO-MIL-002
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Запись данных по воинской обязанности в 1С"
+    object_type: RECORD
+    document_class: null
+    lifecycle_role: OUTPUT
+    state_in: null
+    state_out: "entered"
+    created_by_role_ref: ROLE-HR-KDP-001
+    consumed_by_role_refs: [ROLE-HR-KDP-001]
+    related_step_refs: [A022]
+    system_refs: [SYS-1C-HR-001]
+    channel_refs: []
+    storage_location: "1С: Зарплата и управление персоналом"
+    format: "Системная запись"
+    required: UNKNOWN
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-HIRE-009]
+    evidence_class: EXPLICIT
+    notes: "Условный объект; source condition recorded in A022/D003."
+
+  - information_id: IO-MIL-003
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Карточка гражданина, подлежащего воинскому учету, форма 10"
+    object_type: DOCUMENT
+    document_class: TRANSACTIONAL
+    lifecycle_role: OUTPUT
+    state_in: null
+    state_out: "formed_checked_and_signed"
+    created_by_role_ref: ROLE-HR-KDP-001
+    consumed_by_role_refs: [ROLE-MIL-RESP-001, ROLE-EMPLOYEE-001]
+    related_step_refs: [A023, A024, A025]
+    system_refs: [SYS-1C-HR-001]
+    channel_refs: []
+    storage_location: null
+    format: "Форма 10"
+    required: UNKNOWN
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-HIRE-010]
+    evidence_class: EXPLICIT
+    components:
+      - "Личные данные"
+      - "Дата и место рождения"
+      - "Образование и профессия"
+      - "Семейное положение и состав семьи"
+      - "Паспортные данные"
+      - "Адреса/место жительства"
+      - "Категория запаса, воинское звание, состав и кодовое обозначение ВУС"
+      - "Сведения о приеме/увольнении, номер и дата приказа, должность, военный комиссариат"
+    notes: "Условный объект. Сверяется с документами воинского учета; требуется подпись ответственного и военнообязанного."
+
+  - information_id: IO-MIL-004
+    model_layer: AS_IS
+    derived_from_information_ref: null
+    introduced_by_change_refs: []
+    name: "Сведения о приеме военнообязанного для военного комиссариата"
+    object_type: DOCUMENT
+    document_class: TRANSACTIONAL
+    lifecycle_role: HANDOFF_PAYLOAD
+    state_in: "formed"
+    state_out: "sent_by_post"
+    created_by_role_ref: null
+    consumed_by_role_refs: []
+    external_recipient: "Военный комиссариат по месту жительства/воинского учета"
+    related_step_refs: [A026, A027]
+    system_refs: []
+    channel_refs: []
+    observed_channel_names: ["Почтовое отправление"]
+    storage_location: null
+    format: null
+    required: UNKNOWN
+    existence_status: CONFIRMED
+    evidence_refs: [FACT-HIRE-011]
+    evidence_class: EXPLICIT
+    notes: "Условный объект. Исполнитель формирования/отправки в источнике не назван однозначно."
+
+communications:
+  - communication_id: COM-HIRE-001
+    model_layer: AS_IS
+    derived_from_communication_ref: null
+    introduced_by_change_refs: []
+    sender_role_ref: ROLE-HR-DIRECTOR-001
+    recipient_role_refs: [ROLE-HR-KDP-001]
+    purpose: "Передать данные для кадрового оформления выбранного кандидата"
+    payload_refs: [IO-HIRE-001]
+    message_information_ref: IO-HIRE-001
+    channel_ref: null
+    observed_channel_names: ["Telegram", "Корпоративный мессенджер", "Электронная почта"]
+    system_ref: null
+    related_step_refs: [A001]
+    response_expected: UNKNOWN
+    expected_response_information_refs: []
+    response_deadline: null
+    evidence_refs: [FACT-HIRE-001]
+    evidence_class: EXPLICIT
+    notes: "Точный payload и подтверждение приема сообщения UNKNOWN."
+
+  - communication_id: COM-HIRE-002
+    model_layer: AS_IS
+    derived_from_communication_ref: null
+    introduced_by_change_refs: []
+    sender_role_ref: ROLE-HR-KDP-001
+    recipient_role_refs: [ROLE-EMPLOYEE-001]
+    purpose: "Запросить отсутствующие документы для завершения комплекта приема"
+    payload_refs: [IO-HIRE-003]
+    message_information_ref: IO-HIRE-003
+    channel_ref: null
+    observed_channel_names: []
+    system_ref: null
+    related_step_refs: [A003, A004]
+    response_expected: YES
+    expected_response_information_refs: [IO-HIRE-004]
+    response_deadline: null
+    evidence_refs: [FACT-HIRE-002]
+    evidence_class: EXPLICIT
+    notes: "Канал и срок ответа не раскрыты."
+
+  - communication_id: COM-SFR-001
+    model_layer: AS_IS
+    derived_from_communication_ref: null
+    introduced_by_change_refs: []
+    sender_role_ref: ROLE-HR-KDP-001
+    recipient_role_refs: [ROLE-FIN-CHIEF-ACCOUNTANT-001]
+    purpose: "Сообщить, что сведения СФР сформированы и их нужно отправить"
+    payload_refs: [IO-SFR-001]
+    message_information_ref: IO-SFR-002
+    channel_ref: null
+    observed_channel_names: ["Лично", "Корпоративный мессенджер"]
+    system_ref: null
+    related_step_refs: [A019]
+    response_expected: YES
+    expected_response_information_refs: [IO-SFR-003]
+    response_deadline: "Не указан отдельно; отправка самого отчета — не позднее следующего дня от даты приема"
+    evidence_refs: [FACT-HIRE-008]
+    evidence_class: EXPLICIT
+    notes: null
+
+  - communication_id: COM-SFR-002
+    model_layer: AS_IS
+    derived_from_communication_ref: null
+    introduced_by_change_refs: []
+    sender_role_ref: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    recipient_role_refs: [ROLE-HR-KDP-001]
+    purpose: "Подтвердить, что отчет в СФР сдан"
+    payload_refs: [IO-SFR-003]
+    message_information_ref: IO-SFR-003
+    channel_ref: null
+    observed_channel_names: ["Лично", "Корпоративный мессенджер"]
+    system_ref: null
+    related_step_refs: [A021]
+    response_expected: NO
+    expected_response_information_refs: []
+    response_deadline: null
+    evidence_refs: [FACT-HIRE-008]
+    evidence_class: EXPLICIT
+    notes: "Не приравнивать это внутреннее сообщение к внешней квитанции СФР."
+
+channel_observations:
+  - observed_name: "Электронная почта"
+    channel_type_candidate: EMAIL
+    source_refs: [SRC-HR-KDP-001]
+    related_communications: [COM-HIRE-001]
+  - observed_name: "Telegram"
+    channel_type_candidate: MESSENGER
+    source_refs: [SRC-HR-KDP-001]
+    related_communications: [COM-HIRE-001]
+  - observed_name: "Корпоративный мессенджер"
+    channel_type_candidate: MESSENGER
+    source_refs: [SRC-HR-KDP-001]
+    related_communications: [COM-HIRE-001, COM-SFR-001, COM-SFR-002]
+  - observed_name: "Лично"
+    channel_type_candidate: IN_PERSON
+    source_refs: [SRC-HR-KDP-001]
+    related_communications: [COM-SFR-001, COM-SFR-002]
+  - observed_name: "Почтовое отправление"
+    channel_type_candidate: POSTAL
+    source_refs: [SRC-HR-KDP-001]
+    related_information_refs: [IO-MIL-004]
+
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Каналы структурированы как observations и не записаны в shared channel dictionary. Canonicalization proposal передан Coordinator."

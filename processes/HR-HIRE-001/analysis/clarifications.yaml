@@ -1,0 +1,141 @@
+schema_version: "1.1"
+questions:
+  - question_id: Q-HR-HIRE-001-001
+    process_id: HR-HIRE-001
+    source_refs: [SRC-HR-KDP-001, SRC-HR-DIR-001]
+    related_steps: [A001]
+    related_flow_refs: []
+    related_handoff_refs: [HO-HIRE-001]
+    related_information_object_refs: [IO-HIRE-001]
+    question: "Какие именно данные и документы Директор по персоналу обязан передать КДП после принятия оффера, и по какому признаку КДП считает handoff в прием принятым?"
+    why_needed: "От ответа зависит точный input HR-HIRE-001 и критерий завершения Recruitment→Hire handoff."
+    blocking: true
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+  - question_id: Q-HR-HIRE-001-002
+    process_id: HR-HIRE-001
+    source_refs: [SRC-HR-KDP-001]
+    related_steps: [A002, A003, A004]
+    related_flow_refs: [F002, F003, F004]
+    related_handoff_refs: [HO-HIRE-002]
+    related_information_object_refs: [IO-HIRE-002, IO-HIRE-003, IO-HIRE-004]
+    question: "Каков фактический полный список документов, по которому КДП проверяет комплект приема?"
+    why_needed: "Список существует и определяет decision 'комплект полный?', но источник его не перечисляет полностью. Ответ нужен для полной фактической information model; новый шаблон создавать не требуется."
+    blocking: false
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+  - question_id: Q-HR-HIRE-001-003
+    process_id: HR-HIRE-001
+    source_refs: [SRC-HR-KDP-001, SRC-HR-MODEL-001]
+    related_steps: [A018, A019, A020, A021]
+    related_flow_refs: [F017, F018, F019]
+    related_handoff_refs: [HO-HIRE-SFR-001]
+    related_information_object_refs: [IO-SFR-001, IO-SFR-002, IO-SFR-003]
+    question: "Кто в действующем процессе фактически формирует сведения СФР, кто выполняет техническую отправку, кто отвечает за конечный результат и чем, кроме сообщения Главного бухгалтера, подтверждается успешная сдача?"
+    why_needed: "Интервью КДП и reference-модель расходятся по role boundary подготовки/отправки; это блокирует финальный owner и handoff semantics HR-HIRE-SFR-001."
+    blocking: true
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+  - question_id: Q-HR-HIRE-001-004
+    process_id: HR-HIRE-001
+    source_refs: [SRC-HR-KDP-001]
+    related_steps: [A022, A023, A024, A025, A026, A027]
+    related_flow_refs: [F023]
+    related_handoff_refs: [HO-HIRE-MIL-001]
+    related_information_object_refs: [IO-MIL-001, IO-MIL-002, IO-MIL-003, IO-MIL-004]
+    question: "Каков фактический критерий применимости воинской ветки при приеме и кто именно формирует/проверяет/отправляет воинские документы: КДП или отдельный Ответственный за воинский учет?"
+    why_needed: "Источник отдельно упоминает 'мужской пол' при вводе данных и 'военнообязанный' при форме 10/сведениях; identity ROLE-MIL-RESP-001 и routing branch не установлены однозначно."
+    blocking: true
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+  - question_id: Q-HR-HIRE-001-005
+    process_id: HR-HIRE-001
+    source_refs: [SRC-HR-KDP-001, SRC-HR-MODEL-001]
+    related_steps: [A023, A024, A025, A026, A027]
+    related_flow_refs: [F023]
+    related_handoff_refs: [HO-HIRE-MIL-001]
+    related_information_object_refs: [IO-MIL-003, IO-MIL-004]
+    question: "При применимости HR-HIRE-MIL-001 должен ли этот L2 полностью завершиться до закрытия parent HR-HIRE-001?"
+    why_needed: "Reference-модель показывает join перед End, но ее lifecycle UNKNOWN; интервью не определяет parent-close dependency."
+    blocking: true
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+  - question_id: Q-HR-HIRE-001-006
+    process_id: HR-HIRE-001
+    source_refs: [SRC-HR-KDP-001, SRC-HR-MODEL-001]
+    related_steps: [A018, A019, A020, A021]
+    related_flow_refs: [F016, F017, F018, F019]
+    related_handoff_refs: [HO-HIRE-SFR-001]
+    related_information_object_refs: [IO-SFR-001, IO-SFR-002, IO-SFR-003]
+    question: "Должен ли HR-HIRE-SFR-001 полностью завершиться до закрытия parent HR-HIRE-001?"
+    why_needed: "Reference-модель показывает join перед End, но current parent-close dependency источниками не подтверждена."
+    blocking: true
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+  - question_id: Q-HR-HIRE-001-007
+    process_id: HR-HIRE-001
+    source_refs: [SRC-HR-DIR-001, SRC-HR-MODEL-001]
+    related_steps: []
+    related_flow_refs: []
+    related_handoff_refs: [HO-HIRE-ADAPT-001]
+    related_information_object_refs: []
+    question: "Когда относительно полного закрытия HR-HIRE-001 фактически происходит boundary 'выход сотрудника и начало адаптации': до закрытия, одновременно с закрытием или после него?"
+    why_needed: "От ответа зависит parent boundary timing; нельзя превращать reference parallelism в current fact."
+    blocking: true
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+  - question_id: Q-HR-HIRE-001-008
+    process_id: HR-HIRE-001
+    source_refs: [SRC-HR-DIR-001, SRC-HR-MODEL-001]
+    related_steps: []
+    related_flow_refs: []
+    related_handoff_refs: [HO-HIRE-ADAPT-001]
+    related_information_object_refs: []
+    question: "Кто фактически выполняет boundary-действие 'контроль выхода сотрудника и начало адаптации' — КДП, Директор по персоналу или это разные действия двух ролей?"
+    why_needed: "SRC-HR-DIR-001 относит контроль адаптации к Директору по персоналу, MODEL-001#7 расположен в lane Кадровика. Без ответа role handoff остается CONFLICT."
+    blocking: true
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+  - question_id: Q-HR-HIRE-001-009
+    process_id: HR-HIRE-001
+    source_refs: [SRC-HR-MODEL-001]
+    related_steps: [A018]
+    related_flow_refs: []
+    related_handoff_refs: [HO-HIRE-SFR-001, HO-HIRE-ADAPT-001]
+    related_information_object_refs: []
+    question: "Каков lifecycle/approval status схемы SRC-HR-MODEL-001: действующий AS-IS, проектный/TO-BE, исторический или иной?"
+    why_needed: "Ответ определяет, можно ли использовать role placement и parallel join модели как current evidence либо только как reference overlay."
+    blocking: true
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+  - question_id: Q-HR-HIRE-001-010
+    process_id: HR-HIRE-001
+    source_refs: [SRC-HR-KDP-001]
+    related_steps: [A010, A011]
+    related_flow_refs: [F010]
+    related_handoff_refs: []
+    related_information_object_refs: [IO-HIRE-010]
+    question: "Что фактически происходит, если у сотрудника есть замечания к трудовому договору после ознакомления?"
+    why_needed: "Источник описывает только ветку без замечаний; ответ заполнит значимый return/exception path, но не меняет подтвержденный основной сценарий."
+    blocking: false
+    status: OPEN
+    answer: null
+    answer_source_ref: null
