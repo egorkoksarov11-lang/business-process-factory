@@ -1,0 +1,129 @@
+schema_version: "1.1"
+process_id: "HR-STAFF-REQ-001"
+
+handoffs:
+  - handoff_id: HO-HR-STAFF-MGR-TO-HR-CUR-001
+    handoff_type: PROCESS_TO_PROCESS
+    from_process_ref: HR-STAFF-REQ-001
+    from_subprocess_ref: null
+    from_role_ref: ROLE-HIRING-MANAGER-001
+    to_process_ref: HR-RECRUIT-001
+    to_subprocess_ref: null
+    to_role_ref: ROLE-HR-DIRECTOR-001
+    trigger_or_condition: "Непосредственный руководитель предоставил заявку на необходимую вакантную позицию"
+    payload_refs:
+      - IO-HR-STAFF-REQUEST-CUR-001
+    communication_refs:
+      - COM-HR-STAFF-REQUEST-CUR-001
+    system_refs: []
+    channel_refs: []
+    observed_channel_names: []
+    acceptance_or_result: "Директор по персоналу получил заявку; далее интервью описывает формирование и согласование профиля вакансии и последующий recruitment"
+    acknowledgement_required: UNKNOWN
+    timing:
+      deadline: null
+      expected_wait: null
+      sla: null
+    applicability: CONFIRMED_CURRENT
+    evidence_refs:
+      - FACT-HR-DIR-001
+    evidence_class: EXPLICIT
+    ambiguity: "Интервью не подтверждает, что переданная заявка уже согласована Генеральным директором, не раскрывает ее обязательное содержание и не показывает upstream-процедуру."
+    notes: "Это boundary handoff parent L1 в HR-RECRUIT-001, а не cross-level next_process из внутреннего шага."
+
+  - handoff_id: HO-HR-STAFF-MGR-TO-CEO-REF-001
+    handoff_type: ROLE_TO_ROLE
+    from_process_ref: HR-STAFF-REQ-001
+    from_subprocess_ref: null
+    from_role_ref: ROLE-HIRING-MANAGER-001
+    to_process_ref: HR-STAFF-REQ-001
+    to_subprocess_ref: null
+    to_role_ref: ROLE-CEO-001
+    trigger_or_condition: "В reference model сформирована заявка с обоснованием потребности и перечнем функций"
+    payload_refs:
+      - IO-HR-STAFF-REQUEST-REF-001
+      - IO-HR-STAFF-FUNCTIONS-REF-001
+    communication_refs:
+      - COM-HR-STAFF-TO-CEO-REF-001
+    system_refs: []
+    channel_refs: []
+    observed_channel_names: []
+    acceptance_or_result: "В reference model Генеральный директор рассматривает заявку"
+    acknowledgement_required: UNKNOWN
+    timing:
+      deadline: null
+      expected_wait: null
+      sla: null
+    applicability: REFERENCE_ONLY
+    evidence_refs:
+      - MODEL002-FACT-004
+    evidence_class: EXPLICIT
+    ambiguity: "Lifecycle/approval status SRC-HR-MODEL-002 UNKNOWN; обязательность CEO approval в текущем процессе не подтверждена."
+    notes: null
+
+  - handoff_id: HO-HR-STAFF-CEO-TO-MGR-REV-REF-001
+    handoff_type: ROLE_TO_ROLE
+    from_process_ref: HR-STAFF-REQ-001
+    from_subprocess_ref: null
+    from_role_ref: ROLE-CEO-001
+    to_process_ref: HR-STAFF-REQ-001
+    to_subprocess_ref: null
+    to_role_ref: ROLE-HIRING-MANAGER-001
+    trigger_or_condition: "Reference result: требуется доработка"
+    payload_refs:
+      - IO-HR-STAFF-DECISION-REF-001
+      - IO-HR-STAFF-REVISION-REF-001
+    communication_refs:
+      - COM-HR-STAFF-REVISION-REF-001
+    system_refs: []
+    channel_refs: []
+    observed_channel_names: []
+    acceptance_or_result: "В reference model замечания направлены для доработки заявки/функций"
+    acknowledgement_required: UNKNOWN
+    timing:
+      deadline: null
+      expected_wait: null
+      sla: null
+    applicability: REFERENCE_ONLY
+    evidence_refs:
+      - MODEL002-FACT-005
+    evidence_class: EXPLICIT
+    ambiguity: "Current applicability возврата UNKNOWN; точная точка возврата внутри содержания заявки/функций не установлена текстовой нормализацией."
+    notes: null
+
+  - handoff_id: HO-HR-STAFF-TO-RECRUIT-REF-001
+    handoff_type: PROCESS_TO_PROCESS
+    from_process_ref: HR-STAFF-REQ-001
+    from_subprocess_ref: null
+    from_role_ref: ROLE-HIRING-MANAGER-001
+    to_process_ref: HR-RECRUIT-001
+    to_subprocess_ref: null
+    to_role_ref: UNKNOWN
+    trigger_or_condition: "Reference result: заявка согласована"
+    payload_refs:
+      - IO-HR-STAFF-REQUEST-REF-001
+      - IO-HR-STAFF-DECISION-REF-001
+    communication_refs:
+      - COM-HR-STAFF-APPROVED-TO-HR-REF-001
+    system_refs: []
+    channel_refs: []
+    observed_channel_names: []
+    acceptance_or_result: "В reference model согласованная заявка направлена generic HR; End: 'Заявка направлена HR'"
+    acknowledgement_required: UNKNOWN
+    timing:
+      deadline: null
+      expected_wait: null
+      sla: null
+    applicability: REFERENCE_ONLY
+    evidence_refs:
+      - MODEL002-FACT-006
+    evidence_class: EXPLICIT
+    ambiguity: "Generic 'HR' из reference model не приравнивается автоматически к ROLE-HR-DIRECTOR-001; current applicability согласованного handoff UNKNOWN."
+    notes: "Reference boundary handoff сохранен отдельно от interview-supported current handoff, чтобы не утверждать, что текущая заявка обязательно имеет статус 'согласована'."
+
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: |
+    Parent boundary to HR-RECRUIT-001 is modeled through handoffs, not through a cross-level flow from an internal step.
+    Interview-supported current handoff and reference-only approved handoff are intentionally separate because their status and recipient semantics are not proven identical.
