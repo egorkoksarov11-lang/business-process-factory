@@ -1,0 +1,377 @@
+schema_version: "1.1"
+process_id: "IT-SUPPORT-001"
+as_is_version: "0.1"
+status: "CLARIFICATION_REQUIRED"
+
+scope:
+  trigger: "Внутренний пользователь обращается в техническую поддержку с IT-проблемой или потребностью"
+  business_result: "Пользователь получил постоянное решение либо временное решение, позволяющее продолжить работу; если решение временное, подтверждена последующая доработка до постоянного решения"
+  applicability: "CONFIRMED_CURRENT"
+  source_refs: [SRC-IT-LEAD-001]
+  subprocess_refs:
+    - IT-SUPPORT-INTAKE-001
+    - IT-SUPPORT-RESOLVE-001
+    - IT-SUPPORT-FINALIZE-001
+  current_channels:
+    - EMAIL
+    - PHONE
+    - PERSONAL_CABINET
+  excluded_from_current_as_is:
+    - object: "Бот корпоративного мессенджера для подачи обращений"
+      status: "IN_DEVELOPMENT_NOT_AS_IS"
+      evidence_refs: [FACT-IT-LEAD-006]
+
+steps:
+  - step_id: ITSUP-A001
+    subprocess_id: IT-SUPPORT-INTAKE-001
+    role_ref: ROLE-INTERNAL-USER-001
+    action: "Направить обращение в техническую поддержку, описав проблему или IT-потребность"
+    business_object: "IT-проблема / потребность пользователя"
+    input_information_refs: []
+    output_information_refs:
+      - IO-IT-SUPPORT-REQUEST-001
+      - IO-IT-SUPPORT-DESCRIPTION-001
+    system_refs: []
+    channel_refs:
+      - EMAIL
+      - PHONE
+      - PERSONAL_CABINET
+    incoming_flow_refs: []
+    outgoing_flow_refs: [ITSUP-F001]
+    timing:
+      duration: null
+      deadline: null
+      frequency: null
+      wait_for: null
+    result: "Обращение пользователя направлено через один из трех действующих каналов"
+    evidence_refs: [FACT-IT-LEAD-005]
+    evidence_class: EXPLICIT
+    notes: "Email назван самым частым каналом. Каналы не являются отдельными процессами."
+
+  - step_id: ITSUP-A002
+    subprocess_id: IT-SUPPORT-INTAKE-001
+    role_ref: UNKNOWN
+    action: "Зафиксировать обращение как запись заявки в HelpDesk и присвоить ей порядковый номер"
+    business_object: "HelpDesk ticket / запись заявки"
+    input_information_refs:
+      - IO-IT-SUPPORT-REQUEST-001
+      - IO-IT-SUPPORT-DESCRIPTION-001
+    output_information_refs:
+      - IO-IT-SUPPORT-TICKET-001
+      - IO-IT-SUPPORT-TICKET-NUMBER-001
+      - IO-IT-SUPPORT-STATUS-001
+    system_refs: [SYS-IT-HELPDESK-001]
+    channel_refs: []
+    incoming_flow_refs: [ITSUP-F001]
+    outgoing_flow_refs:
+      - ITSUP-F002
+      - ITSUP-F003
+    timing:
+      duration: null
+      deadline: null
+      frequency: null
+      wait_for: null
+    result: "Заявка существует в HelpDesk, имеет номер и доступна сотрудникам технической поддержки"
+    evidence_refs: [FACT-IT-LEAD-007]
+    evidence_class: EXPLICIT
+    notes: "Кто или что выполняет регистрацию, не установлено. Особенно неизвестно, как телефонный запрос попадает в HelpDesk."
+
+  - step_id: ITSUP-A003
+    subprocess_id: IT-SUPPORT-INTAKE-001
+    role_ref: UNKNOWN
+    action: "Отправить пользователю сообщение о принятии заявки"
+    business_object: "Подтверждение приема заявки"
+    input_information_refs:
+      - IO-IT-SUPPORT-TICKET-001
+      - IO-IT-SUPPORT-TICKET-NUMBER-001
+    output_information_refs:
+      - IO-IT-SUPPORT-ACK-001
+    system_refs: [SYS-IT-HELPDESK-001]
+    channel_refs: [EMAIL]
+    incoming_flow_refs: [ITSUP-F002]
+    outgoing_flow_refs: [ITSUP-F004]
+    timing:
+      duration: null
+      deadline: null
+      frequency: null
+      wait_for: null
+    result: "При email-обращении пользователю отправлено подтверждение, что заявка принята и будет рассмотрена"
+    evidence_refs: [FACT-IT-LEAD-007]
+    evidence_class: EXPLICIT
+    notes: "Механизм отправки и исполнитель не установлены. Подтверждение явно доказано только для email."
+
+  - step_id: ITSUP-A004
+    subprocess_id: IT-SUPPORT-RESOLVE-001
+    role_ref: ROLE-IT-SUPPORT-EXT-001
+    action: "Принять зарегистрированную заявку в работу"
+    business_object: "HelpDesk ticket / запись заявки"
+    input_information_refs:
+      - IO-IT-SUPPORT-TICKET-001
+      - IO-IT-SUPPORT-DESCRIPTION-001
+    output_information_refs:
+      - IO-IT-SUPPORT-STATUS-001
+    system_refs: [SYS-IT-HELPDESK-001]
+    channel_refs: []
+    incoming_flow_refs:
+      - ITSUP-F003
+      - ITSUP-F004
+    outgoing_flow_refs: [ITSUP-F005]
+    timing:
+      duration: null
+      deadline: null
+      frequency: null
+      wait_for: null
+    result: "Сотрудник технической поддержки взял заявку в работу"
+    evidence_refs:
+      - FACT-IT-LEAD-007
+      - FACT-IT-LEAD-008
+    evidence_class: EXPLICIT
+    notes: "Источник подтверждает взятие в работу, но не раскрывает правило приоритизации."
+
+  - step_id: ITSUP-A005
+    subprocess_id: IT-SUPPORT-RESOLVE-001
+    role_ref: ROLE-IT-SUPPORT-EXT-001
+    action: "Обработать обращение и определить вариант решения"
+    business_object: "IT-проблема / потребность пользователя"
+    input_information_refs:
+      - IO-IT-SUPPORT-TICKET-001
+      - IO-IT-SUPPORT-DESCRIPTION-001
+    output_information_refs: []
+    system_refs: [SYS-IT-HELPDESK-001]
+    channel_refs: []
+    incoming_flow_refs: [ITSUP-F005]
+    outgoing_flow_refs:
+      - ITSUP-F006
+      - ITSUP-F007
+    timing:
+      duration: null
+      deadline: null
+      frequency: null
+      wait_for: null
+    result: "По обращению определен временный либо постоянный вариант решения"
+    evidence_refs:
+      - FACT-IT-LEAD-008
+      - FACT-IT-LEAD-010
+    evidence_class: EXPLICIT
+    notes: "Источник не раскрывает конкретные технические действия диагностики/troubleshooting; они не достраиваются."
+
+  - step_id: ITSUP-A006
+    subprocess_id: IT-SUPPORT-RESOLVE-001
+    role_ref: ROLE-IT-SUPPORT-EXT-001
+    action: "Предоставить временное решение, позволяющее пользователю продолжить работу"
+    business_object: "IT-проблема пользователя"
+    input_information_refs:
+      - IO-IT-SUPPORT-TICKET-001
+    output_information_refs:
+      - IO-IT-SUPPORT-TEMP-SOLUTION-001
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [ITSUP-F006]
+    outgoing_flow_refs: [ITSUP-F008]
+    timing:
+      duration: null
+      deadline: null
+      frequency: null
+      wait_for: null
+    result: "Возможность работы пользователя восстановлена временным решением"
+    evidence_refs: [FACT-IT-LEAD-010]
+    evidence_class: EXPLICIT
+    notes: "Канал передачи временного решения и критерий закрытия заявки на этом этапе UNKNOWN."
+
+  - step_id: ITSUP-A007
+    subprocess_id: IT-SUPPORT-RESOLVE-001
+    role_ref: ROLE-IT-SUPPORT-EXT-001
+    action: "Предоставить постоянное решение по обращению"
+    business_object: "IT-проблема / потребность пользователя"
+    input_information_refs:
+      - IO-IT-SUPPORT-TICKET-001
+    output_information_refs:
+      - IO-IT-SUPPORT-PERM-SOLUTION-001
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: [ITSUP-F007]
+    outgoing_flow_refs: []
+    timing:
+      duration: null
+      deadline: null
+      frequency: null
+      wait_for: null
+    result: "Пользователь получил постоянное решение по обращению"
+    evidence_refs: [FACT-IT-LEAD-010]
+    evidence_class: EXPLICIT
+    notes: "Канал передачи, подтверждение результата пользователем и точный HelpDesk closure event источником не раскрыты."
+
+  - step_id: ITSUP-A008
+    subprocess_id: IT-SUPPORT-FINALIZE-001
+    role_ref: ROLE-IT-SUPPORT-EXT-001
+    action: "Доработать ранее выданное временное решение до постоянного, когда это возможно"
+    business_object: "Заявка с временным решением"
+    input_information_refs:
+      - IO-IT-SUPPORT-TICKET-001
+      - IO-IT-SUPPORT-TEMP-SOLUTION-001
+    output_information_refs:
+      - IO-IT-SUPPORT-PERM-SOLUTION-001
+    system_refs: [SYS-IT-HELPDESK-001]
+    channel_refs: []
+    incoming_flow_refs: [ITSUP-F008]
+    outgoing_flow_refs: []
+    timing:
+      duration: null
+      deadline: null
+      frequency: null
+      wait_for: "В ближайшее время, когда это возможно; числовой срок не установлен"
+    result: "Временное решение доработано до более постоянного решения"
+    evidence_refs: [FACT-IT-LEAD-010]
+    evidence_class: EXPLICIT
+    notes: "Подпроцесс применяется только после временного решения. Формальный момент окончательного закрытия заявки UNKNOWN."
+
+flows:
+  - flow_id: ITSUP-F001
+    from_ref: ITSUP-A001
+    to_ref: ITSUP-A002
+    flow_type: SEQUENCE
+    condition: null
+    evidence_refs:
+      - FACT-IT-LEAD-005
+      - FACT-IT-LEAD-007
+    applicability: CONFIRMED_CURRENT
+
+  - flow_id: ITSUP-F002
+    from_ref: ITSUP-A002
+    to_ref: ITSUP-A003
+    flow_type: CONDITIONAL
+    condition: "Канал обращения — email"
+    evidence_refs: [FACT-IT-LEAD-007]
+    applicability: CONFIRMED_CURRENT
+
+  - flow_id: ITSUP-F003
+    from_ref: ITSUP-A002
+    to_ref: ITSUP-A004
+    flow_type: CONDITIONAL
+    condition: "Канал не email; наличие отдельного подтверждения приема для телефона/личного кабинета не установлено"
+    evidence_refs: [FACT-IT-LEAD-007]
+    applicability: PARTIAL_CURRENT
+
+  - flow_id: ITSUP-F004
+    from_ref: ITSUP-A003
+    to_ref: ITSUP-A004
+    flow_type: SEQUENCE
+    condition: null
+    evidence_refs:
+      - FACT-IT-LEAD-007
+      - FACT-IT-LEAD-008
+    applicability: CONFIRMED_CURRENT
+
+  - flow_id: ITSUP-F005
+    from_ref: ITSUP-A004
+    to_ref: ITSUP-A005
+    flow_type: SEQUENCE
+    condition: null
+    evidence_refs: [FACT-IT-LEAD-008]
+    applicability: CONFIRMED_CURRENT
+
+  - flow_id: ITSUP-F006
+    from_ref: ITSUP-A005
+    to_ref: ITSUP-A006
+    flow_type: CONDITIONAL
+    condition: "Сначала возможно только временное решение"
+    evidence_refs: [FACT-IT-LEAD-010]
+    applicability: CONFIRMED_CURRENT
+
+  - flow_id: ITSUP-F007
+    from_ref: ITSUP-A005
+    to_ref: ITSUP-A007
+    flow_type: CONDITIONAL
+    condition: "Возможно сразу постоянное решение"
+    evidence_refs: [FACT-IT-LEAD-010]
+    applicability: CONFIRMED_CURRENT
+
+  - flow_id: ITSUP-F008
+    from_ref: ITSUP-A006
+    to_ref: ITSUP-A008
+    flow_type: CONDITIONAL
+    condition: "Выдано временное решение; доработка выполняется позже, когда это возможно"
+    evidence_refs: [FACT-IT-LEAD-010]
+    applicability: CONFIRMED_CURRENT
+
+decisions:
+  - decision_id: ITSUP-D001
+    after_step_ref: ITSUP-A002
+    question: "Обращение поступило по email?"
+    branches:
+      - outcome: "Да"
+        next_ref: ITSUP-A003
+      - outcome: "Нет / иной из текущих каналов"
+        next_ref: ITSUP-A004
+        note: "Отсутствие подтверждения для телефона/личного кабинета не утверждается; его наличие UNKNOWN."
+    evidence_refs: [FACT-IT-LEAD-007]
+    evidence_class: EXPLICIT
+    applicability: CONFIRMED_CURRENT
+
+  - decision_id: ITSUP-D002
+    after_step_ref: ITSUP-A005
+    question: "Какой вариант решения возможен по обращению?"
+    branches:
+      - outcome: "Временное решение"
+        next_ref: ITSUP-A006
+      - outcome: "Постоянное решение"
+        next_ref: ITSUP-A007
+    evidence_refs: [FACT-IT-LEAD-010]
+    evidence_class: EXPLICIT
+    applicability: CONFIRMED_CURRENT
+
+exceptions:
+  - exception_id: ITSUP-EX001
+    related_step_refs: [ITSUP-A002]
+    condition: "Обращение подано по телефону"
+    behavior: "Телефон является действующим каналом, но способ переноса/регистрации телефонного обращения в HelpDesk и исполнитель регистрации UNKNOWN"
+    evidence_refs:
+      - FACT-IT-LEAD-005
+      - FACT-IT-LEAD-007
+
+  - exception_id: ITSUP-EX002
+    related_step_refs:
+      - ITSUP-A006
+      - ITSUP-A008
+    condition: "Сначала выдано временное решение"
+    behavior: "Пользователь может продолжить работу; заявка впоследствии дорабатывается, но момент формального закрытия HelpDesk ticket до/после доработки UNKNOWN"
+    evidence_refs: [FACT-IT-LEAD-010]
+
+quantitative_observations:
+  - observation_id: ITSUP-QO001
+    metric_type: DURATION
+    related_refs: [IT-SUPPORT-RESOLVE-001]
+    value: 30
+    unit: "minutes"
+    qualifier: "Назван ориентир; точный измеряемый интервал UNKNOWN"
+    measurement_scope: UNKNOWN
+    formal_sla_status: UNKNOWN
+    evidence_refs: [FACT-IT-LEAD-009]
+    evidence_class: EXPLICIT
+    notes: "Не интерпретировать как формальный SLA."
+
+  - observation_id: ITSUP-QO002
+    metric_type: DURATION
+    related_refs: [IT-SUPPORT-RESOLVE-001]
+    value_min: 10
+    value_max: 15
+    unit: "minutes"
+    qualifier: "Наблюдение по аналитике; точный измеряемый интервал UNKNOWN"
+    measurement_scope: UNKNOWN
+    formal_sla_status: UNKNOWN
+    evidence_refs: [FACT-IT-LEAD-009]
+    evidence_class: EXPLICIT
+    notes: "Источник говорит о 10–15 минутах по аналитике, но не устанавливает, что именно измеряется."
+
+open_questions:
+  - Q-IT-SUPPORT-001
+  - Q-IT-SUPPORT-002
+  - Q-IT-SUPPORT-003
+  - Q-IT-SUPPORT-004
+  - Q-IT-SUPPORT-005
+  - Q-IT-SUPPORT-006
+
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Единый parent AS-IS для IT-SUPPORT-001; шаги размечены subprocess_id. TO-BE, оптимизация, BPMN и troubleshooting-detail не создавались."
