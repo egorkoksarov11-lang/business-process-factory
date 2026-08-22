@@ -1,4 +1,8 @@
 schema_version: "1.0"
+architecture_linkage_policy:
+  L1_previous_next: "Только канонические L1↔L1 связи."
+  L2_previous_next: "Только sibling L2 внутри одного parent."
+  cross_level: "Через parent_entry/parent_exit/boundary_handoff, не через previous_processes/next_processes."
 processes:
   - process_id: HR-STAFF-REQ-001
     name: "Формирование и согласование заявки на подбор"
@@ -7,16 +11,16 @@ processes:
     status: ARCHITECTURE_READY
     owner_role: UNKNOWN
     trigger: "Возникла потребность в сотруднике"
-    business_result: "Согласованная заявка на подбор направлена HR либо зафиксирован результат 'подбор сотрудника не согласован'"
+    business_result: "Согласованная заявка направлена HR либо зафиксирован отказ в подборе"
     previous_processes: []
     next_processes: [HR-RECRUIT-001]
     source_refs: [SRC-HR-MODEL-002, SRC-HR-MODEL-001, SRC-HR-DIR-001]
-    views: [VIEW-HR-MODEL-ENTRY-E2E-001]
+    views: [VIEW-HR-FUNCTION-001, VIEW-HR-MODEL-ENTRY-E2E-001]
     as_is_version: null
     to_be_version: null
     blocking_questions:
-      - "UNKNOWN: является ли схема SRC-HR-MODEL-002 действующим AS-IS, TO-BE или иным reference-state; lifecycle/approval status источника не подтвержден."
-      - "UNKNOWN: обязательно ли согласование Генеральным директором в текущей фактической практике или это правило только существующей схемы."
+      - "UNKNOWN: lifecycle/approval status SRC-HR-MODEL-002."
+      - "UNKNOWN: обязательность согласования Генеральным директором в текущем AS-IS."
 
   - process_id: HR-RECRUIT-001
     name: "Подбор сотрудника на вакантную позицию"
@@ -25,18 +29,20 @@ processes:
     status: ARCHITECTURE_READY
     owner_role: UNKNOWN
     trigger: "HR получена согласованная заявка на подбор"
-    business_result: "Кандидат выбран и согласился на оффер; кандидат готов к передаче в кадровое оформление приема"
+    business_result: "Кандидат выбран и согласился на оффер; готов handoff в кадровое оформление"
     previous_processes: [HR-STAFF-REQ-001]
     next_processes: [HR-HIRE-001]
     source_refs: [SRC-HR-DIR-001, SRC-HR-MODEL-001, SRC-HR-MODEL-002, SRC-HR-KDP-001]
-    views: [VIEW-HR-DIRECTOR-ROLE-001, VIEW-HR-HIRE-E2E-001, VIEW-HR-MODEL-ENTRY-E2E-001]
+    views: [VIEW-HR-FUNCTION-001, VIEW-HR-DIRECTOR-ROLE-001, VIEW-HR-HIRE-E2E-001, VIEW-HR-MODEL-ENTRY-E2E-001]
+    internal_flow:
+      canonical_path: [HR-RECRUIT-SOURCE-001, HR-RECRUIT-SELECT-001, HR-RECRUIT-OFFER-001]
+      conditional_variant: [HR-RECRUIT-SOURCE-001, HR-RECRUIT-SELECT-001, HR-RECRUIT-SEC-001, HR-RECRUIT-OFFER-001]
     as_is_version: null
     to_be_version: null
     blocking_questions:
-      - "UNKNOWN: какой состав данных и документов передается из подбора в HR-HIRE-001 после принятия оффера."
-      - "UNKNOWN: является ли проверка Службой безопасности обязательной частью текущего AS-IS или только элементом reference-модели SRC-HR-MODEL-001."
-      - "UNKNOWN: является ли условное согласование оффера Генеральным директором при негативной информации действующим правилом."
-      - "UNKNOWN: lane 'HR' в SRC-HR-MODEL-001 соответствует Директору по персоналу или более широкой HR-функции."
+      - "UNKNOWN: applicability HR-RECRUIT-SEC-001; reference-only source lifecycle UNKNOWN."
+      - "UNKNOWN: условное согласование оффера Генеральным директором."
+      - "UNKNOWN: точный состав handoff в HR-HIRE-001."
 
   - process_id: HR-RECRUIT-SOURCE-001
     name: "Поиск и привлечение кандидатов"
@@ -45,16 +51,22 @@ processes:
     parent_process: HR-RECRUIT-001
     status: ARCHITECTURE_READY
     owner_role: UNKNOWN
-    trigger: "Согласованная заявка и требования к вакансии готовы для поиска"
-    business_result: "Сформирован поток/пул кандидатов для дальнейшего отбора"
-    previous_processes: [HR-STAFF-REQ-001]
+    trigger: "Parent HR-RECRUIT-001 запущен и требования готовы к поиску"
+    business_result: "Получены кандидаты/отклики для отбора"
+    previous_processes: []
     next_processes: [HR-RECRUIT-SELECT-001]
+    parent_entry_handoff:
+      from_l1: HR-STAFF-REQ-001
+      via_parent: HR-RECRUIT-001
+    architecture_applicability:
+      mode: CANONICAL_L2
+      as_is_applicability: SUPPORTED_BY_INTERVIEW
+      source_confidence: INTERVIEW_SUPPORTED
     source_refs: [SRC-HR-DIR-001, SRC-HR-MODEL-001]
     views: []
     as_is_version: null
     to_be_version: null
-    blocking_questions:
-      - "UNKNOWN: полный набор каналов поиска помимо HeadHunter."
+    blocking_questions: ["UNKNOWN: полный набор каналов поиска."]
 
   - process_id: HR-RECRUIT-SELECT-001
     name: "Отбор, собеседования и выбор кандидата"
@@ -64,15 +76,22 @@ processes:
     status: ARCHITECTURE_READY
     owner_role: UNKNOWN
     trigger: "Получены кандидаты для оценки"
-    business_result: "Выбран кандидат для последующей проверки/подготовки оффера"
+    business_result: "Выбран кандидат для оффера либо условной проверки СБ"
     previous_processes: [HR-RECRUIT-SOURCE-001]
-    next_processes: [HR-RECRUIT-SEC-001]
+    next_processes: [HR-RECRUIT-OFFER-001]
+    conditional_next_processes:
+      - process_ref: HR-RECRUIT-SEC-001
+        applicability: UNKNOWN
+        source_ref: SRC-HR-MODEL-001
+    architecture_applicability:
+      mode: CANONICAL_L2
+      as_is_applicability: SUPPORTED_BY_INTERVIEW
+      source_confidence: INTERVIEW_SUPPORTED
     source_refs: [SRC-HR-DIR-001, SRC-HR-MODEL-001]
     views: []
     as_is_version: null
     to_be_version: null
-    blocking_questions:
-      - "UNKNOWN: критерии перехода кандидата между этапами и критерии финального выбора."
+    blocking_questions: ["UNKNOWN: критерии отбора/финального выбора.", "UNKNOWN: когда применима проверка СБ."]
 
   - process_id: HR-RECRUIT-SEC-001
     name: "Проверка кандидата службой безопасности"
@@ -81,17 +100,20 @@ processes:
     parent_process: HR-RECRUIT-001
     status: ARCHITECTURE_READY
     owner_role: UNKNOWN
-    trigger: "Кандидат выбран для проверки перед оффером согласно SRC-HR-MODEL-001"
+    trigger: "Если проверка СБ применима, выбранный кандидат передан на проверку"
     business_result: "Получен результат проверки о наличии/отсутствии негативной информации"
     previous_processes: [HR-RECRUIT-SELECT-001]
     next_processes: [HR-RECRUIT-OFFER-001]
+    architecture_applicability:
+      mode: CONDITIONAL_REFERENCE_DERIVED
+      as_is_applicability: UNKNOWN
+      source_confidence: REFERENCE_ONLY
+      source_lifecycle_status: UNKNOWN
     source_refs: [SRC-HR-MODEL-001]
     views: []
     as_is_version: null
     to_be_version: null
-    blocking_questions:
-      - "UNKNOWN: lifecycle/approval status SRC-HR-MODEL-001 и фактическая обязательность проверки СБ."
-      - "UNKNOWN: что именно считается негативной информацией и какой артефакт фиксирует результат; Agent 01 это не достраивает."
+    blocking_questions: ["UNKNOWN: действует ли этот L2 в AS-IS и для каких случаев.", "UNKNOWN: артефакт результата проверки."]
 
   - process_id: HR-RECRUIT-OFFER-001
     name: "Формирование, согласование и принятие оффера"
@@ -100,17 +122,36 @@ processes:
     parent_process: HR-RECRUIT-001
     status: ARCHITECTURE_READY
     owner_role: UNKNOWN
-    trigger: "Кандидат выбран и получен результат требуемой проверки"
-    business_result: "Кандидат согласился на оффер либо инициирован возврат к поиску при отказе/несогласовании"
-    previous_processes: [HR-RECRUIT-SEC-001]
-    next_processes: [HR-HIRE-001, HR-RECRUIT-SOURCE-001]
+    trigger: "Кандидат выбран; результат проверки учитывается только при ее применимости"
+    business_result: "Оффер принят либо сформирован результат для возврата к поиску"
+    previous_processes: [HR-RECRUIT-SELECT-001]
+    next_processes: []
+    conditional_previous_processes:
+      - process_ref: HR-RECRUIT-SEC-001
+        applicability: UNKNOWN
+    parent_exit_handoff:
+      event: "Оффер принят"
+      target_l1: HR-HIRE-001
+    conditional_internal_returns:
+      - target_process: HR-RECRUIT-SOURCE-001
+        condition: "Кандидат отказался"
+        source_ref: SRC-HR-MODEL-001
+      - target_process: HR-RECRUIT-SOURCE-001
+        condition: "Условное согласование ГД не получено"
+        applicability: UNKNOWN
+        source_ref: SRC-HR-MODEL-001
+    conditional_reference_rule:
+      rule: "Согласование оффера ГД при негативной информации"
+      applicability: UNKNOWN
+      source_ref: SRC-HR-MODEL-001
+    architecture_applicability:
+      mode: CANONICAL_L2_WITH_REFERENCE_CONDITIONS
+      source_confidence: MIXED
     source_refs: [SRC-HR-DIR-001, SRC-HR-MODEL-001]
     views: []
     as_is_version: null
     to_be_version: null
-    blocking_questions:
-      - "UNKNOWN: кто утверждает стандартные условия оффера без негативной информации."
-      - "UNKNOWN: фактическое правило условного согласования Генеральным директором при негативной информации."
+    blocking_questions: ["UNKNOWN: условное согласование ГД.", "UNKNOWN: фиксация принятия оффера."]
 
   - process_id: HR-HIRE-001
     name: "Кадровое оформление приема сотрудника"
@@ -118,19 +159,31 @@ processes:
     level: L1
     status: ARCHITECTURE_READY
     owner_role: UNKNOWN
-    trigger: "Кандидат согласился на оффер и сведения о кандидате/условиях переданы в кадровое делопроизводство"
-    business_result: "Кадровое оформление приема завершено; применимые ветки воинского учета и отчетности в СФР обработаны в подтвержденной источниками границе"
+    trigger: "Кандидат согласился на оффер и сведения переданы в кадровое делопроизводство"
+    business_result: "Core кадровое оформление завершено; точная parent-close граница относительно MIL/SFR UNKNOWN"
     previous_processes: [HR-RECRUIT-001]
-    next_processes: [HR-ADAPT-001]
+    next_processes: []
+    boundary_handoff:
+      event: "Фактический выход сотрудника и начало адаптации"
+      target_l1: HR-ADAPT-001
+      timing_relative_to_parent_close: UNKNOWN_MAY_OVERLAP
+    completion_boundary:
+      HR-HIRE-KDP-001: REQUIRED
+      HR-HIRE-MIL-001:
+        applicability: CONDITIONAL
+        required_before_parent_close: UNKNOWN
+      HR-HIRE-SFR-001:
+        applicability: SOURCE_SUPPORTED
+        required_before_parent_close: UNKNOWN
     source_refs: [SRC-HR-KDP-001, SRC-HR-DIR-001, SRC-HR-MODEL-001]
-    views: [VIEW-HR-KDP-ROLE-001, VIEW-HR-DIRECTOR-ROLE-001, VIEW-HR-HIRE-E2E-001, VIEW-HR-MODEL-ENTRY-E2E-001]
+    views: [VIEW-HR-FUNCTION-001, VIEW-HR-KDP-ROLE-001, VIEW-HR-DIRECTOR-ROLE-001, VIEW-HR-HIRE-E2E-001, VIEW-HR-MODEL-ENTRY-E2E-001]
     as_is_version: null
     to_be_version: null
     blocking_questions:
-      - "UNKNOWN: точный состав handoff после принятия оффера."
-      - "CONFLICT: распределение ответственности за подготовку/отправку отчетности в СФР различается между SRC-HR-KDP-001 и SRC-HR-MODEL-001."
-      - "UNKNOWN: является ли ответственный за воинский учет отдельной ролью или функцией кадрового специалиста."
-      - "CONFLICT/AMBIGUITY: SRC-HR-MODEL-001 размещает 'контроль выхода и начало адаптации' в lane Кадровика, а SRC-HR-DIR-001 относит контроль адаптации к Директору по персоналу."
+      - "UNKNOWN: обязателен ли completion HR-HIRE-MIL-001 до parent close."
+      - "UNKNOWN: обязателен ли completion HR-HIRE-SFR-001 до parent close."
+      - "CONFLICT: распределение ответственности за СФР."
+      - "CONFLICT: роль в boundary начала адаптации."
 
   - process_id: HR-HIRE-KDP-001
     name: "Оформление кадровых документов и данных приема"
@@ -139,16 +192,25 @@ processes:
     parent_process: HR-HIRE-001
     status: ARCHITECTURE_READY
     owner_role: UNKNOWN
-    trigger: "В кадровое делопроизводство переданы сведения о кандидате, согласившемся на оффер"
-    business_result: "Основные кадровые данные и документы приема оформлены и подписаны в пределах подтвержденного источниками сценария"
-    previous_processes: [HR-RECRUIT-001]
-    next_processes: [HR-HIRE-MIL-001, HR-HIRE-SFR-001, HR-ADAPT-001]
+    trigger: "Parent HR-HIRE-001 запущен передачей сведений о кандидате"
+    business_result: "Основные кадровые данные и документы приема оформлены/подписаны"
+    previous_processes: []
+    next_processes: [HR-HIRE-SFR-001]
+    conditional_next_processes:
+      - process_ref: HR-HIRE-MIL-001
+        applicability: CONDITIONAL
+    parent_entry_handoff:
+      from_l1: HR-RECRUIT-001
+      via_parent: HR-HIRE-001
+    external_boundary_handoff:
+      event: "Фактический выход сотрудника"
+      target_l1: HR-ADAPT-001
+      routing: VIA_PARENT_ONLY
     source_refs: [SRC-HR-KDP-001, SRC-HR-MODEL-001, SRC-HR-DIR-001]
     views: []
     as_is_version: null
     to_be_version: null
-    blocking_questions:
-      - "UNKNOWN: точная конечная точка этого L2 относительно подписания всех документов и даты фактического выхода."
+    blocking_questions: ["UNKNOWN: точная конечная точка core оформления относительно выхода/подписей."]
 
   - process_id: HR-HIRE-MIL-001
     name: "Воинский учет при приеме сотрудника"
@@ -157,17 +219,20 @@ processes:
     parent_process: HR-HIRE-001
     status: ARCHITECTURE_READY
     owner_role: UNKNOWN
-    trigger: "Принимаемый сотрудник подпадает под применимую ветку воинского учета"
-    business_result: "Действия и документы воинского учета, связанные с событием приема, обработаны и требуемые сведения направлены в пределах описанного сценария"
+    trigger: "Сотрудник подпадает под применимую ветку воинского учета"
+    business_result: "Связанные с приемом действия воинского учета обработаны"
     previous_processes: [HR-HIRE-KDP-001]
     next_processes: []
+    architecture_applicability:
+      mode: CONDITIONAL_L2
+      as_is_applicability: CONDITIONAL
+      source_confidence: INTERVIEW_SUPPORTED
+      parent_completion_dependency: UNKNOWN
     source_refs: [SRC-HR-KDP-001, SRC-HR-MODEL-001]
     views: []
     as_is_version: null
     to_be_version: null
-    blocking_questions:
-      - "UNKNOWN: ROLE-MIL-RESP-001 — отдельная роль или функция ROLE-HR-KDP-001."
-      - "UNKNOWN: точный критерий применимости ветки; Agent 01 не достраивает его из законодательства."
+    blocking_questions: ["UNKNOWN: identity ROLE-MIL-RESP-001.", "UNKNOWN: критерий применимости.", "UNKNOWN: dependency parent close."]
 
   - process_id: HR-HIRE-SFR-001
     name: "Подготовка и отправка сведений о приеме в СФР"
@@ -176,17 +241,19 @@ processes:
     parent_process: HR-HIRE-001
     status: ARCHITECTURE_READY
     owner_role: UNKNOWN
-    trigger: "Событие приема оформлено и доступны сведения для отчетности в СФР"
-    business_result: "Сведения о приеме отправлены в СФР и получено/зафиксировано подтверждение сдачи в пределах описанных источников"
+    trigger: "Событие приема оформлено и доступны сведения для СФР"
+    business_result: "Сведения отправлены и подтверждение сдачи зафиксировано в пределах источников"
     previous_processes: [HR-HIRE-KDP-001]
     next_processes: []
+    architecture_applicability:
+      mode: CANONICAL_L2
+      source_confidence: INTERVIEW_AND_REFERENCE_WITH_ROLE_CONFLICT
+      parent_completion_dependency: UNKNOWN
     source_refs: [SRC-HR-KDP-001, SRC-HR-MODEL-001]
     views: []
     as_is_version: null
     to_be_version: null
-    blocking_questions:
-      - "CONFLICT: SRC-HR-KDP-001 — кадровик формирует сведения и передает Главному бухгалтеру на отправку; SRC-HR-MODEL-001 — 'подготовка и отправка' целиком расположена в lane Главного бухгалтера."
-      - "UNKNOWN: фактическая граница ответственности и система/действие, фиксирующее успешную сдачу."
+    blocking_questions: ["CONFLICT: кто готовит/отправляет.", "UNKNOWN: dependency parent close."]
 
   - process_id: HR-ADAPT-001
     name: "Сопровождение адаптации и испытательного срока сотрудника"
@@ -195,17 +262,18 @@ processes:
     status: ARCHITECTURE_READY
     owner_role: UNKNOWN
     trigger: "Фактический выход сотрудника и начало периода адаптации/испытательного срока"
-    business_result: "Период адаптации/испытательного срока проконтролирован, обратная связь получена, выявленные негативные моменты в зоне HR отработаны; формальное решение по итогам периода остается UNKNOWN"
-    previous_processes: [HR-HIRE-001]
+    business_result: "Период проконтролирован, обратная связь получена, негативные моменты в зоне HR отработаны; формальный итог UNKNOWN"
+    previous_processes: []
     next_processes: []
+    boundary_handoff_from:
+      source_l1: HR-HIRE-001
+      event: "Фактический выход сотрудника"
+      relation_to_source_completion: UNKNOWN_MAY_OVERLAP
     source_refs: [SRC-HR-DIR-001, SRC-HR-MODEL-001]
-    views: [VIEW-HR-DIRECTOR-ROLE-001, VIEW-HR-HIRE-E2E-001, VIEW-HR-MODEL-ENTRY-E2E-001]
+    views: [VIEW-HR-FUNCTION-001, VIEW-HR-DIRECTOR-ROLE-001, VIEW-HR-HIRE-E2E-001, VIEW-HR-MODEL-ENTRY-E2E-001]
     as_is_version: null
     to_be_version: null
-    blocking_questions:
-      - "CONFLICT/AMBIGUITY: SRC-HR-MODEL-001 размещает 'контроль выхода и начало адаптации' у Кадровика, SRC-HR-DIR-001 относит контроль адаптации к Директору по персоналу."
-      - "UNKNOWN: является ли элемент модели только handoff/контролем выхода либо описывает участие Кадровика в полном HR-ADAPT-001."
-      - "UNKNOWN: кто предоставляет итоговую обратную связь и какой формальный результат закрывает испытательный срок."
+    blocking_questions: ["CONFLICT: role boundary КДП vs Директор.", "UNKNOWN: formal result/feedback source.", "UNKNOWN: timing relative to HR-HIRE-001 close."]
 
   - process_id: HR-TERM-001
     name: "Прекращение трудовых отношений с сотрудником"
@@ -213,18 +281,15 @@ processes:
     level: L1
     status: ARCHITECTURE_READY
     owner_role: UNKNOWN
-    trigger: "Возникновение подтвержденного источниками основания прекращения трудовых отношений: заявление сотрудника; сокращение штата/снижение численности; договоренность с сотрудником. Полный перечень оснований остается UNKNOWN"
-    business_result: "Трудовые отношения прекращены и кадровое оформление прекращения завершено; для подробно раскрытого сценария по заявлению сотрудника подтверждены выдача документов и подготовка связанной отчетности"
+    trigger: "Возникновение подтвержденного основания прекращения трудовых отношений"
+    business_result: "Трудовые отношения прекращены и кадровое оформление завершено"
     previous_processes: []
     next_processes: []
     source_refs: [SRC-HR-KDP-001, SRC-HR-DIR-001]
-    views: [VIEW-HR-KDP-ROLE-001, VIEW-HR-DIRECTOR-ROLE-001]
+    views: [VIEW-HR-FUNCTION-001, VIEW-HR-KDP-ROLE-001, VIEW-HR-DIRECTOR-ROLE-001]
     as_is_version: null
     to_be_version: null
-    blocking_questions:
-      - "UNKNOWN: полный перечень сценариев прекращения трудовых отношений и их архитектурные различия."
-      - "UNKNOWN: граница полного расчета и передачи дел."
-      - "UNKNOWN: кто подписывает приказ об увольнении; SRC-HR-KDP-001 содержит противоречивую фразу."
+    blocking_questions: ["UNKNOWN: полный перечень сценариев и границы.", "UNKNOWN: граница полного расчета и передачи дел.", "UNKNOWN: подписант приказа из-за source issue."]
 
   - process_id: HR-MIL-ORG-001
     name: "Постановка организации на воинский учет"
@@ -233,16 +298,14 @@ processes:
     status: ARCHITECTURE_READY
     owner_role: UNKNOWN
     trigger: "Необходимость первоначально поставить организацию на воинский учет"
-    business_result: "Организация поставлена на воинский учет; формальный подтверждающий артефакт в источнике не назван"
+    business_result: "Организация поставлена на воинский учет; формальный подтверждающий артефакт UNKNOWN"
     previous_processes: []
     next_processes: [HR-MIL-CHANGE-001, HR-MIL-RECON-001]
     source_refs: [SRC-HR-KDP-001]
-    views: [VIEW-HR-KDP-ROLE-001]
+    views: [VIEW-HR-FUNCTION-001, VIEW-HR-KDP-ROLE-001]
     as_is_version: null
     to_be_version: null
-    blocking_questions:
-      - "UNKNOWN: формальный результат/подтверждение постановки организации на учет."
-      - "UNKNOWN: фактический исполнитель относительно ROLE-HR-KDP-001 и ROLE-MIL-RESP-001."
+    blocking_questions: ["UNKNOWN: формальный result.", "UNKNOWN: фактический исполнитель."]
 
   - process_id: HR-MIL-CHANGE-001
     name: "Актуализация сведений воинского учета при изменениях данных сотрудника"
@@ -250,17 +313,15 @@ processes:
     level: L1
     status: ARCHITECTURE_READY
     owner_role: UNKNOWN
-    trigger: "Изменение личных данных, документов, образования или должности сотрудника, состоящего на воинском учете"
-    business_result: "Сведения об изменениях зафиксированы и направлены письмом в военный комиссариат"
+    trigger: "Изменение личных данных, документов, образования или должности сотрудника на воинском учете"
+    business_result: "Сведения об изменениях зафиксированы и направлены в военный комиссариат"
     previous_processes: []
     next_processes: []
     source_refs: [SRC-HR-KDP-001]
-    views: [VIEW-HR-KDP-ROLE-001]
+    views: [VIEW-HR-FUNCTION-001, VIEW-HR-KDP-ROLE-001]
     as_is_version: null
     to_be_version: null
-    blocking_questions:
-      - "UNKNOWN: как кадровая служба получает подтвержденные сведения об изменении."
-      - "UNKNOWN: identity ROLE-MIL-RESP-001."
+    blocking_questions: ["UNKNOWN: входное подтверждение изменений.", "UNKNOWN: identity ROLE-MIL-RESP-001."]
 
   - process_id: HR-MIL-RECON-001
     name: "Ежегодная сверка воинского учета с военным комиссариатом"
@@ -269,16 +330,14 @@ processes:
     status: ARCHITECTURE_READY
     owner_role: UNKNOWN
     trigger: "Ежегодный период сверки: начиная с 1 октября и до конца года"
-    business_result: "Ежегодная сверка с военным комиссариатом выполнена в пределах описанного источником сценария"
+    business_result: "Ежегодная сверка выполнена в пределах описанного сценария"
     previous_processes: [HR-MIL-ORG-001]
     next_processes: []
     source_refs: [SRC-HR-KDP-001]
-    views: [VIEW-HR-KDP-ROLE-001]
+    views: [VIEW-HR-FUNCTION-001, VIEW-HR-KDP-ROLE-001]
     as_is_version: null
     to_be_version: null
-    blocking_questions:
-      - "UNKNOWN: конкретный артефакт/отметка завершения сверки."
-      - "UNKNOWN: кто закрывает процесс после согласования документов."
+    blocking_questions: ["UNKNOWN: артефакт завершения.", "UNKNOWN: кто закрывает процесс."]
 
   - process_id: HR-REPORT-REQ-001
     name: "Подготовка кадрового отчета по запросу"
@@ -287,16 +346,14 @@ processes:
     status: ARCHITECTURE_READY
     owner_role: UNKNOWN
     trigger: "Поступление запроса на кадровый отчет"
-    business_result: "Запрошенный кадровый отчет сформирован и отправлен инициатору запроса"
+    business_result: "Запрошенный отчет сформирован и отправлен инициатору"
     previous_processes: []
     next_processes: []
     source_refs: [SRC-HR-KDP-001]
-    views: [VIEW-HR-KDP-ROLE-001]
+    views: [VIEW-HR-FUNCTION-001, VIEW-HR-KDP-ROLE-001]
     as_is_version: null
     to_be_version: null
-    blocking_questions:
-      - "UNKNOWN: инициаторы/потребители кадровых отчетов."
-      - "UNKNOWN: каналы поступления запросов и отправки результата."
+    blocking_questions: ["UNKNOWN: инициаторы/потребители.", "UNKNOWN: каналы запроса/отправки."]
 
 architecture_candidates:
   - candidate_id: CAND-HR-MOVE-001
@@ -305,77 +362,69 @@ architecture_candidates:
     proposed_level: L1
     status: BOUNDARY_UNKNOWN
     source_refs: [SRC-HR-KDP-001, SRC-HR-DIR-001]
-    evidence_note: "Оба интервью подтверждают переводы/кадровые движения как область работы, но последовательность не раскрыта."
+    evidence_note: "Оба интервью подтверждают область работы, но последовательность не раскрыта."
     missing_for_canonicalization: ["trigger", "business result", "consumer", "границы и handoff", "различие видов перемещений"]
-
   - candidate_id: CAND-HR-WORKFORCE-001
     working_name: "Управление изменением штатной численности"
     domain: HR
     proposed_level: L1
     status: BOUNDARY_UNKNOWN
     source_refs: [SRC-HR-DIR-001, SRC-HR-MODEL-002]
-    evidence_note: "HR-STAFF-REQ-001 теперь покрывает конкретный цикл от потребности до согласованной заявки/отказа. Более широкий контур изменения штатной численности компании остается кандидатом: SRC-HR-DIR-001 связывает изменение объема задач с увеличением/снижением численности, но управленческое решение о целевой численности не раскрыто."
-    missing_for_canonicalization: ["владелец решения о численности", "результат планирования численности", "граница относительно отдельных заявок и сокращений"]
-
+    evidence_note: "Более широкий контур численности остается кандидатом вне HR-STAFF-REQ-001."
+    missing_for_canonicalization: ["владелец решения", "result планирования", "граница относительно заявок/сокращений"]
   - candidate_id: CAND-HR-LEAVE-SCHEDULE-001
     working_name: "Формирование и утверждение графика отпусков"
     domain: HR
     proposed_level: L1
     status: BOUNDARY_REVIEW_REQUIRED
     source_refs: [SRC-HR-DIR-001]
-    evidence_note: "Самостоятельный ежегодный блок назван, но требуется отдельный boundary-review."
-    missing_for_canonicalization: ["точный trigger", "входные данные/участники", "конечная точка"]
-
+    evidence_note: "Ежегодный блок назван, требуется boundary-review."
+    missing_for_canonicalization: ["trigger", "входные данные/участники", "конечная точка"]
   - candidate_id: CAND-HR-LNA-001
     working_name: "Управление локальными нормативными актами"
     domain: HR
     proposed_level: L1
     status: BOUNDARY_REVIEW_REQUIRED
     source_refs: [SRC-HR-DIR-001]
-    evidence_note: "Смешаны создание/редактирование/согласование/ознакомление и применение ЛНА; нужна проверка lifecycle-границы."
-    missing_for_canonicalization: ["триггеры создания/изменения", "граница поддержания и применения", "результат цикла"]
-
+    evidence_note: "Создание/редактирование/согласование/ознакомление и применение смешаны."
+    missing_for_canonicalization: ["триггеры", "lifecycle boundary", "result"]
   - candidate_id: CAND-HR-CONFLICT-001
     working_name: "Урегулирование конфликтных и дисциплинарных ситуаций"
     domain: HR
     proposed_level: L1
     status: BOUNDARY_REVIEW_REQUIRED
     source_refs: [SRC-HR-DIR-001]
-    evidence_note: "Описаны досудебный и судебный контуры, но их границы смешаны."
-    missing_for_canonicalization: ["единая/раздельная граница", "результат судебной поддержки", "handoff к юристам"]
-
+    evidence_note: "Досудебный и судебный контуры смешаны."
+    missing_for_canonicalization: ["единая/раздельная граница", "result судебной поддержки", "handoff к юристам"]
   - candidate_id: CAND-HR-INSPECTION-001
     working_name: "Подготовка кадровых документов по запросу государственного органа"
     domain: HR
     proposed_level: L1
     status: BOUNDARY_REVIEW_REQUIRED
     source_refs: [SRC-HR-DIR-001]
-    evidence_note: "Подготовка пакета по списку инспекции подтверждена, но start/end и передача не раскрыты."
+    evidence_note: "Пакет документов подтвержден, start/end и передача не раскрыты."
     missing_for_canonicalization: ["получатель запроса", "проверяющий/отправляющий", "точка завершения"]
-
   - candidate_id: CAND-HR-FOT-001
     working_name: "Ежемесячный контроль фонда оплаты труда"
     domain: HR
     proposed_level: L1
     status: BOUNDARY_REVIEW_REQUIRED
     source_refs: [SRC-HR-DIR-001]
-    evidence_note: "Ежемесячная таблица ФОТ передается на согласование, но потребитель и граница после передачи не названы."
-    missing_for_canonicalization: ["календарный trigger", "роль согласующего", "граница после согласования"]
-
+    evidence_note: "Таблица ФОТ передается на согласование, потребитель/граница UNKNOWN."
+    missing_for_canonicalization: ["календарный trigger", "согласующий", "граница"]
   - candidate_id: CAND-HR-CORP-EVENT-001
     working_name: "Организация корпоративного мероприятия"
     domain: HR
     proposed_level: L1
     status: BOUNDARY_REVIEW_REQUIRED
     source_refs: [SRC-HR-DIR-001]
-    evidence_note: "Программа, место, формат, бюджет, проведение и отчет названы, но trigger/consumer требуют уточнения."
-    missing_for_canonicalization: ["trigger", "согласующий бюджет", "формальная точка закрытия"]
-
+    evidence_note: "Программа/место/бюджет/проведение/отчет названы; trigger/consumer UNKNOWN."
+    missing_for_canonicalization: ["trigger", "согласующий бюджет", "точка закрытия"]
   - candidate_id: CAND-HR-TIME-LEAVE-001
     working_name: "Табелирование и учет отпусков/больничного времени"
     domain: HR
     proposed_level: L1
     status: INSUFFICIENTLY_DESCRIBED
     source_refs: [SRC-HR-DIR-001]
-    evidence_note: "Темы перечислены внутри контроля КДП; отдельные process_id без trigger/result/consumer не создаются."
+    evidence_note: "Темы перечислены внутри контроля КДП; отдельные process_id не создаются."
     missing_for_canonicalization: ["границы", "триггеры", "результаты", "участники/handoff"]
