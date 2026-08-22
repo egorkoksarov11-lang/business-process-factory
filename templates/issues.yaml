@@ -1,4 +1,4 @@
-schema_version: "1.0"
+schema_version: "1.1"
 issues: []
 
 # Пример:
@@ -6,6 +6,9 @@ issues: []
 #   process_id: HR-HIRE-001
 #   category: WAIT
 #   as_is_steps: [A12]
+#   flow_refs: []
+#   handoff_refs: []
+#   information_object_refs: []
 #   description: "После передачи документа согласующему нет установленного срока ответа"
 #   evidence_refs: [FACT-014]
 #   consequence: "Документ может быть несвоевременно отражен в следующем процессе"

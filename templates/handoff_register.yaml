@@ -1,0 +1,34 @@
+schema_version: "1.1"
+process_id: "DOMAIN-PROCESS-001"
+handoffs: []
+
+# Handoff фиксирует передачу объекта/результата/ответственности.
+# - handoff_id: HO-001
+#   handoff_type: ROLE_TO_ROLE # ROLE_TO_ROLE | PROCESS_TO_PROCESS | CROSS_DOMAIN | EXTERNAL
+#   from_process_ref: DOMAIN-PROCESS-001
+#   from_subprocess_ref: null
+#   from_role_ref: ROLE-001
+#   to_process_ref: DOMAIN-PROCESS-002
+#   to_subprocess_ref: null
+#   to_role_ref: ROLE-002
+#   trigger_or_condition: "Документ подготовлен и готов к согласованию"
+#   payload_refs: [IO-001]
+#   communication_refs: [COM-001]
+#   system_refs: []
+#   channel_refs: []
+#   acceptance_or_result: "Получатель принял документ в работу"
+#   acknowledgement_required: UNKNOWN # YES | NO | UNKNOWN
+#   timing:
+#     deadline: null
+#     expected_wait: null
+#     sla: null
+#   applicability: CONFIRMED_CURRENT # CONFIRMED_CURRENT | PARTIAL_CURRENT | UNKNOWN_CURRENT | REFERENCE_ONLY | CONDITIONAL
+#   evidence_refs: []
+#   evidence_class: EXPLICIT
+#   ambiguity: null
+#   notes: null
+
+metadata:
+  created_at: null
+  updated_at: null
+  notes: null

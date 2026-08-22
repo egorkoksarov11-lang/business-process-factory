@@ -1,0 +1,12 @@
+schema_version: "1.1"
+channels: []
+
+# Канал не является системой и не является сообщением.
+# Пример:
+# - channel_id: CH-EMAIL-001
+#   canonical_name: "Электронная почта"
+#   channel_type: EMAIL # EMAIL | MESSENGER | PHONE | TICKET_PORTAL | IN_PERSON | POSTAL | FILE_SHARE | OTHER
+#   system_ref: null
+#   aliases: []
+#   source_refs: []
+#   notes: null

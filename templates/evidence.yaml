@@ -1,4 +1,4 @@
-schema_version: "1.0"
+schema_version: "1.1"
 source:
   source_id: "SRC-DOMAIN-001"
   title: ""
@@ -7,15 +7,21 @@ source:
   interviewee_name: null
   date: null
   file_ref: null
+  segment_file_ref: null
 
 facts: []
 
 # Пример факта:
 # - fact_id: FACT-001
 #   process_refs: [HR-HIRE-001]
+#   subprocess_refs: []
+#   as_is_step_refs: []
+#   information_object_refs: []
+#   handoff_refs: []
 #   statement: "Кадровый специалист проверяет комплект документов до внесения сотрудника в 1С"
 #   evidence_class: EXPLICIT # EXPLICIT | INFERRED | UNKNOWN | CONFLICT
 #   source_locator: "абзац/строка/таймкод"
+#   segment_refs: [SEG-SRC-DOMAIN-001-001]
 #   role_ref: ROLE-HR-KDP-001
 #   object_refs: []
 #   conflicts_with: []

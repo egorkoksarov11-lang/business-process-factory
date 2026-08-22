@@ -1,0 +1,84 @@
+schema_version: "1.1"
+process_id: "DOMAIN-PROCESS-001"
+as_is_version: "0.1"
+status: "AS_IS_DRAFT" # AS_IS_DRAFT | CLARIFICATION_REQUIRED | AS_IS_READY
+
+scope:
+  trigger: null
+  business_result: null
+  applicability: "UNKNOWN_CURRENT" # CONFIRMED_CURRENT | PARTIAL_CURRENT | UNKNOWN_CURRENT | REFERENCE_ONLY | CONDITIONAL
+  source_refs: []
+
+steps: []
+
+# Пример шага:
+# - step_id: A001
+#   subprocess_id: null
+#   role_ref: ROLE-001
+#   action: "Проверить комплект документов"
+#   business_object: "Комплект документов"
+#   input_information_refs: [IO-001]
+#   output_information_refs: [IO-002]
+#   system_refs: []
+#   channel_refs: []
+#   incoming_flow_refs: [F001]
+#   outgoing_flow_refs: [F002]
+#   timing:
+#     duration: null
+#     deadline: null
+#     frequency: null
+#     wait_for: null
+#   result: "Комплект проверен; определена комплектность"
+#   evidence_refs: [FACT-001]
+#   evidence_class: EXPLICIT # EXPLICIT | INFERRED | UNKNOWN | CONFLICT
+#   notes: null
+
+flows: []
+
+# - flow_id: F001
+#   from_ref: A001
+#   to_ref: A002
+#   flow_type: SEQUENCE # SEQUENCE | CONDITIONAL | RETURN | PARALLEL_SPLIT | PARALLEL_JOIN | HANDOFF | EXCEPTION
+#   condition: null
+#   evidence_refs: []
+#   applicability: CONFIRMED_CURRENT
+
+# Decisions хранят бизнес-условия и ветви; gateway сам по себе не является процессом.
+decisions: []
+
+# - decision_id: D001
+#   after_step_ref: A003
+#   question: "Комплект полный?"
+#   branches:
+#     - outcome: "Да"
+#       next_ref: A004
+#     - outcome: "Нет"
+#       next_ref: A002
+#   evidence_refs: []
+#   evidence_class: EXPLICIT
+#   applicability: CONFIRMED_CURRENT
+
+exceptions: []
+
+# - exception_id: EX001
+#   related_step_refs: [A005]
+#   condition: "Ответ согласующего не получен"
+#   behavior: "Процесс ожидает ответа; дальнейшее действие UNKNOWN"
+#   evidence_refs: []
+
+quantitative_observations: []
+
+# - observation_id: QO001
+#   metric_type: DURATION # DURATION | DEADLINE | FREQUENCY | VOLUME | COUNT | SLA | WAIT
+#   related_refs: [A001]
+#   value: 15
+#   unit: "minutes"
+#   qualifier: "обычно"
+#   evidence_refs: [FACT-010]
+#   evidence_class: EXPLICIT
+
+open_questions: []
+metadata:
+  created_at: null
+  updated_at: null
+  notes: null

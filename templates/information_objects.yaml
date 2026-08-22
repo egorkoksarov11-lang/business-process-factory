@@ -1,0 +1,57 @@
+schema_version: "1.1"
+process_id: "DOMAIN-PROCESS-001"
+
+information_objects: []
+
+# Информационный объект — документ, сообщение, файл, отчет, запрос, запись и т. п.
+# AS-IS и TO-BE объекты не перезаписывают друг друга: измененный/новый TO-BE объект получает отдельный ID.
+# - information_id: IO-001
+#   model_layer: AS_IS # AS_IS | TO_BE
+#   derived_from_information_ref: null # для TO_BE: ссылка на AS_IS объект, если он изменяется
+#   introduced_by_change_refs: [] # для TO_BE: change refs, объясняющие появление/изменение
+#   name: "Заявка на подбор"
+#   object_type: DOCUMENT # DOCUMENT | MESSAGE | REQUEST | NOTIFICATION | FILE | REPORT | FORM | RECORD | DATASET | REGISTER | OTHER
+#   document_class: EXISTING_INTERNAL # EXISTING_INTERNAL | EXTERNAL_STATUTORY | TRANSACTIONAL | PROPOSED_TEMPLATE | PROPOSED_CHECKLIST | PROPOSED_REGISTER | null
+#   lifecycle_role: INPUT # INPUT | OUTPUT | SUPPORTING | APPROVAL_BASIS | CONFIRMATION | HANDOFF_PAYLOAD | ARCHIVE
+#   state_in: null
+#   state_out: null
+#   created_by_role_ref: null
+#   consumed_by_role_refs: []
+#   related_step_refs: []
+#   system_refs: []
+#   channel_refs: []
+#   storage_location: null
+#   format: null
+#   required: UNKNOWN # YES | NO | UNKNOWN
+#   existence_status: CONFIRMED # CONFIRMED | UNVERIFIED | PROPOSED
+#   evidence_refs: []
+#   evidence_class: EXPLICIT # EXPLICIT | INFERRED | UNKNOWN | CONFLICT | null for TO_BE design
+#   notes: null
+
+communications: []
+
+# Коммуникация — факт передачи сообщения/запроса/уведомления, а не канал сам по себе.
+# Измененная TO-BE коммуникация получает отдельный communication_id; AS-IS запись не редактируется задним числом.
+# - communication_id: COM-001
+#   model_layer: AS_IS # AS_IS | TO_BE
+#   derived_from_communication_ref: null
+#   introduced_by_change_refs: []
+#   sender_role_ref: ROLE-001
+#   recipient_role_refs: [ROLE-002]
+#   purpose: "Сообщить о готовности сведений для отправки"
+#   payload_refs: [IO-002]
+#   message_information_ref: IO-003
+#   channel_ref: CH-EMAIL-001
+#   system_ref: null
+#   related_step_refs: [A010]
+#   response_expected: YES # YES | NO | UNKNOWN
+#   expected_response_information_refs: []
+#   response_deadline: null
+#   evidence_refs: [FACT-010]
+#   evidence_class: EXPLICIT # EXPLICIT | INFERRED | UNKNOWN | CONFLICT | null for TO_BE design
+#   notes: null
+
+metadata:
+  created_at: null
+  updated_at: null
+  notes: null
