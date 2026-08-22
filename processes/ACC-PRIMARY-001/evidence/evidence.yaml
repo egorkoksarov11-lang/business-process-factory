@@ -1,0 +1,116 @@
+schema_version: "1.1"
+source:
+  source_id: "SRC-ACC-CHIEF-001"
+  title: "Интервью Главного бухгалтера — detailed AS-IS evidence for ACC-PRIMARY-001"
+  source_type: "INTERVIEW"
+  interviewee_role: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+  interviewee_name: null
+  date: null
+  file_ref: "sources/raw/accounting/SRC-ACC-CHIEF-001_chief_accountant_interview.txt"
+  segment_file_ref: null
+
+facts:
+  - fact_id: "FACT-ACC-PRIMARY-ASIS-001"
+    process_refs: ["ACC-PRIMARY-001"]
+    subprocess_refs: ["ACC-PRIMARY-CHECK-001"]
+    as_is_step_refs: ["A001"]
+    information_object_refs: ["IO-ACC-PRIMARY-001", "IO-ACC-PRIMARY-003"]
+    handoff_refs: []
+    statement: "В Диадоке/СБИС Главный бухгалтер проверяет входящую документацию контрагентов; источник прямо называет первичную документацию, счета, накладные, акты, ОПД и договоры. При наличии входящих документов Главный бухгалтер скачивает их на сервер соответствующего юридического лица."
+    evidence_class: "EXPLICIT"
+    source_locator: "lines 9-16"
+    segment_refs: []
+    role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    object_refs: ["SYS-DIADOC-001", "SYS-SBIS-001"]
+    conflicts_with: []
+    notes: "ОПД сохранено ровно как в транскрипте; расшифровка/нормализация аббревиатуры не выполняется."
+
+  - fact_id: "FACT-ACC-PRIMARY-ASIS-002"
+    process_refs: ["ACC-PRIMARY-001"]
+    subprocess_refs: ["ACC-PRIMARY-CHECK-001"]
+    as_is_step_refs: ["A002"]
+    information_object_refs: ["IO-ACC-PRIMARY-001", "IO-ACC-PRIMARY-002"]
+    handoff_refs: []
+    statement: "Документы в рамках взаимодействия с контрагентом — счета, счета-фактуры, договоры, ОПД, накладные, акты — Главный бухгалтер проверяет на правильность оформления, соответствие реквизитов договорам и суммам."
+    evidence_class: "EXPLICIT"
+    source_locator: "line 29"
+    segment_refs: []
+    role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    object_refs: []
+    conflicts_with: []
+    notes: "Перечень не объявлен исчерпывающим."
+
+  - fact_id: "FACT-ACC-PRIMARY-ASIS-003"
+    process_refs: ["ACC-PRIMARY-001"]
+    subprocess_refs: ["ACC-PRIMARY-APPROVE-001", "ACC-PRIMARY-POST-001"]
+    as_is_step_refs: ["A003", "A005-FIN", "A005-RESP", "A006"]
+    information_object_refs: ["IO-ACC-PRIMARY-001", "IO-ACC-PRIMARY-004", "IO-ACC-PRIMARY-005", "IO-ACC-PRIMARY-006"]
+    handoff_refs: ["HO-ACC-PRIMARY-001", "HO-ACC-PRIMARY-002", "HO-ACC-PRIMARY-003", "HO-ACC-PRIMARY-004", "HO-ACC-PRIMARY-005"]
+    statement: "После проверки Главный бухгалтер направляет документы на согласование руководителю либо Финансовому директору; после решения о принятии документов к учету Главный бухгалтер отражает их в учетной программе 1С для формирования отчетности."
+    evidence_class: "EXPLICIT"
+    source_locator: "line 29"
+    segment_refs: []
+    role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    object_refs: ["ROLE-FIN-DIRECTOR-001", "ROLE-CONTRACT-OBLIGATION-RESP-001", "SYS-1C-ACCOUNTING-001"]
+    conflicts_with: []
+    notes: "Слово 'руководитель' не интерпретируется как ROLE-CEO-001."
+
+  - fact_id: "FACT-ACC-PRIMARY-ASIS-004"
+    process_refs: ["ACC-PRIMARY-001"]
+    subprocess_refs: ["ACC-PRIMARY-APPROVE-001"]
+    as_is_step_refs: ["A003", "A004"]
+    information_object_refs: ["IO-ACC-PRIMARY-004", "IO-ACC-PRIMARY-005"]
+    handoff_refs: ["HO-ACC-PRIMARY-001", "HO-ACC-PRIMARY-002"]
+    statement: "Согласование документов/договоров интервьюируемая называет самым долгим участком; задержка согласования тормозит дальнейшие действия и может повлиять на своевременное отражение документов в учете."
+    evidence_class: "EXPLICIT"
+    source_locator: "lines 161-168; lines 185-240"
+    segment_refs: []
+    role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    object_refs: ["XISS-ACC-WAIT-001", "XISS-ACC-PRIMARY-TIMING-001"]
+    conflicts_with: []
+    notes: "Формальный SLA/числовой срок ожидания источник не сообщает."
+
+  - fact_id: "FACT-ACC-PRIMARY-ASIS-005"
+    process_refs: ["ACC-PRIMARY-001"]
+    subprocess_refs: ["ACC-PRIMARY-APPROVE-001"]
+    as_is_step_refs: ["A004", "A005-FIN", "A005-RESP"]
+    information_object_refs: ["IO-ACC-PRIMARY-005"]
+    handoff_refs: ["HO-ACC-PRIMARY-003", "HO-ACC-PRIMARY-004"]
+    statement: "Если получатель информации не направил ответ/резолюцию 'берем или не берем документ к учету', Главному бухгалтеру, по словам интервьюируемой, приходится либо самостоятельно принимать решение, либо ждать ответа адресата. Среди адресатов названы руководитель, руководитель проекта и другое лицо, отвечающее за исполнение обязательств по договору."
+    evidence_class: "EXPLICIT"
+    source_locator: "lines 185-207"
+    segment_refs: []
+    role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    object_refs: ["ROLE-CONTRACT-OBLIGATION-RESP-001"]
+    conflicts_with: []
+    notes: "Источник не устанавливает правило выбора между самостоятельным решением и дальнейшим ожиданием и не подтверждает полномочие как формальное правило."
+
+  - fact_id: "FACT-ACC-PRIMARY-ASIS-006"
+    process_refs: ["ACC-PRIMARY-001"]
+    subprocess_refs: ["ACC-PRIMARY-APPROVE-001"]
+    as_is_step_refs: []
+    information_object_refs: []
+    handoff_refs: []
+    statement: "Интервьюируемая считает, что инициатор договора/сделки должен подтверждать фактическое исполнение: была ли поставка или были ли оказаны услуги."
+    evidence_class: "EXPLICIT"
+    source_locator: "lines 207-229"
+    segment_refs: []
+    role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    object_refs: []
+    conflicts_with: []
+    notes: "Это explicit позиция интервьюируемой, но NOT_CONFIRMED как действующее правило и NOT_CONFIRMED_CURRENT_ROLE для AS-IS."
+
+  - fact_id: "FACT-ACC-PRIMARY-ASIS-007"
+    process_refs: ["ACC-PRIMARY-001"]
+    subprocess_refs: ["ACC-PRIMARY-APPROVE-001"]
+    as_is_step_refs: ["A005-FIN", "A005-RESP"]
+    information_object_refs: ["IO-ACC-PRIMARY-005"]
+    handoff_refs: ["HO-ACC-PRIMARY-003", "HO-ACC-PRIMARY-004"]
+    statement: "Источник подтверждает существование решения/резолюции о принятии или непринятии документа к учету, но не называет форму фиксации решения, канал ответа или место хранения этой резолюции."
+    evidence_class: "INFERRED"
+    source_locator: "line 29; lines 185-207"
+    segment_refs: []
+    role_ref: null
+    object_refs: []
+    conflicts_with: []
+    notes: "Само решение/резолюция explicit; отсутствие сведений о форме, канале и хранении — источник не раскрывает."
