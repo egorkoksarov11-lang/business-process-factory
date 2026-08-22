@@ -1,0 +1,40 @@
+schema_version: "1.0"
+view:
+  view_id: "VIEW-IT-LEAD-ROLE-001"
+  name: "Landscape роли внешнего IT lead"
+  view_type: "ROLE_LANDSCAPE"
+  subject_role: "ROLE-IT-LEAD-EXT-001"
+  subject_department: null
+  purpose: "Показать подтвержденное участие внешнего IT lead в IT-функции без приписывания ему выдуманной штатной должности или официального подразделения."
+  level: "L0"
+  process_refs:
+    - IT-SUPPORT-001
+  architecture_candidates:
+    - CAND-IT-ARCH-001
+    - CAND-IT-GOV-001
+  cross_domain_refs:
+    - IT-HR-CROSS-DOMAIN-001
+  participation:
+    - ref: IT-SUPPORT-001
+      mode: "OWNER/ESCALATION_ROLE_AT_ARCHITECTURE_LEVEL"
+      evidence_class: EXPLICIT
+      note: "Подчиненные IT lead выполняют поддержку; сам IT lead доступен команде и перенаправляет мелкие проблемы в поддержку, а по архитектуре/безопасности подключается лично."
+    - ref: CAND-IT-ARCH-001
+      mode: "LEAD_AND_IMPLEMENTATION_RESPONSIBILITY_REPORTED"
+      evidence_class: EXPLICIT
+      note: "Граница канонического процесса пока UNKNOWN."
+    - ref: CAND-IT-GOV-001
+      mode: "AUTHOR/INITIATOR_REPORTED"
+      evidence_class: EXPLICIT
+      note: "Подтверждены попытки создавать и внедрять регламенты; отдельный L1 не доказан."
+  role_context:
+    employment_status: "EXTERNAL_HIGH_INVOLVEMENT"
+    current_company_relation: "Руководитель собственной IT-компании; ранее штатный сотрудник"
+    reports_to_reference: "Непосредственно Анатолию по направлениям ответственности"
+    reports_to_role: UNKNOWN
+    official_department: UNKNOWN
+  entry_point: null
+  exit_point: null
+  notes: |
+    Это role landscape, а не последовательный E2E.
+    Имя «Анатолий» не нормализуется в бизнес-роль, так как должность в интервью не названа.
