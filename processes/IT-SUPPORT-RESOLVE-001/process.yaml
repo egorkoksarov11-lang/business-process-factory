@@ -6,7 +6,7 @@ process:
   level: "L2"
   status: "ARCHITECTURE_READY"
   parent_process: "IT-SUPPORT-001"
-  owner_role: "ROLE-IT-SUPPORT-EXT-001"
+  owner_role: UNKNOWN
   participants:
     - ROLE-IT-SUPPORT-EXT-001
     - ROLE-INTERNAL-USER-001
@@ -47,6 +47,7 @@ architecture_scope:
     stated_target: "30 минут"
     observed_practice: "10–15 минут"
     formal_sla_status: UNKNOWN
+  owner_note: "Сотрудники технической поддержки выполняют работу, но формальный владелец подпроцесса в источнике не назван."
 
 sources:
   source_refs: [SRC-IT-LEAD-001]
@@ -65,6 +66,7 @@ issues: []
 changes: []
 to_be: {steps: [], flows: [], documents: [], rules: [], exceptions: [], automation_options: []}
 open_questions:
+  - "Кто является формальным владельцем L2 обработки/решения?"
   - "Как определяется приоритет/срочность заявок и кто принимает это решение?"
   - "Какие категории обращений эскалируются IT lead и как это фиксируется?"
   - "Что именно измеряют названные 30 минут и 10–15 минут?"
