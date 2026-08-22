@@ -1,0 +1,123 @@
+schema_version: "1.1"
+process_id: "ACC-REG-REQ-001"
+
+handoffs:
+  - handoff_id: "HO-ACC-REG-REQ-INBOUND-001"
+    handoff_type: "PROCESS_TO_PROCESS"
+    from_process_ref: "CAND-ACC-INBOX-001"
+    from_subprocess_ref: null
+    from_role_ref: "UNKNOWN"
+    to_process_ref: "ACC-REG-REQ-001"
+    to_subprocess_ref: null
+    to_role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    trigger_or_condition: "Релевантный запрос контролирующего органа требует бухгалтерских/налоговых документов или данных и оказывается в бухгалтерской границе"
+    payload_refs:
+      - "IO-ACC-REG-REQ-REQUEST-001"
+      - "IO-ACC-REG-REQ-REQUIREMENTS-001"
+    communication_refs: []
+    system_refs: []
+    channel_refs: []
+    observed_channel_names: []
+    acceptance_or_result: "Главный бухгалтер имеет запрос как основание для подготовки бухгалтерской/налоговой части ответа"
+    acknowledgement_required: "UNKNOWN"
+    timing:
+      deadline: null
+      expected_wait: null
+      sla: null
+    applicability: "CONFIRMED_CURRENT"
+    evidence_refs:
+      - "FACT-ACC-002"
+      - "FACT-ACC-003"
+      - "FACT-ACC-004"
+      - "FACT-ACC-006"
+    evidence_class: "INFERRED"
+    ambiguity: "Owner общего intake, точное событие/роль первичного приема, критерий маршрута и process-specific channel перехода из CAND-ACC-INBOX-001 остаются UNKNOWN."
+    notes: "Это boundary handoff, а не превращение CAND-ACC-INBOX-001 в новый L1 или внутренний шаг ACC-REG-REQ-001."
+
+  - handoff_id: "HO-ACC-REG-REQ-ROUTE-FIN-001"
+    handoff_type: "ROLE_TO_ROLE"
+    from_process_ref: "CAND-ACC-INBOX-001"
+    from_subprocess_ref: null
+    from_role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    to_process_ref: "CAND-ACC-INBOX-001"
+    to_subprocess_ref: null
+    to_role_ref: "ROLE-FIN-DIRECTOR-001"
+    trigger_or_condition: "Для большей части (примерно 90%) входящих налоговых запросов; точный критерий применимости UNKNOWN"
+    payload_refs:
+      - "IO-ACC-REG-REQ-REQUEST-001"
+    communication_refs:
+      - "COM-ACC-REG-REQ-ROUTE-001"
+    system_refs: []
+    channel_refs: []
+    observed_channel_names: []
+    acceptance_or_result: "Запрос направлен в группу с участием Финансового директора; дальнейшая роль/резолюция UNKNOWN"
+    acknowledgement_required: "UNKNOWN"
+    timing:
+      deadline: null
+      expected_wait: null
+      sla: null
+    applicability: "CONDITIONAL"
+    evidence_refs: ["FACT-ACC-004"]
+    evidence_class: "EXPLICIT"
+    ambiguity: "Неизвестно, какой критерий определяет этот маршрут и как он соотносится по времени с подготовкой бухгалтерского пакета."
+    notes: "Сохранено только как boundary interface CAND-ACC-INBOX-001."
+
+  - handoff_id: "HO-ACC-REG-REQ-ROUTE-SEC-001"
+    handoff_type: "ROLE_TO_ROLE"
+    from_process_ref: "CAND-ACC-INBOX-001"
+    from_subprocess_ref: null
+    from_role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    to_process_ref: "CAND-ACC-INBOX-001"
+    to_subprocess_ref: null
+    to_role_ref: "ROLE-SECURITY-001"
+    trigger_or_condition: "Для большей части (примерно 90%) входящих налоговых запросов; точный критерий подключения службы безопасности UNKNOWN"
+    payload_refs:
+      - "IO-ACC-REG-REQ-REQUEST-001"
+    communication_refs:
+      - "COM-ACC-REG-REQ-ROUTE-001"
+    system_refs: []
+    channel_refs: []
+    observed_channel_names: []
+    acceptance_or_result: "Запрос направлен в группу с участием службы безопасности; дальнейшее действие/резолюция UNKNOWN"
+    acknowledgement_required: "UNKNOWN"
+    timing:
+      deadline: null
+      expected_wait: null
+      sla: null
+    applicability: "CONDITIONAL"
+    evidence_refs: ["FACT-ACC-004"]
+    evidence_class: "EXPLICIT"
+    ambiguity: "Security не является обязательным участником всех запросов; критерий включения и поведение для оставшейся части запросов не установлены."
+    notes: "Не моделируется как обязательный sequence внутри ACC-REG-REQ-001."
+
+  - handoff_id: "HO-ACC-REG-REQ-OUTBOUND-001"
+    handoff_type: "ROLE_TO_ROLE"
+    from_process_ref: "ACC-REG-REQ-001"
+    from_subprocess_ref: null
+    from_role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    to_process_ref: "UNKNOWN"
+    to_subprocess_ref: null
+    to_role_ref: "UNKNOWN"
+    trigger_or_condition: "Подготовлен бухгалтерский пакет/папка для согласования и дальнейшего направления ответным письмом"
+    payload_refs:
+      - "IO-ACC-REG-REQ-PACKAGE-001"
+    communication_refs: []
+    system_refs: []
+    channel_refs: []
+    observed_channel_names: []
+    acceptance_or_result: "UNKNOWN"
+    acknowledgement_required: "UNKNOWN"
+    timing:
+      deadline: null
+      expected_wait: null
+      sla: null
+    applicability: "UNKNOWN_CURRENT"
+    evidence_refs: ["FACT-ACC-006"]
+    evidence_class: "INFERRED"
+    ambiguity: "Источник подтверждает назначение пакета для согласования/дальнейшей отправки, но не подтверждает receiver, обязательность конкретного согласования, фактическую передачу, канал, финального sender или acknowledgement."
+    notes: "Boundary uncertainty возвращается Coordinator/clarification; не изображается как доказанный handoff на Финансового директора или Security."
+
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "CAND-ACC-INBOX-001 сохранен как внешний boundary interface. Security/Financial Director handoffs условны и не встроены в обязательную последовательность подготовки ответа."
