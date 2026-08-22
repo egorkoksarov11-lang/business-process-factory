@@ -1,0 +1,132 @@
+schema_version: "1.1"
+process_id: "ACC-PRIMARY-001"
+handoffs:
+  - handoff_id: "HO-ACC-PRIMARY-001"
+    handoff_type: "ROLE_TO_ROLE"
+    from_process_ref: "ACC-PRIMARY-001"
+    from_subprocess_ref: "ACC-PRIMARY-APPROVE-001"
+    from_role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    to_process_ref: "ACC-PRIMARY-001"
+    to_subprocess_ref: "ACC-PRIMARY-APPROVE-001"
+    to_role_ref: "ROLE-FIN-DIRECTOR-001"
+    trigger_or_condition: "Документ проверен и направлен Финансовому директору для решения о принятии к учету"
+    payload_refs: ["IO-ACC-PRIMARY-001", "IO-ACC-PRIMARY-003", "IO-ACC-PRIMARY-004"]
+    communication_refs: ["COM-ACC-PRIMARY-001"]
+    system_refs: []
+    channel_refs: []
+    acceptance_or_result: "Финансовый директор является адресатом согласования; подтверждение приема документа в работу источник не описывает"
+    acknowledgement_required: "UNKNOWN"
+    timing:
+      deadline: null
+      expected_wait: "Ожидается ответ/резолюция; числовое ожидание не подтверждено"
+      sla: null
+    applicability: "CONDITIONAL"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003", "FACT-ACC-PRIMARY-ASIS-004"]
+    evidence_class: "EXPLICIT"
+    ambiguity: "Критерий выбора Финансового директора как согласующего для конкретного документа UNKNOWN"
+    notes: null
+
+  - handoff_id: "HO-ACC-PRIMARY-002"
+    handoff_type: "ROLE_TO_ROLE"
+    from_process_ref: "ACC-PRIMARY-001"
+    from_subprocess_ref: "ACC-PRIMARY-APPROVE-001"
+    from_role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    to_process_ref: "ACC-PRIMARY-001"
+    to_subprocess_ref: "ACC-PRIMARY-APPROVE-001"
+    to_role_ref: "ROLE-CONTRACT-OBLIGATION-RESP-001"
+    trigger_or_condition: "Документ проверен и направлен руководителю/руководителю проекта/иному ответственному за исполнение обязательств по договору для решения о принятии к учету"
+    payload_refs: ["IO-ACC-PRIMARY-001", "IO-ACC-PRIMARY-003", "IO-ACC-PRIMARY-004"]
+    communication_refs: ["COM-ACC-PRIMARY-002"]
+    system_refs: []
+    channel_refs: []
+    acceptance_or_result: "Функциональный согласующий является адресатом документа; подтверждение приема документа в работу источник не описывает"
+    acknowledgement_required: "UNKNOWN"
+    timing:
+      deadline: null
+      expected_wait: "Ожидается ответ/резолюция; числовое ожидание не подтверждено"
+      sla: null
+    applicability: "CONDITIONAL"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003", "FACT-ACC-PRIMARY-ASIS-005"]
+    evidence_class: "EXPLICIT"
+    ambiguity: "ROLE-CONTRACT-OBLIGATION-RESP-001 — функциональная категория; конкретная должность и правило маршрутизации UNKNOWN"
+    notes: "ROLE-CEO-001 не используется."
+
+  - handoff_id: "HO-ACC-PRIMARY-003"
+    handoff_type: "ROLE_TO_ROLE"
+    from_process_ref: "ACC-PRIMARY-001"
+    from_subprocess_ref: "ACC-PRIMARY-APPROVE-001"
+    from_role_ref: "ROLE-FIN-DIRECTOR-001"
+    to_process_ref: "ACC-PRIMARY-001"
+    to_subprocess_ref: "ACC-PRIMARY-POST-001"
+    to_role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    trigger_or_condition: "Финансовый директор предоставил решение/резолюцию по документу"
+    payload_refs: ["IO-ACC-PRIMARY-005"]
+    communication_refs: ["COM-ACC-PRIMARY-003"]
+    system_refs: []
+    channel_refs: []
+    acceptance_or_result: "Главный бухгалтер получил решение; при положительном решении документ может быть принят к учету и отражен в 1С"
+    acknowledgement_required: "UNKNOWN"
+    timing:
+      deadline: null
+      expected_wait: null
+      sla: null
+    applicability: "CONDITIONAL"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003", "FACT-ACC-PRIMARY-ASIS-007"]
+    evidence_class: "EXPLICIT"
+    ambiguity: "Канал и форма резолюции UNKNOWN"
+    notes: null
+
+  - handoff_id: "HO-ACC-PRIMARY-004"
+    handoff_type: "ROLE_TO_ROLE"
+    from_process_ref: "ACC-PRIMARY-001"
+    from_subprocess_ref: "ACC-PRIMARY-APPROVE-001"
+    from_role_ref: "ROLE-CONTRACT-OBLIGATION-RESP-001"
+    to_process_ref: "ACC-PRIMARY-001"
+    to_subprocess_ref: "ACC-PRIMARY-POST-001"
+    to_role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    trigger_or_condition: "Функциональный согласующий предоставил решение/резолюцию по документу"
+    payload_refs: ["IO-ACC-PRIMARY-005"]
+    communication_refs: ["COM-ACC-PRIMARY-004"]
+    system_refs: []
+    channel_refs: []
+    acceptance_or_result: "Главный бухгалтер получил решение; при положительном решении документ может быть принят к учету и отражен в 1С"
+    acknowledgement_required: "UNKNOWN"
+    timing:
+      deadline: null
+      expected_wait: null
+      sla: null
+    applicability: "CONDITIONAL"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-005", "FACT-ACC-PRIMARY-ASIS-007"]
+    evidence_class: "EXPLICIT"
+    ambiguity: "Конкретная должность, канал и форма резолюции UNKNOWN"
+    notes: null
+
+  - handoff_id: "HO-ACC-PRIMARY-005"
+    handoff_type: "PROCESS_TO_PROCESS"
+    from_process_ref: "ACC-PRIMARY-001"
+    from_subprocess_ref: "ACC-PRIMARY-APPROVE-001"
+    from_role_ref: null
+    to_process_ref: "ACC-PRIMARY-001"
+    to_subprocess_ref: "ACC-PRIMARY-POST-001"
+    to_role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    trigger_or_condition: "Получено положительное решение о принятии документа к учету"
+    payload_refs: ["IO-ACC-PRIMARY-001", "IO-ACC-PRIMARY-005"]
+    communication_refs: []
+    system_refs: ["SYS-1C-ACCOUNTING-001"]
+    channel_refs: []
+    acceptance_or_result: "Главный бухгалтер принимает документ к учету и отражает его в 1С"
+    acknowledgement_required: "NO"
+    timing:
+      deadline: null
+      expected_wait: null
+      sla: null
+    applicability: "CONFIRMED_CURRENT"
+    evidence_refs: ["FACT-ACC-PRIMARY-ASIS-003"]
+    evidence_class: "EXPLICIT"
+    ambiguity: null
+    notes: "Negative/reject branch after a decision not to accept remains UNKNOWN and is not routed to POST."
+
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Handoffs model both outbound approval transfers and return of the decision. Waits are explicit; formal SLA is not invented."
