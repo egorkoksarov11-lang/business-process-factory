@@ -5,16 +5,14 @@ view:
   view_type: "END_TO_END"
   subject_role: null
   subject_department: null
-  purpose: "Показать multi-process цепочку после завершения upstream-согласования заявки: подбор → кадровое оформление → адаптация/испытательный срок."
+  purpose: "Показать multi-process достижение результата после согласованной заявки: подбор → кадровое оформление и boundary запуска адаптации → сопровождение адаптации/испытательного срока, не кодируя ложное ожидание полного закрытия HR-HIRE-001 до старта адаптации."
   level: "L0"
-  process_refs:
-    - HR-RECRUIT-001
-    - HR-HIRE-001
-    - HR-ADAPT-001
+  process_refs: [HR-RECRUIT-001, HR-HIRE-001, HR-ADAPT-001]
   entry_point: "Согласованная заявка на подбор получена HR из HR-STAFF-REQ-001"
   exit_point: "Период адаптации/испытательного срока проконтролирован; формальный итог периода остается UNKNOWN"
   notes: |
-    Это расширенный multi-process E2E, а не детальная схема.
-    HR-STAFF-REQ-001 является подтвержденным upstream L1, но остается за entry boundary этого view; отдельный source-oriented view SRC-HR-MODEL-001 охватывает путь от возникновения потребности.
-    SRC-HR-DIR-001 раскрывает recruitment и полноценный контроль адаптации; SRC-HR-KDP-001 раскрывает кадровое оформление; SRC-HR-MODEL-001 добавляет collapsed L2, циклы возврата, СБ и boundary начала адаптации.
-    Source conflicts по роли адаптации и ответственности за СФР сохраняются в process packages и mapping.
+    Это conceptual multi-process E2E, не детальная последовательная BPMN.
+    HR-RECRUIT-001 → HR-HIRE-001 связан parent-level handoff после принятого оффера.
+    HR-ADAPT-001 запускается отдельным событием фактического выхода сотрудника. Нельзя читать view как требование сначала полностью закрыть HR-HIRE-001.
+    SRC-HR-MODEL-001 показывает после core оформления параллель: начало адаптации, MIL и SFR; lifecycle модели UNKNOWN, поэтому фактическая timing relation и closure dependency остаются UNKNOWN.
+    Source conflicts по роли адаптации и СФР сохранены в packages/mappings.
