@@ -61,7 +61,7 @@ issues:
     information_object_refs: ["IO-ACC-PRIMARY-005"]
     description: "Форма, канал и место фиксации итоговой резолюции 'принять/не принять' документ не установлены."
     evidence_refs: ["FACT-ACC-PRIMARY-ASIS-007"]
-    consequence: "Нельзя точно определить наблюдаемый критерий завершения handoff APPROVE → POST."
+    consequence: "Нельзя точно определить наблюдаемый критерий перехода APPROVE → POST."
     severity: "MEDIUM"
     status: "OPEN"
 
