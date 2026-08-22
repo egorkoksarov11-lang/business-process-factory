@@ -1,0 +1,216 @@
+schema_version: "1.1"
+process_id: "ACC-REG-REQ-001"
+as_is_version: "0.1"
+status: "CLARIFICATION_REQUIRED"
+
+scope:
+  trigger: "Релевантный запрос контролирующего органа оказался в бухгалтерской границе и требует бухгалтерских/налоговых документов или данных"
+  business_result: "Главным бухгалтером подготовлен бухгалтерский пакет/папка для согласования и дальнейшего направления ответным письмом; фактический receiver согласования, финальный sender и подтверждение отправки/получения UNKNOWN"
+  applicability: "CONFIRMED_CURRENT"
+  source_refs: [SRC-ACC-CHIEF-001]
+  upstream_boundary_ref: "CAND-ACC-INBOX-001"
+  upstream_boundary_status: "OWNER_AND_ROUTING_BOUNDARY_UNKNOWN"
+  explicitly_named_request_origins:
+    - "Налоговый орган"
+    - "Фонд социального страхования"
+    - "Другие контролирующие службы"
+  notes:
+    - "Перечень типов органов не расширяется из законодательства."
+    - "Общий прием и маршрутизация входящих объектов не моделируются как шаги ACC-REG-REQ-001."
+
+steps:
+  - step_id: "REGREQ-A001"
+    subprocess_id: null
+    role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    action: "Определить по содержанию входящего запроса, какие бухгалтерские/налоговые документы или данные требуется подготовить"
+    business_object: "Запрос контролирующего органа"
+    input_information_refs:
+      - "IO-ACC-REG-REQ-REQUEST-001"
+      - "IO-ACC-REG-REQ-REQUIREMENTS-001"
+    output_information_refs:
+      - "IO-ACC-REG-REQ-REQUIREMENTS-001"
+    system_refs: []
+    channel_refs: []
+    incoming_flow_refs: []
+    outgoing_flow_refs: []
+    timing:
+      duration: null
+      deadline: null
+      frequency: null
+      wait_for: null
+    result: "Определен требуемый по запросу состав бухгалтерской/налоговой информации в пределах того, что прямо указано в запросе"
+    evidence_refs: ["FACT-ACC-006"]
+    evidence_class: "EXPLICIT"
+    notes: "Источник не описывает формальную классификацию запроса, чек-лист или отдельное решение о полноте требований."
+
+  - step_id: "REGREQ-A002"
+    subprocess_id: null
+    role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    action: "Собрать требуемые документы, которые уже находятся в сетевых папках на серверах"
+    business_object: "Подтверждающие бухгалтерские/налоговые документы"
+    input_information_refs:
+      - "IO-ACC-REG-REQ-REQUEST-001"
+      - "IO-ACC-REG-REQ-REQUIREMENTS-001"
+    output_information_refs:
+      - "IO-ACC-REG-REQ-SUPPORTING-001"
+    system_refs:
+      - "SYS-REMOTE-DESKTOP-001"
+    channel_refs: []
+    incoming_flow_refs: []
+    outgoing_flow_refs: []
+    timing:
+      duration: null
+      deadline: null
+      frequency: null
+      wait_for: null
+    result: "Доступные в сетевых папках требуемые документы собраны для включения в ответный пакет"
+    evidence_refs: ["FACT-ACC-006"]
+    evidence_class: "EXPLICIT"
+    notes: "Шаг применим только если нужные материалы находятся в сетевых папках; источник не задает структуру поиска или обязательный набор папок."
+
+  - step_id: "REGREQ-A003"
+    subprocess_id: null
+    role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    action: "Сформировать в учетной программе 1С и скачать требуемые запросом бухгалтерские/налоговые документы или данные"
+    business_object: "Бухгалтерская/налоговая информация из 1С"
+    input_information_refs:
+      - "IO-ACC-REG-REQ-REQUEST-001"
+      - "IO-ACC-REG-REQ-REQUIREMENTS-001"
+    output_information_refs:
+      - "IO-ACC-REG-REQ-1C-MATERIAL-001"
+    system_refs:
+      - "SYS-1C-ACCOUNTING-001"
+      - "SYS-REMOTE-DESKTOP-001"
+    channel_refs: []
+    incoming_flow_refs: []
+    outgoing_flow_refs: []
+    timing:
+      duration: null
+      deadline: null
+      frequency: null
+      wait_for: null
+    result: "Требуемые материалы из 1С сформированы и скачаны для включения в ответный пакет"
+    evidence_refs: ["FACT-ACC-006"]
+    evidence_class: "EXPLICIT"
+    notes: "Конкретные формы, отчеты и операции в 1С источник для этого процесса не перечисляет."
+
+  - step_id: "REGREQ-A004"
+    subprocess_id: null
+    role_ref: "ROLE-FIN-CHIEF-ACCOUNTANT-001"
+    action: "Скомплектовать собранные и/или сформированные материалы в папку/пакет для согласования и дальнейшего направления ответным письмом"
+    business_object: "Бухгалтерская часть ответа на запрос"
+    input_information_refs:
+      - "IO-ACC-REG-REQ-SUPPORTING-001"
+      - "IO-ACC-REG-REQ-1C-MATERIAL-001"
+    output_information_refs:
+      - "IO-ACC-REG-REQ-PACKAGE-001"
+    system_refs:
+      - "SYS-REMOTE-DESKTOP-001"
+    channel_refs: []
+    incoming_flow_refs: []
+    outgoing_flow_refs: []
+    timing:
+      duration: null
+      deadline: null
+      frequency: null
+      wait_for: null
+    result: "Подготовлена папка/пакет бухгалтерских материалов, предназначенная для согласования и дальнейшего ответа"
+    evidence_refs: ["FACT-ACC-006"]
+    evidence_class: "EXPLICIT"
+    notes: "Источник не подтверждает, что Главный бухгалтер сама финально отправляет ответ; receiver согласования, канал передачи, acceptance и acknowledgement UNKNOWN."
+
+flows: []
+
+orchestration_constraints:
+  confirmed_order:
+    - relation_id: "REGREQ-ORD-001"
+      before_ref: "REGREQ-A001"
+      after_ref: "REGREQ-A002"
+      condition: "Если требуемые материалы находятся в сетевых папках"
+      evidence_refs: ["FACT-ACC-006"]
+      evidence_class: "EXPLICIT"
+    - relation_id: "REGREQ-ORD-002"
+      before_ref: "REGREQ-A001"
+      after_ref: "REGREQ-A003"
+      condition: "Если требуемые материалы нужно сформировать/скачать из 1С"
+      evidence_refs: ["FACT-ACC-006"]
+      evidence_class: "EXPLICIT"
+    - relation_id: "REGREQ-ORD-003"
+      before_ref: "REGREQ-A002"
+      after_ref: "REGREQ-A004"
+      condition: "Когда для конкретного запроса используются материалы из сетевых папок"
+      evidence_refs: ["FACT-ACC-006"]
+      evidence_class: "EXPLICIT"
+    - relation_id: "REGREQ-ORD-004"
+      before_ref: "REGREQ-A003"
+      after_ref: "REGREQ-A004"
+      condition: "Когда для конкретного запроса используются материалы из 1С"
+      evidence_refs: ["FACT-ACC-006"]
+      evidence_class: "EXPLICIT"
+  order_unknown:
+    - relation_id: "REGREQ-ORD-UNK-001"
+      refs:
+        - "REGREQ-A002"
+        - "REGREQ-A003"
+      relation: "ORDER_UNKNOWN"
+      reason: "Источник допускает использование сетевых папок и/или 1С, но не устанавливает обязательный взаимный порядок этих действий."
+      evidence_refs: ["FACT-ACC-006"]
+      evidence_class: "UNKNOWN"
+    - relation_id: "REGREQ-ORD-UNK-002"
+      refs:
+        - "HO-ACC-REG-REQ-ROUTE-FIN-001"
+        - "HO-ACC-REG-REQ-ROUTE-SEC-001"
+        - "REGREQ-A001"
+        - "REGREQ-A004"
+      relation: "ORDER_UNKNOWN"
+      reason: "Интервью описывает маршрутизацию большей части входящих налоговых запросов в группу Финансового директора/СБ и отдельно подготовку бухгалтерских материалов, но не задает доказанный порядок/синхронизацию этих контуров."
+      evidence_refs:
+        - "FACT-ACC-004"
+        - "FACT-ACC-006"
+      evidence_class: "UNKNOWN"
+
+decisions: []
+exceptions: []
+
+security_interface:
+  role_ref: "ROLE-SECURITY-001"
+  applicability: "CONDITIONAL"
+  criterion: "UNKNOWN"
+  observed_behavior: "Большая часть (примерно 90%) входящих налоговых запросов направляется в группу Финансового директора и службы безопасности."
+  model_treatment: "BOUNDARY_INTERFACE_WITH_CAND_ACC_INBOX_ONLY"
+  evidence_refs: ["FACT-ACC-004"]
+  evidence_class: "EXPLICIT"
+  note: "Не является обязательным шагом sequence ACC-REG-REQ-001."
+
+quantitative_observations:
+  - observation_id: "REGREQ-QO001"
+    metric_type: "PERCENTAGE"
+    related_refs:
+      - "HO-ACC-REG-REQ-ROUTE-FIN-001"
+      - "HO-ACC-REG-REQ-ROUTE-SEC-001"
+    value: 90
+    unit: "percent"
+    qualifier: "Источник говорит «в большей части 90%»; трактуется как приблизительное наблюдение, не как формально измеренный KPI."
+    measurement_scope: "Входящие налоговые запросы, маршрутизируемые в группу Финансового директора и службы безопасности"
+    formal_sla_status: null
+    evidence_refs: ["FACT-ACC-004"]
+    evidence_class: "EXPLICIT"
+
+waits:
+  source_backed_waits: []
+  note: "Внутри подтвержденной detailed boundary отдельное ожидание ответа другого участника не моделируется. Подготовка «для согласования» подтверждена, но сам wait/receiver/acceptance после подготовки UNKNOWN."
+
+open_questions:
+  - "Q-ACC-REG-REQ-001"
+  - "Q-ACC-REG-REQ-002"
+  - "Q-ACC-REG-REQ-003"
+  - "Q-ACC-REG-REQ-004"
+  - "Q-ACC-REG-REQ-005"
+
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: |
+    Partial order сохранен: действия с сетевыми папками и 1С не превращены в искусственную линейную последовательность.
+    CAND-ACC-INBOX-001 не поглощен в процесс; его routing отражен только как boundary interface.
+    Финальная отправка, канал, согласующий и acknowledgement не достроены из профессиональных знаний.
