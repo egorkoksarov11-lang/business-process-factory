@@ -1,0 +1,106 @@
+schema_version: "1.1"
+questions:
+  - question_id: "Q-ACC-PRIMARY-001-001"
+    process_id: "ACC-PRIMARY-001"
+    source_refs: ["SRC-ACC-CHIEF-001"]
+    related_steps: ["A003", "A004", "A005-RESP"]
+    related_flow_refs: ["F004-RESP"]
+    related_handoff_refs: ["HO-ACC-PRIMARY-002", "HO-ACC-PRIMARY-004"]
+    related_information_object_refs: ["IO-ACC-PRIMARY-004", "IO-ACC-PRIMARY-005"]
+    question: "Какая конкретная должность/роль внутри функциональной категории ROLE-CONTRACT-OBLIGATION-RESP-001 согласует первичные документы по разным типам сделок и кто определяет маршрут?"
+    why_needed: "От ответа зависит фактический исполнитель approval step и условие маршрутизации документа."
+    blocking: true
+    status: "OPEN"
+    answer: null
+    answer_source_ref: null
+
+  - question_id: "Q-ACC-PRIMARY-001-002"
+    process_id: "ACC-PRIMARY-001"
+    source_refs: ["SRC-ACC-CHIEF-001"]
+    related_steps: ["A003", "A004"]
+    related_flow_refs: ["F003"]
+    related_handoff_refs: ["HO-ACC-PRIMARY-001", "HO-ACC-PRIMARY-002"]
+    related_information_object_refs: ["IO-ACC-PRIMARY-004"]
+    question: "Через какой фактический канал/систему проверенный документ передается на согласование и как видно, что согласующий получил его в работу?"
+    why_needed: "От ответа зависит communication/handoff acceptance и фиксация канала без смешения с системами Диадок/СБИС/1С."
+    blocking: true
+    status: "OPEN"
+    answer: null
+    answer_source_ref: null
+
+  - question_id: "Q-ACC-PRIMARY-001-003"
+    process_id: "ACC-PRIMARY-001"
+    source_refs: ["SRC-ACC-CHIEF-001"]
+    related_steps: ["A004", "A005-FIN", "A005-RESP"]
+    related_flow_refs: []
+    related_handoff_refs: ["HO-ACC-PRIMARY-003", "HO-ACC-PRIMARY-004"]
+    related_information_object_refs: ["IO-ACC-PRIMARY-005"]
+    question: "Что происходит, если ответ/резолюция согласующего не получены: кто и при каких условиях вправе принять решение самостоятельно, сколько ждут и есть ли эскалация?"
+    why_needed: "Источник подтверждает два возможных поведения — самостоятельное решение Главного бухгалтера или дальнейшее ожидание — но не подтверждает правило выбора и полномочия; это меняет ключевую no-response ветку."
+    blocking: true
+    status: "OPEN"
+    answer: null
+    answer_source_ref: null
+
+  - question_id: "Q-ACC-PRIMARY-001-004"
+    process_id: "ACC-PRIMARY-001"
+    source_refs: ["SRC-ACC-CHIEF-001"]
+    related_steps: ["A002", "A005-FIN", "A005-RESP"]
+    related_flow_refs: []
+    related_handoff_refs: []
+    related_information_object_refs: ["IO-ACC-PRIMARY-001", "IO-ACC-PRIMARY-005"]
+    question: "Как обрабатывается отрицательное решение/непринятие документа или выявленное при проверке несоответствие: кому и как возвращается документ, кто уведомляется и что является завершением этой ветки?"
+    why_needed: "Без ответа невозможно фактически восстановить reject/return ветку и связанные сообщения/handoffs."
+    blocking: true
+    status: "OPEN"
+    answer: null
+    answer_source_ref: null
+
+  - question_id: "Q-ACC-PRIMARY-001-005"
+    process_id: "ACC-PRIMARY-001"
+    source_refs: ["SRC-ACC-CHIEF-001"]
+    related_steps: ["A005-FIN", "A005-RESP", "A006"]
+    related_flow_refs: ["F005-FIN", "F005-RESP"]
+    related_handoff_refs: ["HO-ACC-PRIMARY-003", "HO-ACC-PRIMARY-004", "HO-ACC-PRIMARY-005"]
+    related_information_object_refs: ["IO-ACC-PRIMARY-005"]
+    question: "В какой форме и где фиксируется итоговая резолюция 'принять/не принять' документ к учету?"
+    why_needed: "От ответа зависит точный information object подтверждения решения и критерий перехода APPROVE → POST."
+    blocking: true
+    status: "OPEN"
+    answer: null
+    answer_source_ref: null
+
+  - question_id: "Q-ACC-PRIMARY-001-006"
+    process_id: "ACC-PRIMARY-001"
+    source_refs: ["SRC-ACC-CHIEF-001"]
+    related_steps: []
+    related_flow_refs: []
+    related_handoff_refs: []
+    related_information_object_refs: []
+    question: "Является ли подтверждение фактического исполнения инициатором договора/сделки действующим правилом сейчас, и если да — в каких случаях и какая каноническая роль его выполняет?"
+    why_needed: "Сейчас это только позиция интервьюируемой NOT_CONFIRMED; подтверждение изменит состав AS-IS ролей и decision path."
+    blocking: true
+    status: "OPEN"
+    answer: null
+    answer_source_ref: null
+
+  - question_id: "Q-ACC-PRIMARY-001-007"
+    process_id: "ACC-PRIMARY-001"
+    source_refs: ["SRC-ACC-CHIEF-001"]
+    related_steps: ["A001", "A002"]
+    related_flow_refs: []
+    related_handoff_refs: []
+    related_information_object_refs: ["IO-ACC-PRIMARY-001", "IO-ACC-PRIMARY-002"]
+    question: "Какие еще обязательные критерии проверки применяются по типам первичных документов и какие из общих каналов входящих документов реально используются именно для ACC-PRIMARY-001 помимо Диадок/СБИС?"
+    why_needed: "Ответ уточнит полноту CHECK и фактические каналы входа, не расширяя boundary на общий incoming process."
+    blocking: false
+    status: "OPEN"
+    answer: null
+    answer_source_ref: null
+
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  blocking_summary: "CLARIFICATION_REQUIRED из-за неизвестных decision owner/routing, no-response authority, reject/return path и формы резолюции."
+  dictionary_change_requests: []
+  notes: "Новые ROLE/SYSTEM/channel dictionary IDs не создавались и shared dictionaries не изменялись. При появлении необходимости новый ID должен быть передан Coordinator."
