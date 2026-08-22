@@ -48,11 +48,17 @@ channels:
     source_refs: [SRC-HR-KDP-001]
     notes: "Физический почтовый канал. Конкретный оператор и сервис не утверждаются без evidence."
 
+  - channel_id: CH-TICKET-PORTAL-001
+    canonical_name: "Личный кабинет технической поддержки"
+    channel_type: TICKET_PORTAL
+    system_ref: null
+    aliases: ["личный кабинет"]
+    source_refs: [SRC-IT-LEAD-001]
+    notes: "Источник прямо называет личный кабинет одним из трех текущих каналов связи и описывает просмотр заявок. Заявка далее поступает в SYS-IT-HELPDESK-001, но техническая принадлежность самого интерфейса к этой системе отдельно не доказана, поэтому system_ref остается null."
+
 # Канал не является системой и не является сообщением.
 # Agent 02 не создает новые CH-* самостоятельно: ненормализованный канал остается
 # observed_channel_names + null/empty canonical ref и передается Coordinator как dictionary proposal.
-# "Личный кабинет" HelpDesk намеренно не канонизирован здесь: требуется отдельно решить,
-# является ли это TICKET_PORTAL channel/interface либо частью SYS-IT-HELPDESK-001.
 #
 # Пример:
 # - channel_id: CH-EMAIL-001
