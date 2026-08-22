@@ -94,3 +94,5 @@ Business evidence сохранен без расширения:
 ## PR state
 
 PR #7 должен оставаться Draft для повторного Coordinator review. Merge не выполнять.
+
+Final Schema v1.1 cleanup completed: communication channel field normalized from channel_refs to canonical channel_ref. Business AS-IS unchanged.
