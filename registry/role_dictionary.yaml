@@ -1,12 +1,41 @@
 schema_version: "1.0"
-roles: []
+roles:
+  - role_id: ROLE-FIN-CHIEF-ACCOUNTANT-001
+    canonical_name: "Главный бухгалтер"
+    department: UNKNOWN
+    aliases:
+      - "главбух"
+    source_refs: [SRC-ACC-CHIEF-001]
+    notes: "Интервьюируемая роль; работает без подчиненных и ведет три юридических лица. В открытой HR-архитектуре тот же role_id используется как cross-domain роль — при последующем merge source_refs должны объединяться, а не заменяться."
 
-# Пример:
-# - role_id: ROLE-HR-KDP-001
-#   canonical_name: "Ведущий специалист по кадровому делопроизводству"
-#   department: "Кадровая служба"
-#   aliases:
-#     - "кадровик"
-#     - "специалист кадров"
-#   source_refs: []
-#   notes: null
+  - role_id: ROLE-FIN-DIRECTOR-001
+    canonical_name: "Финансовый директор"
+    department: UNKNOWN
+    aliases: []
+    source_refs: [SRC-ACC-CHIEF-001]
+    notes: "Основной инициатор внутренних запросов, адресат части входящих документов, участник согласования первички/договоров и получатель ведомостей."
+
+  - role_id: ROLE-FIN-BANK-OPERATOR-001
+    canonical_name: "Операционист по движению расчетных счетов"
+    department: UNKNOWN
+    aliases:
+      - "операционист"
+    source_refs: [SRC-ACC-CHIEF-001]
+    notes: "Направляет Главному бухгалтеру электронные банковские выписки и связанные банковские документы."
+
+cross_domain_role_refs:
+  - role_id: ROLE-HR-DIRECTOR-001
+    canonical_name: "Директор по персоналу"
+    owner_domain: HR
+    source_refs: [SRC-ACC-CHIEF-001]
+    note: "Определение роли не создается/не изменяется в этой ветке; используется только как handoff target ACC-PAYROLL-001."
+  - role_id: ROLE-SECURITY-001
+    canonical_name: "Служба безопасности"
+    owner_domain: SECURITY
+    source_refs: [SRC-ACC-CHIEF-001]
+    note: "Cross-domain participant в маршруте части запросов; собственный package не создается."
+  - role_id: ROLE-CEO-001
+    canonical_name: "Генеральный директор"
+    owner_domain: CORPORATE_GOVERNANCE
+    source_refs: [SRC-ACC-CHIEF-001]
+    note: "Участвует в части запросов/договорных согласований; определение роли вне ACC ownership."
