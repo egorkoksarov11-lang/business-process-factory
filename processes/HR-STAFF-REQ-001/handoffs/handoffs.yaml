@@ -1,0 +1,48 @@
+schema_version: "1.1"
+process_id: "HR-STAFF-REQ-001"
+
+handoffs:
+  - handoff_id: HO-HR-STAFF-MGR-TO-HR-CUR-001
+    handoff_type: ROLE_TO_ROLE
+    from_process_ref: null
+    from_role_ref: ROLE-HIRING-MANAGER-001
+    to_process_ref: null
+    to_role_ref: ROLE-HR-DIRECTOR-001
+    trigger_or_condition: "Непосредственный руководитель передает заявку на вакантную позицию Директору по персоналу"
+    payload_refs:
+      - IO-HR-STAFF-REQUEST-CUR-001
+    communication_refs: []
+    system_refs: []
+    channel_refs: []
+    acceptance_or_result: "Директор по персоналу получил заявку; далее начинается recruitment activity по SRC-HR-DIR-001"
+    acknowledgement_required: UNKNOWN
+    applicability: CONFIRMED_CURRENT
+    evidence_refs:
+      - FACT-HR-DIR-001
+    evidence_class: EXPLICIT
+    ambiguity: "Не подтверждено существование отдельного current HR-STAFF-REQ process boundary. Это observation входа заявки в recruitment, а не доказанный PROCESS_TO_PROCESS handoff."
+
+  - handoff_id: HO-HR-STAFF-TO-RECRUIT-REF-001
+    handoff_type: PROCESS_TO_PROCESS
+    from_process_ref: HR-STAFF-REQ-001
+    to_process_ref: HR-RECRUIT-001
+    from_role_ref: ROLE-HIRING-MANAGER-001
+    to_role_ref: null
+    trigger_or_condition: "Reference model: согласованная заявка направлена HR"
+    payload_refs:
+      - IO-HR-STAFF-REQUEST-REF-001
+    communication_refs: []
+    system_refs: []
+    channel_refs: []
+    acceptance_or_result: "REFERENCE_ONLY: approved request handoff"
+    acknowledgement_required: UNKNOWN
+    applicability: REFERENCE_ONLY
+    evidence_refs:
+      - MODEL002-FACT-006
+    evidence_class: EXPLICIT
+    ambiguity: "Получатель generic HR и applicability current boundary не подтверждены."
+
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Current evidence confirms request receipt by HR Director, but does not prove standalone STAFF-REQ process or PROCESS_TO_PROCESS transition."

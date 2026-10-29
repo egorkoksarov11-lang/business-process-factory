@@ -1,0 +1,93 @@
+schema_version: "1.1"
+process_id: "HR-STAFF-REQ-001"
+as_is_version: "0.1"
+status: "CLARIFICATION_REQUIRED"
+
+scope:
+  trigger: "UNKNOWN_CURRENT: SRC-HR-DIR-001 starts from an already existing request received by ROLE-HR-DIRECTOR-001; SRC-HR-MODEL-002 trigger remains reference-only."
+  business_result: "UNKNOWN_CURRENT: current evidence confirms request receipt before recruitment work, but does not confirm a standalone STAFF-REQ lifecycle or approved request result."
+  applicability: "UNKNOWN_CURRENT"
+  source_refs:
+    - SRC-HR-DIR-001
+    - SRC-HR-MODEL-002
+
+steps:
+  - step_id: HRREQ-C001
+    role_ref: ROLE-HIRING-MANAGER-001
+    action: "Передать заявку на вакантную позицию Директору по персоналу"
+    business_object: "Заявка на вакантную позицию"
+    output_information_refs:
+      - IO-HR-STAFF-REQUEST-CUR-001
+    system_refs: []
+    channel_refs: []
+    evidence_refs:
+      - FACT-HR-DIR-001
+    evidence_class: EXPLICIT
+    notes: "Подтвержден только факт передачи заявки руководителем. Формирование заявки, содержание, согласование и канал не установлены."
+
+  - step_id: HRREQ-C002
+    role_ref: ROLE-HR-DIRECTOR-001
+    action: "Получить заявку непосредственного руководителя на вакантную позицию"
+    business_object: "Заявка на вакантную позицию"
+    input_information_refs:
+      - IO-HR-STAFF-REQUEST-CUR-001
+    evidence_refs:
+      - FACT-HR-DIR-001
+    evidence_class: EXPLICIT
+    notes: "После получения заявки источник описывает дальнейший подбор. Отдельный current STAFF-REQ approval lifecycle не подтвержден."
+
+  - step_id: HRREQ-R001
+    role_ref: null
+    action: "Выполнить reference model шаги формирования и согласования заявки"
+    business_object: "Reference model HR-STAFF-REQ-001"
+    evidence_refs:
+      - MODEL002-FACT-002
+      - MODEL002-FACT-004
+      - MODEL002-FACT-005
+      - MODEL002-FACT-006
+      - MODEL002-FACT-007
+    evidence_class: EXPLICIT
+    notes: "REFERENCE_ONLY: оценка потребности, документы, CEO approval, revision, rejection и approved request flow не повышаются до current AS-IS."
+
+flows:
+  - flow_id: HRREQ-F-C001
+    from_ref: HRREQ-C001
+    to_ref: HRREQ-C002
+    flow_type: HANDOFF
+    evidence_refs:
+      - FACT-HR-DIR-001
+    applicability: CONFIRMED_CURRENT
+    condition: "Руководитель передал заявку, которую получает Директор по персоналу"
+
+orchestration_constraints:
+  confirmed_order:
+    - constraint_id: HRREQ-OC-C001
+      before_ref: HRREQ-C001
+      after_ref: HRREQ-C002
+      relation: BEFORE
+      evidence_refs:
+        - FACT-HR-DIR-001
+      evidence_class: EXPLICIT
+  order_unknown:
+    - constraint_id: HRREQ-OCU-001
+      ref_a: HRREQ-C002
+      ref_b: HRREQ-R001
+      relation: ORDER_UNKNOWN
+      reason: "Reference model lifecycle cannot be merged with current interview sequence."
+      evidence_refs:
+        - FACT-HR-DIR-001
+        - MODEL002-FACT-002
+      evidence_class: UNKNOWN
+
+decisions: []
+exceptions: []
+quantitative_observations: []
+open_questions:
+  - "Подтверждается ли самостоятельный текущий STAFF-REQ lifecycle до передачи заявки в HR-RECRUIT-001?"
+  - "Является ли CEO approval текущим обязательным правилом?"
+  - "Какой именно результат передается на границе HR-STAFF-REQ-001 → HR-RECRUIT-001?"
+
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Current evidence is limited to request receipt by HR Director before recruitment. Reference model remains separated."

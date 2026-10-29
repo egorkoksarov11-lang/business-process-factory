@@ -1,0 +1,228 @@
+schema_version: "1.1"
+
+issues:
+  - issue_id: ISS-HR-STAFF-REQ-001
+    process_id: HR-STAFF-REQ-001
+    category: TRIGGER_AMBIGUITY
+    as_is_steps:
+      - HRREQ-C001
+      - HRREQ-R101
+    flow_refs: []
+    handoff_refs:
+      - HO-HR-STAFF-MGR-TO-HR-CUR-001
+    information_object_refs:
+      - IO-HR-STAFF-REQUEST-CUR-001
+      - IO-HR-STAFF-LOAD-REF-001
+    description: "Reference model начинает процесс с возникновения потребности и расчета загрузки, тогда как интервью раскрывает текущую практику только с уже существующей заявки непосредственного руководителя."
+    evidence_refs:
+      - FACT-HR-DIR-001
+      - MODEL002-FACT-001
+      - MODEL002-FACT-002
+    consequence: "Нельзя подтвердить фактическую текущую точку старта L1 и обязательность upstream reference steps."
+    severity: HIGH
+    status: OPEN
+
+  - issue_id: ISS-HR-STAFF-REQ-002
+    process_id: HR-STAFF-REQ-001
+    category: REFERENCE_APPLICABILITY_UNKNOWN
+    as_is_steps:
+      - HRREQ-R101
+      - HRREQ-R102
+      - HRREQ-R103
+      - HRREQ-R104
+      - HRREQ-R105
+      - HRREQ-R106
+      - HRREQ-R107
+    flow_refs:
+      - HRREQ-F-R101
+      - HRREQ-F-R102
+      - HRREQ-F-R103
+      - HRREQ-F-R104
+      - HRREQ-F-R105-REV
+      - HRREQ-F-R105-APP
+    handoff_refs:
+      - HO-HR-STAFF-MGR-TO-CEO-REF-001
+      - HO-HR-STAFF-CEO-TO-MGR-REV-REF-001
+      - HO-HR-STAFF-TO-RECRUIT-REF-001
+    information_object_refs:
+      - IO-HR-STAFF-LOAD-REF-001
+      - IO-HR-STAFF-AUTHORITY-REF-001
+      - IO-HR-STAFF-FUNCTIONS-REF-001
+      - IO-HR-STAFF-REQUEST-REF-001
+      - IO-HR-STAFF-DECISION-REF-001
+      - IO-HR-STAFF-REVISION-REF-001
+    description: "Полный upstream/approval/rework/rejection flow известен из SRC-HR-MODEL-002, но lifecycle_status и approval_status reference model остаются UNKNOWN."
+    evidence_refs:
+      - MODEL002-FACT-001
+      - MODEL002-FACT-002
+      - MODEL002-FACT-003
+      - MODEL002-FACT-004
+      - MODEL002-FACT-005
+      - MODEL002-FACT-006
+      - MODEL002-FACT-007
+      - MODEL002-FACT-008
+    consequence: "Ни один reference-derived шаг нельзя считать обязательным текущим AS-IS без отдельного подтверждения."
+    severity: HIGH
+    status: OPEN
+
+  - issue_id: ISS-HR-STAFF-REQ-003
+    process_id: HR-STAFF-REQ-001
+    category: BOUNDARY_RESULT_AMBIGUITY
+    as_is_steps:
+      - HRREQ-C002
+      - HRREQ-R107
+    flow_refs:
+      - HRREQ-F-C001
+      - HRREQ-F-R105-APP
+    handoff_refs:
+      - HO-HR-STAFF-MGR-TO-HR-CUR-001
+      - HO-HR-STAFF-TO-RECRUIT-REF-001
+    information_object_refs:
+      - IO-HR-STAFF-REQUEST-CUR-001
+      - IO-HR-STAFF-REQUEST-REF-001
+    description: "Интервью подтверждает передачу заявки непосредственного руководителя Директору по персоналу, но не подтверждает статус 'согласована'; reference model передает HR именно согласованную заявку."
+    evidence_refs:
+      - FACT-HR-DIR-001
+      - MODEL002-FACT-006
+    consequence: "Точный текущий business result HR-STAFF-REQ-001 и payload parent handoff в HR-RECRUIT-001 остаются неустановленными."
+    severity: HIGH
+    status: OPEN
+
+  - issue_id: ISS-HR-STAFF-REQ-004
+    process_id: HR-STAFF-REQ-001
+    category: ROLE_APPLICABILITY_UNKNOWN
+    as_is_steps:
+      - HRREQ-R104
+      - HRREQ-R105
+      - HRREQ-R106
+    flow_refs:
+      - HRREQ-F-R104
+      - HRREQ-F-R105-REV
+      - HRREQ-F-R105-APP
+    handoff_refs:
+      - HO-HR-STAFF-MGR-TO-CEO-REF-001
+      - HO-HR-STAFF-CEO-TO-MGR-REV-REF-001
+    information_object_refs:
+      - IO-HR-STAFF-REQUEST-REF-001
+      - IO-HR-STAFF-DECISION-REF-001
+      - IO-HR-STAFF-REVISION-REF-001
+    description: "Генеральный директор явно участвует в рассмотрении заявки только в SRC-HR-MODEL-002; интервью не подтверждает эту роль применительно к заявке на подбор."
+    evidence_refs:
+      - FACT-HR-DIR-001
+      - MODEL002-FACT-004
+      - MODEL002-FACT-005
+    consequence: "Нельзя моделировать ROLE-CEO-001 как безусловного current approver или владельца decision."
+    severity: HIGH
+    status: OPEN
+
+  - issue_id: ISS-HR-STAFF-REQ-005
+    process_id: HR-STAFF-REQ-001
+    category: DOCUMENT_APPLICABILITY_UNKNOWN
+    as_is_steps:
+      - HRREQ-R101
+      - HRREQ-R102
+      - HRREQ-R103
+      - HRREQ-R104
+    flow_refs: []
+    handoff_refs: []
+    information_object_refs:
+      - IO-HR-STAFF-LOAD-REF-001
+      - IO-HR-STAFF-AUTHORITY-REF-001
+      - IO-HR-STAFF-FUNCTIONS-REF-001
+      - IO-HR-STAFF-REQUEST-REF-001
+    description: "Таблица оценки загрузки, составной документ-основание и структурированное содержание заявки подтверждены только reference model."
+    evidence_refs:
+      - MODEL002-FACT-002
+      - MODEL002-FACT-003
+      - MODEL002-FACT-008
+    consequence: "Нельзя считать эти объекты обязательными текущими входами/формами и нельзя создавать отсутствующий шаблон заявки."
+    severity: MEDIUM
+    status: OPEN
+
+  - issue_id: ISS-HR-STAFF-REQ-006
+    process_id: HR-STAFF-REQ-001
+    category: REWORK_REJECTION_APPLICABILITY_UNKNOWN
+    as_is_steps:
+      - HRREQ-R105
+      - HRREQ-R106
+    flow_refs:
+      - HRREQ-F-R105-REV
+    handoff_refs:
+      - HO-HR-STAFF-CEO-TO-MGR-REV-REF-001
+    information_object_refs:
+      - IO-HR-STAFF-DECISION-REF-001
+      - IO-HR-STAFF-REVISION-REF-001
+    description: "Revision loop и конечный отказ в подборе присутствуют только в reference model; для возврата не установлена точная точка доработки, а для отказа не показана отдельная коммуникация инициатору."
+    evidence_refs:
+      - MODEL002-FACT-004
+      - MODEL002-FACT-005
+      - MODEL002-FACT-007
+    consequence: "Current RETURN и stop path нельзя считать подтвержденными, а отказ нельзя дополнить придуманным сообщением или каналом."
+    severity: HIGH
+    status: OPEN
+
+  - issue_id: ISS-HR-STAFF-REQ-007
+    process_id: HR-STAFF-REQ-001
+    category: RECIPIENT_IDENTITY_AMBIGUITY
+    as_is_steps:
+      - HRREQ-C002
+      - HRREQ-R107
+    flow_refs: []
+    handoff_refs:
+      - HO-HR-STAFF-MGR-TO-HR-CUR-001
+      - HO-HR-STAFF-TO-RECRUIT-REF-001
+    information_object_refs:
+      - IO-HR-STAFF-REQUEST-CUR-001
+      - IO-HR-STAFF-REQUEST-REF-001
+    description: "Интервью называет конкретного получателя текущей заявки — Директора по персоналу; reference model после согласования указывает generic 'HR'."
+    evidence_refs:
+      - FACT-HR-DIR-001
+      - MODEL002-FACT-006
+    consequence: "Нельзя молча приравнять generic HR reference flow к ROLE-HR-DIRECTOR-001 и тем самым создать ложную cross-source идентичность."
+    severity: MEDIUM
+    status: OPEN
+
+  - issue_id: ISS-HR-STAFF-REQ-008
+    process_id: HR-STAFF-REQ-001
+    category: CHANNEL_UNKNOWN
+    as_is_steps:
+      - HRREQ-C001
+      - HRREQ-C002
+      - HRREQ-R104
+      - HRREQ-R106
+      - HRREQ-R107
+    flow_refs: []
+    handoff_refs:
+      - HO-HR-STAFF-MGR-TO-HR-CUR-001
+      - HO-HR-STAFF-MGR-TO-CEO-REF-001
+      - HO-HR-STAFF-CEO-TO-MGR-REV-REF-001
+      - HO-HR-STAFF-TO-RECRUIT-REF-001
+    information_object_refs:
+      - IO-HR-STAFF-REQUEST-CUR-001
+      - IO-HR-STAFF-REQUEST-REF-001
+      - IO-HR-STAFF-REVISION-REF-001
+    description: "Источники не называют фактические каналы или системы передачи заявки, решения и замечаний."
+    evidence_refs:
+      - FACT-HR-DIR-001
+      - MODEL002-FACT-004
+      - MODEL002-FACT-005
+      - MODEL002-FACT-006
+    consequence: "Communication/handoff traceability по каналу остается неполной; canonical CH-* нельзя назначить без source evidence."
+    severity: LOW
+    status: OPEN
+
+coordinator_escalations:
+  - escalation_id: ESC-HR-STAFF-REQ-001
+    process_id: HR-STAFF-REQ-001
+    category: ARCHITECTURE_BOUNDARY_CONFIRMATION
+    evidence_refs:
+      - FACT-HR-DIR-001
+      - MODEL002-FACT-006
+    observation: "Архитектурный business result формулирует передачу согласованной заявки, но единственный current interview-source подтверждает только получение заявки от непосредственного руководителя без подтверждения CEO approval/status 'согласована'."
+    requested_coordinator_action: "Не менять architecture автоматически. После clarification определить, сохраняется ли current boundary/result 'согласованная заявка' либо архитектурная формулировка требует отдельного пересмотра."
+    status: OPEN
+
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Issues record factual gaps only; no TO-BE solutions are proposed. Direct source contradiction is not asserted where evidence is merely incomplete or reference lifecycle is unknown."

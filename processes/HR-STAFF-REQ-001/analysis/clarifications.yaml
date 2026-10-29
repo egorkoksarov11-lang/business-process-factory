@@ -1,0 +1,187 @@
+schema_version: "1.1"
+
+questions:
+  - question_id: Q-HR-STAFF-REQ-001
+    process_id: HR-STAFF-REQ-001
+    source_refs:
+      - SRC-HR-DIR-001
+      - SRC-HR-MODEL-002
+    related_steps:
+      - HRREQ-C001
+      - HRREQ-R101
+    related_flow_refs: []
+    related_handoff_refs:
+      - HO-HR-STAFF-MGR-TO-HR-CUR-001
+    related_information_object_refs:
+      - IO-HR-STAFF-REQUEST-CUR-001
+      - IO-HR-STAFF-LOAD-REF-001
+    question: "Что именно является фактическим trigger текущего HR-STAFF-REQ-001: само возникновение потребности в сотруднике, отдельное решение непосредственного руководителя о подборе или иной факт?"
+    why_needed: "SRC-HR-MODEL-002 начинается с возникновения потребности, а интервью раскрывает текущую цепочку только с уже существующей заявки. От ответа зависит начало L1 и применимость upstream reference steps."
+    blocking: true
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+  - question_id: Q-HR-STAFF-REQ-002
+    process_id: HR-STAFF-REQ-001
+    source_refs:
+      - SRC-HR-DIR-001
+      - SRC-HR-MODEL-002
+    related_steps:
+      - HRREQ-R104
+      - HRREQ-R105
+    related_flow_refs:
+      - HRREQ-F-R104
+    related_handoff_refs:
+      - HO-HR-STAFF-MGR-TO-CEO-REF-001
+    related_information_object_refs:
+      - IO-HR-STAFF-REQUEST-REF-001
+      - IO-HR-STAFF-DECISION-REF-001
+    question: "Является ли рассмотрение и согласование заявки Генеральным директором обязательным этапом текущего процесса, и если да — для всех заявок или только в определенных случаях?"
+    why_needed: "CEO approval присутствует только в SRC-HR-MODEL-002 с UNKNOWN lifecycle/approval status и не упоминается в интервью применительно к заявке на подбор. От ответа зависит роль CEO, decision и положительный business result."
+    blocking: true
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+  - question_id: Q-HR-STAFF-REQ-003
+    process_id: HR-STAFF-REQ-001
+    source_refs:
+      - SRC-HR-DIR-001
+      - SRC-HR-MODEL-002
+    related_steps:
+      - HRREQ-C001
+      - HRREQ-R101
+      - HRREQ-R102
+      - HRREQ-R103
+      - HRREQ-R104
+    related_flow_refs: []
+    related_handoff_refs:
+      - HO-HR-STAFF-MGR-TO-HR-CUR-001
+    related_information_object_refs:
+      - IO-HR-STAFF-REQUEST-CUR-001
+      - IO-HR-STAFF-LOAD-REF-001
+      - IO-HR-STAFF-AUTHORITY-REF-001
+      - IO-HR-STAFF-FUNCTIONS-REF-001
+      - IO-HR-STAFF-REQUEST-REF-001
+    question: "Кто фактически формирует текущую заявку на подбор и какие сведения обязательно входят в нее до передачи HR: обоснование потребности, функции/задачи, расчет загрузки или иные данные?"
+    why_needed: "Интервью подтверждает только получение заявки от непосредственного руководителя; состав и способ формирования раскрыты только reference model. От ответа зависят actor, обязательные input objects и текущие шаги формирования заявки."
+    blocking: true
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+  - question_id: Q-HR-STAFF-REQ-004
+    process_id: HR-STAFF-REQ-001
+    source_refs:
+      - SRC-HR-MODEL-002
+    related_steps:
+      - HRREQ-R105
+      - HRREQ-R106
+    related_flow_refs:
+      - HRREQ-F-R105-REV
+    related_handoff_refs:
+      - HO-HR-STAFF-CEO-TO-MGR-REV-REF-001
+    related_information_object_refs:
+      - IO-HR-STAFF-REVISION-REF-001
+      - IO-HR-STAFF-REQUEST-REF-001
+    question: "Существует ли в текущей практике возврат заявки на доработку; кто дорабатывает заявку и что именно пересматривается — функции, обоснование, сама заявка или иной объект?"
+    why_needed: "Revision loop есть только в reference model, а точная точка возврата даже в текстовой нормализации не установлена. От ответа зависит наличие RETURN path и участники доработки."
+    blocking: true
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+  - question_id: Q-HR-STAFF-REQ-005
+    process_id: HR-STAFF-REQ-001
+    source_refs:
+      - SRC-HR-MODEL-002
+    related_steps:
+      - HRREQ-R105
+    related_flow_refs: []
+    related_handoff_refs: []
+    related_information_object_refs:
+      - IO-HR-STAFF-DECISION-REF-001
+    question: "Существует ли в текущем процессе конечный отказ в подборе, кто принимает это решение и как инициатор узнает, что подбор не согласован?"
+    why_needed: "Отрицательный end-state подтвержден только SRC-HR-MODEL-002. От ответа зависит реальная stop path и наличие rejection communication."
+    blocking: true
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+  - question_id: Q-HR-STAFF-REQ-006
+    process_id: HR-STAFF-REQ-001
+    source_refs:
+      - SRC-HR-DIR-001
+      - SRC-HR-MODEL-002
+    related_steps:
+      - HRREQ-C002
+      - HRREQ-R107
+    related_flow_refs:
+      - HRREQ-F-C001
+      - HRREQ-F-R105-APP
+    related_handoff_refs:
+      - HO-HR-STAFF-MGR-TO-HR-CUR-001
+      - HO-HR-STAFF-TO-RECRUIT-REF-001
+    related_information_object_refs:
+      - IO-HR-STAFF-REQUEST-CUR-001
+      - IO-HR-STAFF-REQUEST-REF-001
+    question: "Какая именно заявка запускает HR-RECRUIT-001 в текущей практике: любая заявка непосредственного руководителя или только заявка после отдельного согласования; кто является фактическим получателем согласованного результата?"
+    why_needed: "Интервью подтверждает получение заявки Директором по персоналу, reference model — передачу уже согласованной заявки generic HR. От ответа зависит точный parent business result и boundary handoff в HR-RECRUIT-001."
+    blocking: true
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+  - question_id: Q-HR-STAFF-REQ-007
+    process_id: HR-STAFF-REQ-001
+    source_refs:
+      - SRC-HR-DIR-001
+      - SRC-HR-MODEL-002
+    related_steps:
+      - HRREQ-C001
+      - HRREQ-C002
+      - HRREQ-R104
+      - HRREQ-R106
+      - HRREQ-R107
+    related_flow_refs: []
+    related_handoff_refs:
+      - HO-HR-STAFF-MGR-TO-HR-CUR-001
+      - HO-HR-STAFF-MGR-TO-CEO-REF-001
+      - HO-HR-STAFF-CEO-TO-MGR-REV-REF-001
+      - HO-HR-STAFF-TO-RECRUIT-REF-001
+    related_information_object_refs:
+      - IO-HR-STAFF-REQUEST-CUR-001
+      - IO-HR-STAFF-REQUEST-REF-001
+      - IO-HR-STAFF-REVISION-REF-001
+    question: "Через какие фактические каналы или системы передается заявка и, если применимо, решение/замечания по ее согласованию?"
+    why_needed: "Ни интервью, ни reference model не называют канал/систему. Ответ нужен для communication/handoff traceability, но не меняет базовую границу процесса."
+    blocking: false
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+  - question_id: Q-HR-STAFF-REQ-008
+    process_id: HR-STAFF-REQ-001
+    source_refs:
+      - SRC-HR-MODEL-002
+    related_steps:
+      - HRREQ-R101
+      - HRREQ-R102
+    related_flow_refs:
+      - HRREQ-F-R101
+    related_handoff_refs: []
+    related_information_object_refs:
+      - IO-HR-STAFF-LOAD-REF-001
+      - IO-HR-STAFF-AUTHORITY-REF-001
+    question: "Используются ли сейчас 'Таблица оценки загрузки (расчёт потребности)' и указанный в схеме составной документ 'Приказ / распоряжение / распределение функций / должностная инструкция' при формировании заявки?"
+    why_needed: "Оба объекта присутствуют только в reference model; подтверждение определит их current applicability, но отсутствие ответа не мешает сохранить известный interview-supported handoff."
+    blocking: false
+    status: OPEN
+    answer: null
+    answer_source_ref: null
+
+metadata:
+  created_at: "2026-08-22"
+  updated_at: "2026-08-22"
+  notes: "Blocking questions focus on trigger, CEO approval applicability, request formation/content, revision/rejection and exact boundary handoff to recruitment."
